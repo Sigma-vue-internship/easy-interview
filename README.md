@@ -16,10 +16,12 @@ Platform should consist of this features:
 
 ## Main stack:
 * Client on Vue3
+* Pinia for state management
+* Vue Router
 * UI/UX based on [Vuetifyjs](https://vuetifyjs.com/en/) / [BootstrapVue](https://bootstrap-vue.org/) / [Buefy](https://buefy.org/)
 * Secure access based on [Auth0](https://auth0.com[/) or similar
 * Backend [Mockapi](mockapi.io)
-* Unit Tests on [Jest](https://jestjs.io/)
+* Unit Tests on Vitest
 * Deploy on [heroku](https://dashboard.heroku.com/)
 
 ## Technical requirements:
