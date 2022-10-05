@@ -10,7 +10,7 @@ Platform should consist of this features:
 * Add/Edit/View candidate, with interview results (if exist)
 * View list candidates, search, sort, filtering
 * **Main feature** - Quiz wizard with questions/answers list (Must to have progress bar, count of correct/incorrect answers, reference to candidate, results saving).
-* Quiz result after interview by each candidates and list of correct/uncorrect answers for rating and evaluation
+* Quiz result after interview by each candidates and list of correct/incorrect answers for rating and evaluation
 * Add/Edit candidate reviews
  
 
