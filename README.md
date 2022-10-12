@@ -3,7 +3,7 @@
 ## General description:
 The main idea of platform to help developers make interview proccess easy. 
 Platform should consist of this features:
-* Login page
+* Login page, UI can provide Auth0
 * Dashboard with quick widgets
 * Add/Edit/Delete questions with answers by category (OOP, Algorithms, HTML/CSS, JavaScript, and so on)
 * View list of questions with filters by category
