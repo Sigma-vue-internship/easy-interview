@@ -20,7 +20,7 @@ Platform should consist of this features:
 * Vue Router
 * UI/UX based on [Vuetifyjs](https://vuetifyjs.com/en/) / [BootstrapVue](https://bootstrap-vue.org/) / [Buefy](https://buefy.org/)
 * Secure access based on [Auth0](https://auth0.com[/) or similar
-* Backend [Mockapi](mockapi.io)
+* Backend [Mockapi](http://mockapi.io)
 * Unit Tests on Vitest
 * Deploy on [heroku](https://dashboard.heroku.com/)
 
