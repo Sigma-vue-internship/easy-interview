@@ -1,21 +1,49 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import DashboardView from "../views/DashboardView.vue";
+import CandidatesView from "../views/CandidatesView.vue";
+import SingleCandidateView from "../views/SingleCandidateView.vue";
+import CategoriesView from "../views/CategoriesView.vue";
+import SingleCategoryView from "../views/SingleCategoryView.vue";
+import QuizView from "../views/QuizView.vue";
+import QuizResultsView from "../views/QuizResultsView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
-      name: "home",
-      component: HomeView,
+      path: "/dashboard",
+      name: "dashboard",
+      component: DashboardView,
     },
     {
-      path: "/about",
-      name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import("../views/AboutView.vue"),
+      path: "/candidates",
+      name: "candidates",
+      component: CandidatesView,
+    },
+    {
+      path: "/candidates/:id",
+      name: "singleCandidate",
+      component: SingleCandidateView,
+    },
+    {
+      path: "/categories",
+      name: "сategories",
+      component: CategoriesView,
+    },
+    {
+      path: "/categories/:title",
+      name: "singleCategory",
+      component: SingleCategoryView,
+    },
+    {
+      path: "/quiz",
+      name: "quiz",
+      component: QuizView,
+    },
+    {
+      path: "/results",
+      name: "quizResults",
+      component: QuizResultsView,
     },
   ],
 });
