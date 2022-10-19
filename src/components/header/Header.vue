@@ -4,7 +4,7 @@ import BrandIcon from "../icons/BrandIcon.vue";
 const auth0 = useAuth0();
 
 const isUserAuthenticated = auth0.isAuthenticated;
-console.log(isUserAuthenticated.value);
+
 function login() {
   auth0.loginWithRedirect();
 }

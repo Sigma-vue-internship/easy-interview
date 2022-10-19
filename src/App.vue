@@ -1,20 +1,19 @@
 <script setup>
 import { RouterView } from "vue-router";
 import Header from "@/components/header/Header.vue";
-// import { useAuth0 } from "@auth0/auth0-vue";
-// import SpinnerLoader from "@/components/ui/SpinnerLoader.vue";
+import { useAuth0 } from "@auth0/auth0-vue";
+import SpinnerLoader from "@/components/ui/SpinnerLoader.vue";
 
-// const auth0 = useAuth0();
-// let isLoading = auth0.isLoading.value;
-// console.log(isLoading);
+const auth0 = useAuth0();
+const isLoading = auth0.isLoading;
 </script>
 
 <template>
   <Header />
   <!-- <RouterLink to="/dashboard">Dashboard</RouterLink>
   <RouterLink to="/categories">Categories</RouterLink> -->
-  <!-- <SpinnerLoader v-if="isLoading" /> -->
-  <RouterView />
+  <SpinnerLoader v-if="isLoading" />
+  <RouterView v-else />
 </template>
 
 <style scoped></style>

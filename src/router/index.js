@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { authGuard } from "@auth0/auth0-vue";
 import DashboardView from "../views/DashboardView.vue";
 import CandidatesView from "../views/CandidatesView.vue";
 import SingleCandidateView from "../views/SingleCandidateView.vue";
@@ -7,7 +8,6 @@ import SingleCategoryView from "../views/SingleCategoryView.vue";
 import QuizView from "../views/QuizView.vue";
 import QuizResultsView from "../views/QuizResultsView.vue";
 import HomeView from "../views/HomeView.vue";
-import { authGuard } from "@auth0/auth0-vue";
 
 // const guardedRoutes = [
 //   "dashboard"
