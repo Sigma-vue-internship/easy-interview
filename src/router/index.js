@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { authGuard } from "@auth0/auth0-vue";
 import DashboardView from "../views/DashboardView.vue";
-import CandidatesView from "../views/CandidatesView.vue";
-import SingleCandidateView from "../views/SingleCandidateView.vue";
-import CategoriesView from "../views/CategoriesView.vue";
-import SingleCategoryView from "../views/SingleCategoryView.vue";
+import CandidatesListView from "../views/CandidatesListView.vue";
+import CandidateView from "../views/CandidateView.vue";
+import CategoriesListView from "../views/CategoriesListView.vue";
+import CategoryView from "../views/CategoryView.vue";
 import QuizView from "../views/QuizView.vue";
 import QuizResultsView from "../views/QuizResultsView.vue";
 import HomeView from "../views/HomeView.vue";
@@ -35,25 +35,25 @@ const router = createRouter({
     {
       path: "/candidates",
       name: "candidates",
-      component: CandidatesView,
+      component: CandidatesListView,
       beforeEnter: authGuard,
     },
     {
       path: "/candidates/:id",
-      name: "singleCandidate",
-      component: SingleCandidateView,
+      name: "candidate",
+      component: CandidateView,
       beforeEnter: authGuard,
     },
     {
       path: "/categories",
-      name: "сategories",
-      component: CategoriesView,
+      name: "сategoriesList",
+      component: CategoriesListView,
       beforeEnter: authGuard,
     },
     {
       path: "/categories/:title",
-      name: "singleCategory",
-      component: SingleCategoryView,
+      name: "category",
+      component: CategoryView,
       beforeEnter: authGuard,
     },
     {
