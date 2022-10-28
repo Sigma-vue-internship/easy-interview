@@ -9,11 +9,13 @@ const isLoading = auth0.isLoading;
 </script>
 
 <template>
-  <Header />
+  <Header
+    class="border border-top-0 border-start-0 border-end-0 border-secondary"
+  />
   <!-- <RouterLink to="/dashboard">Dashboard</RouterLink>
   <RouterLink to="/categories">Categories</RouterLink> -->
   <SpinnerLoader v-if="isLoading" />
-  <RouterView v-else />
+  <RouterView class="bg-dark" v-else />
 </template>
 
 <style scoped></style>
