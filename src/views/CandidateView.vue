@@ -1,9 +1,11 @@
 <template>
   <div>
-    <h1>Single Candidate</h1>
+    <Candidate />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import Candidate from "../components/CandidatesComponents/Candidate.vue";
+</script>
 
 <style></style>
