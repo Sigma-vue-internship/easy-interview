@@ -1,46 +1,41 @@
 <script setup>
-import { reactive, computed, ref } from "vue";
+import { computed, ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
+import FormValidator from "../../service/FormValidator";
 
 const categories = ["Vue.js", "Native Java Script", "React"];
 const errors = ref([]);
-const initialValue = {
+
+const questionData = ref({
   point: 0,
   text: "",
   answer: "",
   category: "HTML",
   id: 0,
-};
-const showErrorAlert = computed(() => {
-  return errors.value.length ? "show" : "";
 });
-const questionData = reactive({ ...initialValue });
+const validator = new FormValidator(questionData, "question", errors);
+
+const showErrorAlert = computed(() => {
+  return validator.errors.value.length ? "show" : "";
+});
 
 async function addQuestion() {
-  validateQuestion();
-  console.log(errors.value);
-  if (errors.value.length) return;
-  questionData.id = uuidv4();
+  validator.validateForm();
+
+  if (validator.errors.value.length) return;
+  questionData.value.id = uuidv4();
   console.log(questionData);
   resetForm();
 }
 
-function validateQuestion() {
-  errors.value.length = 0;
-  switch (true) {
-    case questionData.point <= 0:
-      errors.value.push("Points have to be bigger than 0");
-    case questionData.text.length <= 5:
-      errors.value.push("Question text have to be bigger than 5 chars");
-    case questionData.answer.length <= 5:
-      errors.value.push("Question answer have to be bigger than 5 chars");
-    default:
-      return errors;
-  }
-}
-
 function resetForm() {
-  Object.assign(questionData, initialValue);
+  questionData.value = {
+    point: 0,
+    text: "",
+    answer: "",
+    category: "HTML",
+    id: 0,
+  };
 }
 </script>
 <template>
@@ -56,6 +51,7 @@ function resetForm() {
 
     <!-- Modal -->
     <div
+      @click.self="resetForm"
       class="modal fade"
       id="exampleModal"
       tabindex="-1"
@@ -63,7 +59,7 @@ function resetForm() {
       aria-hidden="true"
     >
       <div class="question__modal-container modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content bg-dark text-primary">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Question form</h5>
             <button
@@ -81,7 +77,7 @@ function resetForm() {
                 v-model.trim="questionData.point"
                 id="point"
                 placeholder="2"
-                class="form-control"
+                class="form-control border-0 text-secondary"
                 required
               />
               <label for="text" class="form-label">Text:</label>
@@ -90,11 +86,14 @@ function resetForm() {
                 v-model.trim="questionData.text"
                 id="text"
                 placeholder="How to centre div ?"
-                class="form-control"
-                required
+                class="form-control border-0 text-secondary"
               />
               <label for="category" class="form-label">Category:</label>
-              <select v-model="questionData.category" class="form-select">
+              <select
+                id="category"
+                v-model="questionData.category"
+                class="form-select border-0 text-secondary"
+              >
                 <option selected value="HTML">HTML</option>
                 <option
                   v-for="category in categories"
@@ -110,7 +109,7 @@ function resetForm() {
                   id="answer"
                   v-model.trim="questionData.answer"
                   style="height: 100px"
-                  class="form-control"
+                  class="form-control border-0 text-secondary"
                   placeholder="Answer:"
                 ></textarea>
                 <label for="answer">Answer:</label>
@@ -122,10 +121,14 @@ function resetForm() {
                   style="height: 55px"
                   role="alert"
                 >
-                  {{ errors[0] ? errors[0] : "" }}
+                  {{
+                    validator.errors.value[0] ? validator.errors.value[0] : ""
+                  }}
                 </div>
+                <!-- TODO:successAlert -->
                 <div>
                   <button
+                    @click="resetForm"
                     type="button"
                     class="btn btn-secondary me-2"
                     data-bs-dismiss="modal"
