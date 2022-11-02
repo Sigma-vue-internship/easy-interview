@@ -1,9 +1,9 @@
 <template>
   <div>
-    <h1>Question Categories</h1>
+    <CategoriesList />
   </div>
 </template>
 
-<script setup></script>
-
-<style></style>
+<script setup>
+import CategoriesList from "../components/QuestionsComponents/CategoriesList.vue";
+</script>

@@ -1,4 +1,7 @@
 <script setup>
+import EditButton from "../ui/EditButton.vue";
+import DeleteButton from "../ui/DeleteButton.vue";
+
 let singleCandidate = {
   position: "position 1",
   username: "username 1",
@@ -36,10 +39,18 @@ let candidateResults = [
 function resultsID(id) {
   console.log(id);
 }
+
+function editProfile() {
+  console.log("edit button");
+}
+
+function deleteProfile() {
+  console.log("delete button");
+}
 </script>
 
 <template>
-  <div class="container border border-2 border-dark mt-3 rounded-3 p-4">
+  <div class="container border border-2 border-light mt-3 rounded-3 p-4">
     <div class="row">
       <div class="col-12 col-md-6 d-flex justify-content-center">
         <img
@@ -61,18 +72,8 @@ function resultsID(id) {
           />
           {{ singleCandidate.linkedinUrl }}
         </div>
-        <button
-          class="btn border-primary text-primary me-4 rounded-pill"
-          style="width: 6rem"
-        >
-          Edit
-        </button>
-        <button
-          class="btn border-danger text-danger rounded-pill"
-          style="width: 6rem"
-        >
-          Delete
-        </button>
+        <EditButton @click="editProfile" />
+        <DeleteButton @click="deleteProfile" />
       </div>
     </div>
     <p class="text-secondary mt-4">
@@ -83,13 +84,13 @@ function resultsID(id) {
       <h3 class="text-primary">Quiz results</h3>
       <ul class="list-unstyled">
         <li
-          class="my-2 text-secondary"
+          class="my-2 text-secondary candidate_results"
           v-for="result in candidateResults"
           :key="result.id"
         >
           {{ result.title }}
           <button
-            class="btn border-secondary rounded-pill text-secondary ms-3 opacity-75"
+            class="btn btn-outline-secondary rounded-pill ms-3 opacity-75"
             style="width: 7rem"
             @click="resultsID(result.id)"
           >
