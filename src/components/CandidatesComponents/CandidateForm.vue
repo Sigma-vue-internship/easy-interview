@@ -63,6 +63,7 @@ function resetForm() {
             <h5 class="modal-title" id="exampleModalLabel">Candidate form</h5>
             <button
               type="button"
+              @click="resetForm"
               class="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
