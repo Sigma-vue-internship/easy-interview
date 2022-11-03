@@ -1,7 +1,7 @@
 <template>
   <form>
     <div class="row">
-      <div class="col-8">
+      <div class="col-8 ms-md-4">
         <input
           class="form-control text-secondary border-primary"
           type="search"
@@ -12,7 +12,7 @@
       <div class="col-2">
         <button class="btn btn-outline-primary" type="submit">Search</button>
       </div>
-      <div class="col-2">
+      <div class="col-1">
         <div class="dropdown ms-3 ms-md-1">
           <img
             src="../icons/filter.svg"
