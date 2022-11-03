@@ -15,7 +15,7 @@ const isLoading = auth0.isLoading;
   <!-- <RouterLink to="/dashboard">Dashboard</RouterLink>
   <RouterLink to="/categories">Categories</RouterLink> -->
   <SpinnerLoader v-if="isLoading" />
-  <RouterView class="bg-dark" v-else />
+  <RouterView v-else />
 </template>
 
 <style scoped></style>

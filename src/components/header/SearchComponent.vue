@@ -16,7 +16,7 @@
         <div class="dropdown ms-3 ms-md-1">
           <img
             src="../icons/filter.svg"
-            class="dropdown-toggle pt-1"
+            class="dropdown-toggle pt-1 drop_img"
             height="30px"
             type="button"
             id="dropdownMenuButton"

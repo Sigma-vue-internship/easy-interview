@@ -22,7 +22,7 @@ describe("Header.vue", () => {
   it("should call auth0 login", async () => {
     const wrapper = mount(Header);
 
-    const button = wrapper.find("button");
+    const button = wrapper.find(".log_in");
     expect(button.exists()).toBe(true);
 
     await button.trigger("click");

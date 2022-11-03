@@ -84,7 +84,7 @@ function deleteProfile() {
       <h3 class="text-primary">Quiz results</h3>
       <ul class="list-unstyled">
         <li
-          class="my-2 text-secondary candidate_results"
+          class="my-2 text-secondary"
           v-for="result in candidateResults"
           :key="result.id"
         >
