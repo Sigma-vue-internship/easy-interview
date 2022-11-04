@@ -42,5 +42,3 @@ function logoutUser() {
     </nav>
   </header>
 </template>
-
-<style lang="scss"></style>
