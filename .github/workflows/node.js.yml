@@ -34,4 +34,4 @@ jobs:
       run: yarn run lint
 
     - name: Run unit tests
-      run: yarn test:unit --coverage --testResultsProcessor=jest-sonar-reporter
+      run: yarn test:unit --coverage
