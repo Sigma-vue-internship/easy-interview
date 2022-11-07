@@ -31,16 +31,11 @@ jobs:
     - run: npm test
     
     - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+    - name: Install dependencies
+      run: yarn install
 
-      - name: Install dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn install
+    - name: Run linter
+      run: yarn run lint
 
-      - name: Run linter
-        run: yarn run lint
-
-      - name: Run unit tests
-        run: yarn test:unit --coverage --testResultsProcessor=jest-sonar-reporter
+    - name: Run unit tests
+      run: yarn test:unit --coverage --testResultsProcessor=jest-sonar-reporter
