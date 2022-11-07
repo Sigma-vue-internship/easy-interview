@@ -6,22 +6,11 @@ describe("QuestionForm.vue", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
-  it("v-models should assign values to questionData", async () => {
+
+  it("all categories should be rendered", async () => {
     const wrapper = mount(QuestionForm);
-
-    await wrapper.find("#point").setValue(5);
-    await wrapper.find("#text").setValue("text");
-    await wrapper.find("#answer").setValue("answer");
-    await wrapper.find("#category").setValue("HTML");
-
-    expect(wrapper.vm.questionData).toEqual(
-      expect.objectContaining({
-        point: 5,
-        text: "text",
-        answer: "answer",
-        category: "HTML",
-        id: 0,
-      })
-    );
+    const categoriesLength = wrapper.vm.categories.length;
+    const templateLength = wrapper.findAll(".category__option").length;
+    expect(categoriesLength).toEqual(templateLength);
   });
 });

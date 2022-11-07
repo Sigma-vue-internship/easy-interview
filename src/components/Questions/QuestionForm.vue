@@ -1,10 +1,9 @@
 <script setup>
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
-import FormValidator from "../../service/FormValidator";
+import { Field, Form } from "vee-validate";
 
 const categories = ["Vue.js", "Native Java Script", "React"];
-const errors = ref([]);
 
 const questionData = ref({
   point: 0,
@@ -13,29 +12,48 @@ const questionData = ref({
   category: "HTML",
   id: 0,
 });
-const validator = new FormValidator(questionData, "question", errors);
-
-const showErrorAlert = computed(() => {
-  return validator.errors.value.length ? "show" : "";
-});
-
-async function addQuestion() {
-  validator.validateForm();
-
-  if (validator.errors.value.length) return;
+const questionSchema = {
+  point(value) {
+    if (!value) {
+      return "Point field is required";
+    }
+    if (value <= 0) {
+      return "Point field has to be bigger than 0";
+    }
+    return true;
+  },
+  text(value) {
+    if (!value) {
+      return "Text field is required";
+    }
+    if (value.length <= 5) {
+      return "Text has to be bigger than 5 chars";
+    }
+    return true;
+  },
+  category(value) {
+    if (!value) {
+      return "Category field is required";
+    }
+    return true;
+  },
+  answer(value) {
+    if (!value) {
+      return "Answer field is required";
+    }
+    if (value.length <= 5) {
+      return "Answer has to be bigger than 5 chars";
+    }
+    return true;
+  },
+};
+function onSubmit(values, { resetForm }) {
+  console.log(values);
+  questionData.value = { ...values };
   questionData.value.id = uuidv4();
-  console.log(questionData);
+  console.log(questionData.value);
+  // TODO:send candidateData to mockAPI, test api call
   resetForm();
-}
-
-function resetForm() {
-  questionData.value = {
-    point: 0,
-    text: "",
-    answer: "",
-    category: "HTML",
-    id: 0,
-  };
 }
 </script>
 <template>
@@ -51,7 +69,7 @@ function resetForm() {
 
     <!-- Modal -->
     <div
-      @click.self="resetForm"
+      @click.self="this.$refs.form.resetForm"
       class="modal fade"
       id="exampleModal"
       tabindex="-1"
@@ -64,67 +82,74 @@ function resetForm() {
             <h5 class="modal-title" id="exampleModalLabel">Question form</h5>
             <button
               type="button"
-              @click="resetForm"
+              @click="this.$refs.form.resetForm"
               class="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
             ></button>
           </div>
           <div class="modal-body text-start">
-            <form class="needs-validation" @submit.prevent="addQuestion">
+            <Form
+              ref="form"
+              class="needs-validation"
+              @submit="onSubmit"
+              :validation-schema="questionSchema"
+              v-slot="{ errors, resetForm }"
+            >
               <label for="point" class="form-label">Max point:</label>
-              <input
+              <Field
+                name="point"
                 type="number"
-                v-model.trim="questionData.point"
                 id="point"
-                placeholder="2"
+                placeholder="1"
                 class="form-control border-0 text-secondary"
                 required
               />
               <label for="text" class="form-label">Text:</label>
-              <input
+              <Field
+                name="text"
                 type="text"
-                v-model.trim="questionData.text"
                 id="text"
                 placeholder="How to centre div ?"
                 class="form-control border-0 text-secondary"
               />
               <label for="category" class="form-label">Category:</label>
-              <select
-                id="category"
+              <Field
                 v-model="questionData.category"
+                as="select"
+                name="category"
+                id="category"
                 class="form-select border-0 text-secondary"
               >
                 <option selected value="HTML">HTML</option>
                 <option
                   v-for="category in categories"
+                  class="category__option"
                   :key="category"
                   :value="category"
                 >
                   {{ category }}
                 </option>
-              </select>
+              </Field>
               <div class="form-floating my-4">
-                <textarea
+                <Field
+                  as="textarea"
                   name="answer"
                   id="answer"
-                  v-model.trim="questionData.answer"
                   style="height: 100px"
                   class="form-control border-0 text-secondary"
                   placeholder="Answer:"
-                ></textarea>
+                />
                 <label for="answer">Answer:</label>
               </div>
               <div class="modal-footer">
                 <div
                   class="col-12 alert alert-warning fade"
-                  :class="showErrorAlert"
+                  :class="{ show: Object.values(errors).length }"
                   style="height: 55px"
                   role="alert"
                 >
-                  {{
-                    validator.errors.value[0] ? validator.errors.value[0] : ""
-                  }}
+                  {{ Object.values(errors)[0] }}
                 </div>
                 <!-- TODO:successAlert -->
                 <div>
@@ -136,10 +161,16 @@ function resetForm() {
                   >
                     Close
                   </button>
-                  <button class="btn btn-primary">Add question</button>
+                  <button
+                    type="submit"
+                    id="submit__btn"
+                    class="btn btn-primary"
+                  >
+                    Add question
+                  </button>
                 </div>
               </div>
-            </form>
+            </Form>
           </div>
         </div>
       </div>
