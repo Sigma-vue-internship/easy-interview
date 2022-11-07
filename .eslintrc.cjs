@@ -48,6 +48,7 @@ module.exports = {
         trailingComma: "all",
         useTabs: false,
         arrowParens: "avoid",
+      },
     ],
     "prefer-const": "warn", // Suggest using const
     "quote-props": ["warn", "as-needed"], // require quotes around object literal property names
