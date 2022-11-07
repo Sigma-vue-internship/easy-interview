@@ -128,7 +128,7 @@ function categoryTitle(item) {
             class="col-3 text-primary text-center badge bg-light rounded-circle"
             style="width: 2.5rem; height: 2.5rem"
           >
-            <h5 class="questions_quantity">
+            <h5 class="questions-quantity">
               {{ questionsList.filter((obj) => obj.category === item).length }}
             </h5>
           </div>

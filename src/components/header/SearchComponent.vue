@@ -10,7 +10,12 @@
         />
       </div>
       <div class="col-2">
-        <button class="btn btn-outline-primary" type="submit">Search</button>
+        <button 
+          class="btn btn-outline-primary" 
+          type="submit"
+        >
+          Search
+        </button>
       </div>
       <div class="col-1">
         <div class="dropdown ms-3 ms-md-1">
@@ -34,9 +39,12 @@
                   type="checkbox"
                   id="flexSwitchCheckDefault"
                 />
-                <label class="form-check-label" for="flexSwitchCheckDefault"
-                  >Candidates</label
+                <label
+                  class="form-check-label" 
+                  for="flexSwitchCheckDefault"
                 >
+                  Candidates
+                </label>
               </div>
             </li>
             <li>
@@ -46,9 +54,12 @@
                   type="checkbox"
                   id="flexSwitchCheckDefault"
                 />
-                <label class="form-check-label" for="flexSwitchCheckDefault"
-                  >Categories</label
+                <label 
+                  class="form-check-label" 
+                  for="flexSwitchCheckDefault"
                 >
+                  Categories
+                </label>
               </div>
             </li>
             <li>
@@ -58,9 +69,12 @@
                   type="checkbox"
                   id="flexSwitchCheckDefault"
                 />
-                <label class="form-check-label" for="flexSwitchCheckDefault"
-                  >Questions</label
+                <label 
+                  class="form-check-label" 
+                  for="flexSwitchCheckDefault"
                 >
+                  Questions
+                </label>
               </div>
             </li>
           </ul>
