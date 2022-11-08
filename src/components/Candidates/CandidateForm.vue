@@ -49,114 +49,94 @@ function onSubmit(values, { resetForm }) {
 </script>
 <template>
   <div>
-    <button
-      type="button"
-      class="btn btn-primary"
-      data-bs-toggle="modal"
-      data-bs-target="#exampleModal"
-    >
-      Add candidate
-    </button>
-
-    <!-- Modal -->
-    <div
-      class="modal fade"
-      id="exampleModal"
-      @click.self="this.$refs.form.resetForm"
-      tabindex="-1"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content bg-dark text-primary">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Candidate form</h5>
+    <EasyModal>
+      <template #open-btn>Add candidate</template>
+      <template #header>
+        <h5 class="modal-title" id="exampleModalLabel">Candidate form</h5>
+        <button
+          type="button"
+          @click="this.$refs.form.resetForm"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </template>
+      <template #body>
+        <Form
+          ref="form"
+          @submit="onSubmit"
+          :validation-schema="candidateSchema"
+          v-slot="{ errors }"
+        >
+          <label for="position" class="form-label">Position:</label>
+          <Field
+            name="position"
+            type="position"
+            id="position"
+            placeholder="Junior front-end developer"
+            class="form-control border-0 text-secondary"
+          />
+          <label for="username" class="form-label">Username:</label>
+          <Field
+            name="username"
+            type="username"
+            id="username"
+            placeholder="tyler111"
+            class="form-control border-0 text-secondary"
+          />
+          <label for="linkedin" class="form-label">Linkedin:</label>
+          <Field
+            name="linkedin"
+            type="linkedin"
+            id="linkedin"
+            placeholder="https://www.linkedin.com/"
+            class="form-control border-0 text-secondary"
+          />
+          <label for="avatar" class="form-label">Avatar:</label>
+          <Field
+            name="avatar"
+            type="avatar"
+            id="avatar"
+            placeholder="https://myavatar"
+            class="form-control border-0 text-secondary"
+          />
+          <div class="form-floating my-4">
+            <Field
+              as="textarea"
+              name="feedback"
+              id="feedback"
+              style="height: 120px"
+              class="form-control border-0 text-secondary"
+              placeholder="Feedback:"
+            />
+            <label for="feedback">Feedback:</label>
+          </div>
+          <div
+            class="col-12 alert alert-warning fade text-start"
+            :class="{ show: Object.values(errors).length }"
+            style="height: 55px"
+            role="alert"
+          >
+            {{ Object.values(errors)[0] }}
+          </div>
+          <div class="pt-2 d-flex justify-content-end">
             <button
               type="button"
-              @click="this.$refs.form.resetForm"
-              class="btn-close"
+              @click.self="this.$refs.form.resetForm"
+              class="btn btn-secondary"
               data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+            >
+              Close
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary candidate__submit-btn ms-2"
+            >
+              Add candidate
+            </button>
           </div>
-          <Form
-            ref="form"
-            @submit="onSubmit"
-            :validation-schema="candidateSchema"
-            v-slot="{ errors, resetForm }"
-          >
-            <div class="modal-body text-start">
-              <label for="position" class="form-label">Position:</label>
-              <Field
-                name="position"
-                type="position"
-                id="position"
-                placeholder="Junior front-end developer"
-                class="form-control border-0 text-secondary"
-              />
-              <label for="username" class="form-label">Username:</label>
-              <Field
-                name="username"
-                type="username"
-                id="username"
-                placeholder="tyler111"
-                class="form-control border-0 text-secondary"
-              />
-              <label for="linkedin" class="form-label">Linkedin:</label>
-              <Field
-                name="linkedin"
-                type="linkedin"
-                id="linkedin"
-                placeholder="https://www.linkedin.com/"
-                class="form-control border-0 text-secondary"
-              />
-              <label for="avatar" class="form-label">Avatar:</label>
-              <Field
-                name="avatar"
-                type="avatar"
-                id="avatar"
-                placeholder="https://myavatar"
-                class="form-control border-0 text-secondary"
-              />
-              <div class="form-floating my-4">
-                <Field
-                  as="textarea"
-                  name="feedback"
-                  id="feedback"
-                  style="height: 120px"
-                  class="form-control border-0 text-secondary"
-                  placeholder="Feedback:"
-                />
-                <label for="feedback">Feedback:</label>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <div
-                class="col-12 alert alert-warning fade text-start"
-                :class="{ show: Object.values(errors).length }"
-                style="height: 55px"
-                role="alert"
-              >
-                {{ Object.values(errors)[0] }}
-              </div>
-              <button
-                type="button"
-                @click.self="resetForm"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button
-                type="submit"
-                class="btn btn-primary candidate__submit-btn"
-              >
-                Add candidate
-              </button>
-            </div>
-          </Form>
-        </div>
-      </div>
-    </div>
+        </Form>
+      </template>
+    </EasyModal>
   </div>
 </template>
