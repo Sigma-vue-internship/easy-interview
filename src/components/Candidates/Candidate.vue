@@ -57,7 +57,6 @@ function deleteProfile() {
           :src="singleCandidate.avatarUrl"
           alt="candidateAvatar"
           class="img-fluid"
-          max-height="350px"
         />
       </div>
       <div class="col-12 col-md-6 text-center">
@@ -67,8 +66,7 @@ function deleteProfile() {
           <img
             src="../icons/linkedin.svg"
             alt="linkedin"
-            class="me-2"
-            style="width: 2rem"
+            class="me-2 linkedin-logo"
           />
           {{ singleCandidate.linkedinUrl }}
         </div>
@@ -90,8 +88,7 @@ function deleteProfile() {
         >
           {{ result.title }}
           <button
-            class="btn btn-outline-secondary rounded-pill ms-3 opacity-75"
-            style="width: 7rem"
+            class="btn btn-outline-secondary rounded-pill ms-3 opacity-75 show-more"
             @click="resultsID(result.id)"
           >
             show full
@@ -101,3 +98,17 @@ function deleteProfile() {
     </div>
   </div>
 </template>
+
+<style class="scoped">
+.img-fluid {
+  max-height: 350px;
+}
+
+.linkedin-logo {
+  width: 2rem;
+}
+
+.show-more {
+  width: 7rem;
+}
+</style>

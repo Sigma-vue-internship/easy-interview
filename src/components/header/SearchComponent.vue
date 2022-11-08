@@ -23,7 +23,6 @@
             src="../icons/filter.svg"
             alt="filter"
             class="dropdown-toggle pt-1 drop_img"
-            height="30px"
             type="button"
             id="dropdownMenuButton"
             data-bs-toggle="dropdown"
@@ -83,3 +82,9 @@
     </div>
   </form>
 </template>
+
+<style class="scoped">
+#dropdownMenuButton {
+  height: 2rem;
+}
+</style>

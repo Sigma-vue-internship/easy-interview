@@ -113,7 +113,6 @@ function categoryTitle(item) {
     <ul class="list-unstyled mt-5">
       <li
         class="border border-light mt-4 p-2 rounded-3 mx-auto shadow"
-        style="cursor: pointer"
         v-for="item in categoriesList"
         :key="item"
         @click="categoryTitle(item)"
@@ -125,8 +124,7 @@ function categoryTitle(item) {
             </h5>
           </div>
           <div
-            class="col-3 text-primary text-center badge bg-light rounded-circle"
-            style="width: 2.5rem; height: 2.5rem"
+            class="col-3 text-primary text-center badge bg-light rounded-circle quantity-background"
           >
             <h5 class="questions-quantity">
               {{ questionsList.filter((obj) => obj.category === item).length }}
@@ -137,3 +135,14 @@ function categoryTitle(item) {
     </ul>
   </div>
 </template>
+
+<style class="scoped">
+li {
+  cursor: pointer;
+}
+
+.row .quantity-background {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+</style>
