@@ -22,7 +22,7 @@
           <img
             src="../icons/filter.svg"
             alt="filter"
-            class="dropdown-toggle pt-1 drop_img"
+            class="dropdown-toggle pt-1 drop-img"
             type="button"
             id="dropdownMenuButton"
             data-bs-toggle="dropdown"

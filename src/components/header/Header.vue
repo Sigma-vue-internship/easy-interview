@@ -20,14 +20,14 @@ function logoutUser() {
         <img src="../icons/easylogo.svg" alt="logo" height="30" class="my-1" />
         <SearchComponent class="w-50 d-none d-lg-block ms-auto" />
         <button
-          class="btn btn-outline-primary rounded-3 log_in"
+          class="btn btn-outline-primary rounded-3 log-in"
           v-if="!isUserAuthenticated"
           @click="login"
         >
           Log in
         </button>
         <button
-          class="btn btn-outline-secondary rounded-3 log_out"
+          class="btn btn-outline-secondary rounded-3 log-out"
           v-else
           @click="logoutUser"
         >
