@@ -4,14 +4,15 @@ import { required, minLength, maxLength } from "@vuelidate/validators";
 import { v4 as uuidv4 } from "uuid";
 import useValidate from "../service/useValidate";
 
-const candidateData = ref({
+const initState = {
   position: "",
   username: "",
   linkedinUrl: "",
   feedback: "",
   avatarUrl: "",
   id: 0,
-});
+};
+const candidateData = ref(initState);
 const rules = {
   position: { required, minLength: minLength(5), maxLength: maxLength(50) },
   username: { required, minLength: minLength(5), maxLength: maxLength(50) },
@@ -20,14 +21,7 @@ const rules = {
 const { formErrorMessage, v$ } = useValidate(rules, candidateData);
 
 function resetForm() {
-  candidateData.value = {
-    position: "",
-    username: "",
-    linkedinUrl: "",
-    feedback: "",
-    avatarUrl: "",
-    id: 0,
-  };
+  candidateData.value = initState;
   v$.value.$errors = [];
 }
 

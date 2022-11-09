@@ -12,13 +12,15 @@ import useValidate from "../service/useValidate";
 
 const categories = ["Vue.js", "Native Java Script", "React"];
 
-const questionData = ref({
+const initState = {
   point: 0,
   text: "",
   answer: "",
   category: "HTML",
   id: 0,
-});
+};
+
+const questionData = ref(initState);
 const rules = {
   point: { required, minValue: minValue(1), maxValue: maxValue(5) },
   text: { required, minLength: minLength(5), maxLength: maxLength(50) },
@@ -28,13 +30,7 @@ const rules = {
 const { formErrorMessage, v$ } = useValidate(rules, questionData);
 
 function resetForm() {
-  questionData.value = {
-    point: 0,
-    text: "",
-    answer: "",
-    category: "HTML",
-    id: 0,
-  };
+  questionData.value = initState;
   v$.value.$errors = [];
 }
 
