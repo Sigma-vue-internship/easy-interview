@@ -70,11 +70,12 @@ function deleteProfile() {
       <div class="col-12 col-lg-7 text-center text-lg-start">
         <h2 class="text-primary">{{ singleCandidate.username }}</h2>
         <h3 class="text-secondary">{{ singleCandidate.position }}</h3>
-        <div class="text-secondary my-4">
-          <img
-            src="../icons/linkedin.svg"
-            alt="linkedin"
-            class="me-2 linkedin-logo"
+        <div
+          class="text-secondary my-4 d-flex align-items-center justify-content-center justify-content-lg-start"
+        >
+          <font-awesome-icon
+            icon="fa-brands fa-linkedin"
+            class="text-primary me-2"
           />
           {{ singleCandidate.linkedinUrl }}
         </div>
@@ -112,8 +113,8 @@ function deleteProfile() {
   max-height: 350px;
 }
 
-.linkedin-logo {
-  width: 2rem;
+.fa-linkedin {
+  height: 2rem;
 }
 
 .show-more {

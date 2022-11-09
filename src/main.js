@@ -8,6 +8,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 import "./assets/scss/custom.scss";
 import components from "@/components/common";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import { faLinkedin } from "@fortawesome/free-brands-svg-icons"
+
+library.add(faFilter, faLinkedin);
 
 const app = createApp(App);
 app.use(router);
@@ -26,4 +32,4 @@ components.forEach((component) => {
   app.component(component.name, component);
 });
 
-app.mount("#app");
+app.component("font-awesome-icon", FontAwesomeIcon).mount("#app");

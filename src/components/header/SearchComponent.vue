@@ -19,14 +19,12 @@
       </div>
       <div class="col-1">
         <div class="dropdown ms-3 ms-md-1">
-          <img
-            src="../icons/filter.svg"
-            alt="filter"
-            class="dropdown-toggle pt-1 drop-img"
+          <font-awesome-icon 
+            icon="fa-solid fa-filter"
+            class="dropdown-toggle pt-1 drop-img text-primary"
             type="button"
             id="dropdownMenuButton"
-            data-bs-toggle="dropdown"
-          />
+            data-bs-toggle="dropdown"/>
           <ul
             class="dropdown-menu p-2 bg-secondary"
             aria-labelledby="dropdownMenuButton"
