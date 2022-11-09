@@ -1,7 +1,14 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
-import { Field, Form } from "vee-validate";
+import {
+  required,
+  maxValue,
+  minValue,
+  minLength,
+  maxLength,
+} from "@vuelidate/validators";
+import useVuelidate from "@vuelidate/core";
 
 const categories = ["Vue.js", "Native Java Script", "React"];
 
@@ -12,45 +19,37 @@ const questionData = ref({
   category: "HTML",
   id: 0,
 });
-const questionSchema = {
-  point(value) {
-    if (!value) {
-      return "Point field is required";
-    }
-    if (value <= 0) {
-      return "Point field has to be bigger than 0";
-    }
-    return true;
-  },
-  text(value) {
-    if (!value) {
-      return "Text field is required";
-    }
-    if (value.length <= 5) {
-      return "Text has to be bigger than 5 chars";
-    }
-    return true;
-  },
-  category(value) {
-    if (!value) {
-      return "Category field is required";
-    }
-    return true;
-  },
-  answer(value) {
-    if (!value) {
-      return "Answer field is required";
-    }
-    if (value.length <= 5) {
-      return "Answer has to be bigger than 5 chars";
-    }
-    return true;
-  },
+const rules = {
+  point: { required, minValue: minValue(1), maxValue: maxValue(5) },
+  text: { required, minLength: minLength(5), maxLength: maxLength(50) },
+  category: { required },
+  answer: { required, minLength: minLength(5), maxLength: maxLength(50) },
 };
 
-function onSubmit(values, { resetForm }) {
-  console.log(values);
-  questionData.value = { ...values };
+const formErrorMessage = computed(() => {
+  if (v$.value.$errors.length && v$.value.$errors[0].$property) {
+    return `${v$.value.$errors[0].$property}: ${v$.value.$errors[0].$message}`;
+  }
+  return "";
+});
+
+const v$ = useVuelidate(rules, questionData);
+
+function resetForm() {
+  questionData.value = {
+    point: 0,
+    text: "",
+    answer: "",
+    category: "HTML",
+    id: 0,
+  };
+  v$.value.$errors = [];
+}
+
+async function onSubmit() {
+  const isFormCorrect = await v$.value.$validate();
+  if (!isFormCorrect) return;
+
   questionData.value.id = uuidv4();
   console.log(questionData.value);
   // TODO:send candidateData to mockAPI, test api call
@@ -64,22 +63,17 @@ function onSubmit(values, { resetForm }) {
       <h5 class="modal-title" id="exampleModalLabel">Question form</h5>
       <button
         type="button"
-        @click="this.$refs.form.resetForm"
+        @click="resetForm"
         class="btn-close"
         data-bs-dismiss="modal"
         aria-label="Close"
       ></button>
     </template>
     <template #body>
-      <Form
-        ref="form"
-        class="needs-validation"
-        @submit="onSubmit"
-        :validation-schema="questionSchema"
-        v-slot="{ errors }"
-      >
+      <form class="needs-validation" @submit.prevent="onSubmit">
         <label for="point" class="form-label">Max point:</label>
-        <Field
+        <input
+          v-model="questionData.point"
           name="point"
           type="number"
           id="point"
@@ -88,7 +82,8 @@ function onSubmit(values, { resetForm }) {
           required
         />
         <label for="text" class="form-label">Text:</label>
-        <Field
+        <input
+          v-model="questionData.text"
           name="text"
           type="text"
           id="text"
@@ -96,9 +91,8 @@ function onSubmit(values, { resetForm }) {
           class="form-control border-0 text-secondary"
         />
         <label for="category" class="form-label">Category:</label>
-        <Field
+        <select
           v-model="questionData.category"
-          as="select"
           name="category"
           id="category"
           class="form-select border-0 text-secondary"
@@ -112,10 +106,10 @@ function onSubmit(values, { resetForm }) {
           >
             {{ category }}
           </option>
-        </Field>
+        </select>
         <div class="form-floating my-4">
-          <Field
-            as="textarea"
+          <textarea
+            v-model="questionData.answer"
             name="answer"
             id="answer"
             style="height: 100px"
@@ -126,17 +120,17 @@ function onSubmit(values, { resetForm }) {
         </div>
         <div
           class="col-12 alert alert-warning fade text-start"
-          :class="{ show: Object.values(errors).length }"
+          :class="{ show: formErrorMessage }"
           style="height: 55px"
           role="alert"
         >
           <!-- TODO:successAlert -->
-          {{ Object.values(errors)[0] }}
+          {{ formErrorMessage }}
         </div>
         <div class="pt-2 d-flex justify-content-end">
           <button
             type="button"
-            @click.self="this.$refs.form.resetForm"
+            @click.self="resetForm"
             class="btn btn-secondary"
             data-bs-dismiss="modal"
           >
@@ -149,7 +143,7 @@ function onSubmit(values, { resetForm }) {
             Add question
           </button>
         </div>
-      </Form>
+      </form>
     </template>
   </EasyModal>
 </template>
