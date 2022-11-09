@@ -7,6 +7,7 @@ import App from "./App.vue";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 import "./assets/scss/custom.scss";
+import components from "@/components/common";
 
 const app = createApp(App);
 app.use(router);
@@ -20,5 +21,9 @@ app.use(
 );
 
 app.use(createPinia());
+
+components.forEach((component) => {
+  app.component(component.name, component);
+});
 
 app.mount("#app");
