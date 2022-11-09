@@ -1,6 +1,6 @@
 <script setup>
-import EditButton from "../ui/EditButton.vue";
-import DeleteButton from "../ui/DeleteButton.vue";
+import EditButton from "../common/EditButton.vue";
+import DeleteButton from "../common/DeleteButton.vue";
 
 let questionsList = [
   {
