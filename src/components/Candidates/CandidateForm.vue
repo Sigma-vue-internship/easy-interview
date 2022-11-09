@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref } from "vue";
-import { useVuelidate } from "@vuelidate/core";
+import { ref } from "vue";
 import { required, minLength, maxLength } from "@vuelidate/validators";
 import { v4 as uuidv4 } from "uuid";
+import useValidate from "../service/useValidate";
 
 const candidateData = ref({
   position: "",
@@ -17,15 +17,7 @@ const rules = {
   username: { required, minLength: minLength(5), maxLength: maxLength(50) },
   feedback: { required, minLength: minLength(5), maxLength: maxLength(150) },
 };
-
-const formErrorMessage = computed(() => {
-  if (v$.value.$errors.length && v$.value.$errors[0].$property) {
-    return `${v$.value.$errors[0].$property}: ${v$.value.$errors[0].$message}`;
-  }
-  return "";
-});
-
-const v$ = useVuelidate(rules, candidateData);
+const { formErrorMessage, v$ } = useValidate(rules, candidateData);
 
 function resetForm() {
   candidateData.value = {

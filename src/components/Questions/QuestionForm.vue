@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import {
   required,
@@ -8,7 +8,7 @@ import {
   minLength,
   maxLength,
 } from "@vuelidate/validators";
-import useVuelidate from "@vuelidate/core";
+import useValidate from "../service/useValidate";
 
 const categories = ["Vue.js", "Native Java Script", "React"];
 
@@ -25,15 +25,7 @@ const rules = {
   category: { required },
   answer: { required, minLength: minLength(5), maxLength: maxLength(50) },
 };
-
-const formErrorMessage = computed(() => {
-  if (v$.value.$errors.length && v$.value.$errors[0].$property) {
-    return `${v$.value.$errors[0].$property}: ${v$.value.$errors[0].$message}`;
-  }
-  return "";
-});
-
-const v$ = useVuelidate(rules, questionData);
+const { formErrorMessage, v$ } = useValidate(rules, questionData);
 
 function resetForm() {
   questionData.value = {
