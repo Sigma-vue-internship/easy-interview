@@ -1,6 +1,6 @@
 <script setup>
-import EditButton from "../ui/EditButton.vue";
-import DeleteButton from "../ui/DeleteButton.vue";
+import EditButton from "../common/EditButton.vue";
+import DeleteButton from "../common/DeleteButton.vue";
 
 let singleCandidate = {
   position: "position 1",
@@ -34,6 +34,14 @@ let candidateResults = [
     id: "5",
     candidateId: "1",
   },
+  {
+    questionAnswer: [],
+    startedAt: 1666958718,
+    endedAt: 1666958718,
+    title: "title 8",
+    id: "5523",
+    candidateId: "1",
+  },
 ];
 
 function resultsID(id) {
@@ -52,14 +60,14 @@ function deleteProfile() {
 <template>
   <div class="container border border-2 border-light mt-3 rounded-3 p-4">
     <div class="row">
-      <div class="col-12 col-md-6 d-flex justify-content-center">
+      <div class="col-12 col-lg-5 d-flex justify-content-center">
         <img
           :src="singleCandidate.avatarUrl"
           alt="candidateAvatar"
           class="img-fluid"
         />
       </div>
-      <div class="col-12 col-md-6 text-center">
+      <div class="col-12 col-lg-7 text-center text-lg-start">
         <h2 class="text-primary">{{ singleCandidate.username }}</h2>
         <h3 class="text-secondary">{{ singleCandidate.position }}</h3>
         <div class="text-secondary my-4">
@@ -72,17 +80,17 @@ function deleteProfile() {
         </div>
         <EditButton @click="editProfile" />
         <DeleteButton @click="deleteProfile" />
+        <p class="text-secondary mt-4">
+          <span class="text-primary">Feedback:</span>
+          {{ singleCandidate.feedback }}
+        </p>
       </div>
     </div>
-    <p class="text-secondary mt-4">
-      <span class="text-primary ps-5">Feedback:</span>
-      {{ singleCandidate.feedback }}
-    </p>
-    <div class="text-center">
-      <h3 class="text-primary">Quiz results</h3>
-      <ul class="list-unstyled">
+    <div class="text-center mt-4">
+      <h3 class="text-primary mb-3">Quiz results</h3>
+      <ul class="list-unstyled row">
         <li
-          class="my-2 text-secondary"
+          class="my-2 text-secondary col-12 col-md-6 col-lg-4"
           v-for="result in candidateResults"
           :key="result.id"
         >
