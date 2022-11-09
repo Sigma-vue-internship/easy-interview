@@ -1,4 +1,6 @@
 <script setup>
+import CandidateForm from "./CandidateForm.vue";
+
 const candidatesList = [
   {
     position: "position 1",
@@ -283,15 +285,23 @@ const candidatesList = [
 </script>
 <template>
   <div class="container pt-4">
-    <h1 class="mb-3 text-center text-md-start">Candidates</h1>
+    <div class="row mb-3 align-items-center">
+      <h1
+        class="col-lg-2 mb-md-4 mb-lg-0 col-xl-2 col-xxl-2 text-center text-md-start text-primary"
+      >
+        Candidates
+      </h1>
+      <CandidateForm
+        class="col-lg-2 my-xs-4 my-lg-0 ms-lg-5 ms-xl-4 ms-xxl-0 text-center text-md-start"
+      />
+    </div>
     <ul class="list-unstyled row g-md-4 g-lg-4 g-2">
       <li
-        class="col-8 col-md-4 col-lg-3 mx-auto mx-md-0 mb-3 mb-md-0 text-center text-primary"
-        styles="height: 4rem"
+        class="col-8 col-md-4 col-lg-3 mx-auto mx-md-0 mb-3 mb-md-0 text-center text-primary candidate__item"
         v-for="candidate in candidatesList"
         :key="candidate.id"
       >
-        <div class="card border border-secondary rounded-3 bg-dark">
+        <div class="card rounded-3 bg-dark">
           <img
             class="card-img-top"
             :src="candidate.avatarUrl"

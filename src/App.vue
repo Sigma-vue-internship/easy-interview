@@ -12,10 +12,8 @@ const isLoading = auth0.isLoading;
   <Header
     class="border border-top-0 border-start-0 border-end-0 border-secondary"
   />
-  <!-- <RouterLink to="/dashboard">Dashboard</RouterLink>
-  <RouterLink to="/categories">Categories</RouterLink> -->
   <SpinnerLoader v-if="isLoading" />
-  <RouterView class="bg-dark" v-else />
+  <RouterView v-else />
 </template>
 
 <style scoped></style>
