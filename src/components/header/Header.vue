@@ -1,6 +1,6 @@
 <script setup>
 import { useAuth0 } from "@auth0/auth0-vue";
-import BrandIcon from "../icons/BrandIcon.vue";
+import SearchComponent from "./SearchComponent.vue";
 const auth0 = useAuth0();
 
 const isUserAuthenticated = auth0.isAuthenticated;
@@ -15,18 +15,30 @@ function logoutUser() {
 </script>
 <template>
   <header>
-    <nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar navbar-light bg-light">
       <div class="container">
-        <BrandIcon class="brand_icon" />
-        <button v-if="!isUserAuthenticated" @click="login">Log in</button>
-        <button v-else @click="logoutUser">Log out</button>
+        <img src="../icons/easylogo.svg" alt="logo" height="30" class="my-1" />
+        <SearchComponent class="w-50 d-none d-lg-block ms-auto" />
+        <button
+          class="btn btn-outline-primary rounded-3 log-in"
+          v-if="!isUserAuthenticated"
+          @click="login"
+        >
+          Log in
+        </button>
+        <button
+          class="btn btn-outline-secondary rounded-3 log-out"
+          v-else
+          @click="logoutUser"
+        >
+          Log out
+        </button>
+        <div
+          class="col-12 mt-2 d-block d-lg-none d-flex justify-content-evenly"
+        >
+          <SearchComponent class="w-100" />
+        </div>
       </div>
     </nav>
   </header>
 </template>
-
-<style lang="scss">
-.brand_icon {
-  width: 140px;
-}
-</style>
