@@ -1,93 +1,19 @@
 <script setup>
 import EditButton from "../common/EditButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
+import { useQuestionStore } from "../../stores/questions";
+import { ref } from "vue";
+import { useRoute } from "vue-router";
 
-let questionsList = [
-  {
-    point: 99,
-    text: "text 1",
-    answer: "answer 1",
-    category: "1",
-    id: "1",
-  },
-  {
-    point: 15,
-    text: "text 2",
-    answer: "answer 2",
-    category: "2",
-    id: "2",
-  },
-  {
-    point: 70,
-    text: "text 3",
-    answer: "answer 3",
-    category: "3",
-    id: "3",
-  },
-  {
-    point: 5,
-    text: "text 4",
-    answer: "answer 4",
-    category: "4",
-    id: "4",
-  },
-  {
-    point: 77,
-    text: "text 6",
-    answer: "answer 6",
-    category: "6",
-    id: "6",
-  },
-  {
-    point: 32,
-    text: "text 7",
-    answer: "answer 7",
-    category: "7",
-    id: "7",
-  },
-  {
-    point: 84,
-    text: "text 8",
-    answer: "answer 8",
-    category: "8",
-    id: "8",
-  },
-  {
-    point: 69,
-    text: "text 9",
-    answer: "answer 9",
-    category: "9",
-    id: "9",
-  },
-  {
-    point: 11,
-    text: "text 10",
-    answer: "answer 10",
-    category: "10",
-    id: "10",
-  },
-  {
-    point: 12,
-    text: "text 11",
-    answer: "answer 11",
-    category: "11",
-    id: "11",
-  },
-  {
-    point: 78,
-    text: "text 12",
-    answer: "answer 12",
-    category: "12",
-    id: "12",
-  },
-  {
-    point: 19,
-    text: "text 13",
-    answer: "answer 13",
-    category: "13",
-    id: "13",
-  },
-];
+const questionsList = ref([]);
+async function getQuestions() {
+  const route = useRoute();
+  const { getAllQuestions } = useQuestionStore();
+  const { data } = await getAllQuestions(route.params.title);
+  questionsList.value = [...data];
+}
+
+getQuestions();
 
 function editQuestion() {
   console.log("edit button");
