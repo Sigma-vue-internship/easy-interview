@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { computed, onUpdated, ref } from "vue";
 import { required, minLength, maxLength } from "@vuelidate/validators";
 import { v4 as uuidv4 } from "uuid";
 import useValidate from "../service/useValidate";
@@ -12,21 +12,25 @@ const initState = {
   avatarUrl: "",
   id: 0,
 };
-const candidateData = ref(initState);
+const candidateData = ref({ ...initState });
 const rules = {
   position: { required, minLength: minLength(5), maxLength: maxLength(50) },
   username: { required, minLength: minLength(5), maxLength: maxLength(50) },
   feedback: { required, minLength: minLength(5), maxLength: maxLength(150) },
 };
-const { formErrorMessage, v$ } = useValidate(rules, candidateData);
+const { v$ } = useValidate(rules, candidateData);
 
 function resetForm() {
-  candidateData.value = initState;
-  v$.value.$errors = [];
+  candidateData.value = { ...initState };
+  v$.value.$reset();
+  // v$.value.$errors = [];
+  // v$.value.$error = false;
+  console.log(v$.value);
 }
 
 async function onSubmit() {
   const isFormCorrect = await v$.value.$validate();
+  console.log(v$.value.$errors);
   if (!isFormCorrect) return;
   candidateData.value.id = uuidv4();
   console.log(candidateData.value);
@@ -59,6 +63,11 @@ async function onSubmit() {
             placeholder="Junior front-end developer"
             class="form-control border-0 text-secondary"
           />
+          <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
+            <span v-if="v$.position.$error">{{
+              v$.position.$errors[0].$message
+            }}</span>
+          </p>
           <label for="username" class="form-label">Username:</label>
           <input
             v-model="candidateData.username"
@@ -68,6 +77,11 @@ async function onSubmit() {
             placeholder="tyler111"
             class="form-control border-0 text-secondary"
           />
+          <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
+            <span v-if="v$.username.$error">{{
+              v$.username.$errors[0].$message
+            }}</span>
+          </p>
           <label for="linkedin" class="form-label">Linkedin:</label>
           <input
             v-model="candidateData.linkedinUrl"
@@ -75,7 +89,7 @@ async function onSubmit() {
             type="linkedin"
             id="linkedin"
             placeholder="https://www.linkedin.com/"
-            class="form-control border-0 text-secondary"
+            class="form-control border-0 text-secondary mb-4"
           />
           <label for="avatar" class="form-label">Avatar:</label>
           <input
@@ -96,14 +110,11 @@ async function onSubmit() {
               placeholder="Feedback:"
             />
             <label for="feedback">Feedback:</label>
-          </div>
-          <div
-            class="col-12 alert alert-warning fade text-start"
-            :class="{ show: formErrorMessage }"
-            style="height: 55px"
-            role="alert"
-          >
-            {{ formErrorMessage }}
+            <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
+              <span v-if="v$.feedback.$error">{{
+                v$.feedback.$errors[0].$message
+              }}</span>
+            </p>
           </div>
           <div class="pt-2 d-flex justify-content-end">
             <button
