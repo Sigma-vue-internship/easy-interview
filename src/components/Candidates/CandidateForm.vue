@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onUpdated, ref } from "vue";
+import { ref } from "vue";
 import { required, minLength, maxLength } from "@vuelidate/validators";
 import { v4 as uuidv4 } from "uuid";
 import useValidate from "../service/useValidate";
@@ -23,9 +23,6 @@ const { v$ } = useValidate(rules, candidateData);
 function resetForm() {
   candidateData.value = { ...initState };
   v$.value.$reset();
-  // v$.value.$errors = [];
-  // v$.value.$error = false;
-  console.log(v$.value);
 }
 
 async function onSubmit() {
