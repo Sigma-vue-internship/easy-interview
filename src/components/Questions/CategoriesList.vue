@@ -1,4 +1,5 @@
 <script setup>
+import { useRouter } from "vue-router";
 let categoriesList = [
   "HTML",
   "CSS",
@@ -102,8 +103,15 @@ let questionsList = [
   },
 ];
 
-function categoryTitle(item) {
-  console.log(item);
+const router = useRouter();
+
+function pushRoute(item) {
+  router.push({
+    name: "category",
+    params: {
+      title: item,
+    },
+  });
 }
 </script>
 
@@ -115,7 +123,7 @@ function categoryTitle(item) {
         class="border border-light mt-4 p-2 rounded-3 mx-auto shadow"
         v-for="item in categoriesList"
         :key="item"
-        @click="categoryTitle(item)"
+        @click="pushRoute(item)"
       >
         <div class="row">
           <div class="col-9">
