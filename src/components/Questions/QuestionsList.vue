@@ -103,7 +103,7 @@ function deleteQuestion() {
     <h2 class="text-primary">Category</h2>
     <ul class="list-unstyled">
       <li
-        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow"
+        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow-sm"
         v-for="item in questionsList"
         :key="item.id"
       >

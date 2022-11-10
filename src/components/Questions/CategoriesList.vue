@@ -120,7 +120,7 @@ function pushRoute(item) {
     <h2 class="text-primary">Categories List</h2>
     <ul class="list-unstyled mt-5">
       <li
-        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow"
+        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow-sm"
         v-for="item in categoriesList"
         :key="item"
         @click="pushRoute(item)"
