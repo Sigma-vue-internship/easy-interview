@@ -9,9 +9,7 @@ const isLoading = auth0.isLoading;
 </script>
 
 <template>
-  <Header
-    class="border border-top-0 border-start-0 border-end-0 border-secondary"
-  />
+  <Header />
   <SpinnerLoader v-if="isLoading" />
   <RouterView v-else />
 </template>
