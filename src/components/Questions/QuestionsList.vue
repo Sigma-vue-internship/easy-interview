@@ -1,27 +1,24 @@
 <script setup>
+import { useRoute } from "vue-router";
+import { useQuestionStore } from "../../stores/questions";
 import EditButton from "../common/EditButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
-import { useQuestionStore } from "../../stores/questions";
-import { ref } from "vue";
-import { useRoute } from "vue-router";
+import { onMounted, ref } from "vue";
 
 const questionsList = ref([]);
-async function getQuestions() {
-  const route = useRoute();
-  const { getAllQuestions } = useQuestionStore();
-  const { data } = await getAllQuestions(route.params.title);
-  questionsList.value = [...data];
-}
+const route = useRoute();
 
-getQuestions();
+onMounted(async () => {
+  try {
+    console.log("Component: ", route);
 
-function editQuestion() {
-  console.log("edit button");
-}
-
-function deleteQuestion() {
-  console.log("delete button");
-}
+    const { getAllQuestions } = useQuestionStore();
+    const { data } = await getAllQuestions(route.params.title);
+    questionsList.value = [...data];
+  } catch (e) {
+    console.log(e);
+  }
+});
 </script>
 
 <template>
