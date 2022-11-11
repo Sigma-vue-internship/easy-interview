@@ -100,7 +100,7 @@ let quizResults = [
         :key="item.id"
       >
         <div class="row">
-          <h4 class="text-center">{{ item.title }}</h4>
+          <h4 class="text-center text-lg-start">{{ item.title }}</h4>
         </div>
         <div class="row text-center text-lg-start">
           <div class="col-12 col-lg-6">
