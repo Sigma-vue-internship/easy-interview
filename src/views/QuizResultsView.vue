@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import ResultsList from "../components/Results/ResultsList.vue";
+import ResultsList from "../components/results/ResultsList.vue";
 </script>
 
 <style></style>
