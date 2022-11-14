@@ -22,7 +22,7 @@ describe("QuestionsList.vue", () => {
   it("should render all questions", async () => {
     const wrapper = mount(QuestionsList, {
       global: {
-        plugins: [createTestingPinia(), useRoute()],
+        plugins: [createTestingPinia()],
       },
     });
     const { getAllQuestions } = useQuestionStore();
