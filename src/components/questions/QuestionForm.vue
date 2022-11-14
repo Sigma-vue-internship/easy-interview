@@ -20,18 +20,18 @@ const initState = {
   id: 0,
 };
 
-const questionData = ref(initState);
+const questionData = ref({ ...initState });
 const rules = {
   point: { required, minValue: minValue(1), maxValue: maxValue(5) },
   text: { required, minLength: minLength(5), maxLength: maxLength(50) },
   category: { required },
   answer: { required, minLength: minLength(5), maxLength: maxLength(50) },
 };
-const { formErrorMessage, v$ } = useValidate(rules, questionData);
+const { v$ } = useValidate(rules, questionData);
 
 function resetForm() {
-  questionData.value = initState;
-  v$.value.$errors = [];
+  questionData.value = { ...initState };
+  v$.value.$reset();
 }
 
 async function onSubmit() {
@@ -69,6 +69,9 @@ async function onSubmit() {
           class="form-control border-0 text-secondary"
           required
         />
+        <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
+          <span v-if="v$.point.$error">{{ v$.point.$errors[0].$message }}</span>
+        </p>
         <label for="text" class="form-label">Text:</label>
         <input
           v-model="questionData.text"
@@ -78,6 +81,9 @@ async function onSubmit() {
           placeholder="How to centre div ?"
           class="form-control border-0 text-secondary"
         />
+        <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
+          <span v-if="v$.text.$error">{{ v$.text.$errors[0].$message }}</span>
+        </p>
         <label for="category" class="form-label">Category:</label>
         <select
           v-model="questionData.category"
@@ -95,6 +101,11 @@ async function onSubmit() {
             {{ category }}
           </option>
         </select>
+        <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
+          <span v-if="v$.category.$error">{{
+            v$.category.$errors[0].$message
+          }}</span>
+        </p>
         <div class="form-floating my-4">
           <textarea
             v-model="questionData.answer"
@@ -106,15 +117,11 @@ async function onSubmit() {
           />
           <label for="answer">Answer:</label>
         </div>
-        <div
-          class="col-12 alert alert-warning fade text-start"
-          :class="{ show: formErrorMessage }"
-          style="height: 55px"
-          role="alert"
-        >
-          <!-- TODO:successAlert -->
-          {{ formErrorMessage }}
-        </div>
+        <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
+          <span v-if="v$.answer.$error">{{
+            v$.answer.$errors[0].$message
+          }}</span>
+        </p>
         <div class="pt-2 d-flex justify-content-end">
           <button
             type="button"
