@@ -1,6 +1,6 @@
 <script setup>
-import EditButton from "../common/EditButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
+import EditQuestionForm from "./EditQuestionForm.vue";
 
 let questionsList = [
   {
@@ -89,10 +89,6 @@ let questionsList = [
   },
 ];
 
-function editQuestion() {
-  console.log("edit button");
-}
-
 function deleteQuestion() {
   console.log("delete button");
 }
@@ -114,7 +110,8 @@ function deleteQuestion() {
             <h5>Score: {{ item.point }}</h5>
           </div>
           <div class="col-6 col-sm-3 col-xl-1 me-xl-2">
-            <EditButton @click="editQuestion" />
+            <EditQuestionForm />
+            <!-- <EditButton @click="editQuestion" /> -->
           </div>
           <div class="col-6 col-sm-3 col-xl-1">
             <DeleteButton @click="deleteQuestion" />
