@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import CandidatesList from "../components/candidates/CandidatesList.vue";
+import CandidatesList from "../components/candidates1/CandidatesList.vue";
 </script>
 
 <style></style>
