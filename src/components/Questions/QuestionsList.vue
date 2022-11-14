@@ -10,8 +10,6 @@ const route = useRoute();
 
 onMounted(async () => {
   try {
-    console.log("Component: ", route);
-
     const { getAllQuestions } = useQuestionStore();
     const { data } = await getAllQuestions(route.params.title);
     questionsList.value = [...data];
