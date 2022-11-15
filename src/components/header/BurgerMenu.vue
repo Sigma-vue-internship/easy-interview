@@ -1,5 +1,5 @@
 <template>
-  <form>
+  <div>
     <font-awesome-icon
       type="button"
       data-bs-toggle="offcanvas"
@@ -51,7 +51,7 @@
         </ul>
       </div>
     </div>
-  </form>
+  </div>
 </template>
 
 <style lang="scss">
