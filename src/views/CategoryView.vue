@@ -5,5 +5,5 @@
 </template>
 
 <script setup>
-import QuestionsList from "../components/Questions/QuestionsList.vue";
+import QuestionsList from "../components/questions/QuestionsList.vue";
 </script>

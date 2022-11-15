@@ -1,3 +1,9 @@
 <template>
-  <h1>123</h1>
+  <div>
+    <SingleResult />
+  </div>
 </template>
+
+<script setup>
+import SingleResult from '../components/results/SingleResult.vue';
+</script>
