@@ -8,6 +8,7 @@ import CategoryView from "../views/CategoryView.vue";
 import QuizView from "../views/QuizView.vue";
 import QuizResultsView from "../views/QuizResultsView.vue";
 import HomeView from "../views/HomeView.vue";
+import QuizConstructorView from "../views/QuizConstructorView.vue";
 
 // const guardedRoutes = [
 //   "dashboard"
@@ -66,6 +67,12 @@ const router = createRouter({
       path: "/results",
       name: "quizResults",
       component: QuizResultsView,
+      beforeEnter: authGuard,
+    },
+    {
+      path: "/constructor",
+      name: "quizConstructor",
+      component: QuizConstructorView,
       beforeEnter: authGuard,
     },
   ],
