@@ -17,13 +17,13 @@ describe("Candidate.vue", () => {
       },
     });
     wrapper.find("#point").setValue("5");
-    wrapper.find("#text").setValue("text123");
+    wrapper.find("#title").setValue("text123");
     wrapper.find("#category").setValue("HTML");
     wrapper.find("#answer").setValue("answer");
 
     expect(wrapper.vm.prevState).toMatchObject({
       point: 5,
-      text: "text123",
+      title: "text123",
       id: 0,
       category: "HTML",
       answer: "answer",

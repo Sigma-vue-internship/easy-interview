@@ -12,7 +12,7 @@ const prevState = ref({});
 
 const initState = {
   point: 0,
-  text: "",
+  title: "",
   answer: "",
   category: "HTML",
   id: 0,
@@ -22,14 +22,14 @@ const categories = ["Vue.js", "Native Java Script", "React"];
 
 const rules = {
   point: { required, minValue: minValue(1), maxValue: maxValue(5) },
-  text: { required, minLength: minLength(5), maxLength: maxLength(50) },
+  title: { required, minLength: minLength(5), maxLength: maxLength(50) },
   category: { required },
   answer: { required, minLength: minLength(5), maxLength: maxLength(50) },
 };
 onMounted(() => {
   prevState.value = {
     point: 3,
-    text: "avcxvxc",
+    title: "avcxvxc",
     answer: "xcvvbn",
     category: "HTML",
     id: 0,
@@ -54,7 +54,7 @@ async function onSubmit() {
   <EasyModal>
     <template #open-btn>Edit question</template>
     <template #header>
-      <h5 class="modal-title" id="exampleModalLabel">Edit form</h5>
+      <h5 class="modal-title" id="exampleModalLab el">Edit form</h5>
       <button
         type="button"
         @click="resetForm"
@@ -65,6 +65,15 @@ async function onSubmit() {
     </template>
     <template #body>
       <form class="needs-validation" @submit.prevent="onSubmit">
+        <label for="title" class="form-label">Title:</label>
+        <textarea
+          v-model="prevState.title"
+          name="title"
+          type="text"
+          id="title"
+          placeholder="How to centre div ?"
+          class="form-control border-0 text-secondary"
+        />
         <label for="point" class="form-label">Max point:</label>
         <input
           v-model="prevState.point"
@@ -78,17 +87,8 @@ async function onSubmit() {
         <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
           <span v-if="v$.point.$error">{{ v$.point.$errors[0].$message }}</span>
         </p>
-        <label for="text" class="form-label">Text:</label>
-        <input
-          v-model="prevState.text"
-          name="text"
-          type="text"
-          id="text"
-          placeholder="How to centre div ?"
-          class="form-control border-0 text-secondary"
-        />
         <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
-          <span v-if="v$.text.$error">{{ v$.text.$errors[0].$message }}</span>
+          <span v-if="v$.title.$error">{{ v$.title.$errors[0].$message }}</span>
         </p>
         <label for="category" class="form-label">Category:</label>
         <select
