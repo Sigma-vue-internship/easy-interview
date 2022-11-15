@@ -10,7 +10,7 @@ vi.mock("vue-router/dist/vue-router.mjs", () => ({
     params: {
       title: "test_category",
     },
-  })
+  }),
 }));
 describe("QuestionsList.vue", () => {
   beforeEach(() => {

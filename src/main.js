@@ -15,9 +15,12 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
-
+import axiosInstance from "./service/axiosInstance";
 const app = createApp(App);
 const pinia = createPinia();
+
+pinia.use(() => ({ $axios: axiosInstance }));
+
 app.use(pinia);
 
 library.add(faFilter, faLinkedin);
@@ -36,5 +39,4 @@ components.forEach((component) => {
   app.component(component.name, component);
 });
 app.component("font-awesome-icon", FontAwesomeIcon);
-
 app.mount("#app");

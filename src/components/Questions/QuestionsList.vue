@@ -24,13 +24,13 @@ onMounted(async () => {
     <h2 class="text-primary">Category</h2>
     <ul class="list-unstyled">
       <li
-        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow"
+        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-sm-start ps-sm-3"
         v-for="item in questionsList"
         :key="item.id"
       >
         <h4 class="text-secondary mt-2">{{ item.text }}</h4>
         <p class="text-secondary">{{ item.answer }}</p>
-        <div class="row text-primary">
+        <div class="row justify-content-center text-primary text-sm-end">
           <div class="col-12 col-sm-6 col-xl-8">
             <h5>Score: {{ item.point }}</h5>
           </div>
