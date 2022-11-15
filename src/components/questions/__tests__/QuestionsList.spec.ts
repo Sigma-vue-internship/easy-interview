@@ -1,17 +1,30 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mount } from "@vue/test-utils";
 import QuestionsList from "../QuestionsList.vue";
+import { createTestingPinia } from "@pinia/testing";
+import { useQuestionStore } from "../../../stores/questions";
+import { useRoute } from "vue-router";
 
+vi.mock("vue-router/dist/vue-router.mjs", () => ({
+  useRoute: () => ({
+    params: {
+      title: "test_category",
+    },
+  }),
+}));
 describe("QuestionsList.vue", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("should render all questions results", async () => {
-    const wrapper = mount(QuestionsList);
-    const questionsListArray = wrapper.vm.questionsList.length;
-    const questionsLength = wrapper.findAll("li").length;
+  it("should call getAllQuestions ", async () => {
+    const wrapper = mount(QuestionsList, {
+      global: {
+        plugins: [createTestingPinia()],
+      },
+    });
+    const { getAllQuestions } = useQuestionStore();
 
-    expect(questionsListArray).toEqual(questionsLength);
+    expect(getAllQuestions).toBeCalledWith("test_category");
   });
 });
