@@ -74,6 +74,9 @@ async function onSubmit() {
           placeholder="How to centre div ?"
           class="form-control border-0 text-secondary"
         />
+        <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
+          <span v-if="v$.title.$error">{{ v$.title.$errors[0].$message }}</span>
+        </p>
         <label for="point" class="form-label">Max point:</label>
         <input
           v-model="prevState.point"
@@ -86,9 +89,6 @@ async function onSubmit() {
         />
         <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
           <span v-if="v$.point.$error">{{ v$.point.$errors[0].$message }}</span>
-        </p>
-        <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
-          <span v-if="v$.title.$error">{{ v$.title.$errors[0].$message }}</span>
         </p>
         <label for="category" class="form-label">Category:</label>
         <select
@@ -139,7 +139,6 @@ async function onSubmit() {
           </button>
           <button
             type="submit"
-            data-bs-dismiss="modal"
             class="btn btn-primary question__submit-btn ms-2"
           >
             Edit question

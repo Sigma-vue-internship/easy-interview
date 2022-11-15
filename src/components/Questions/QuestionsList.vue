@@ -2,96 +2,25 @@
 import DeleteButton from "../common/DeleteButton.vue";
 import EditQuestionForm from "./EditQuestionForm.vue";
 
-let questionsList = [
-  {
-    point: 99,
-    text: "text 1",
-    answer: "answer 1",
-    category: "1",
-    id: "1",
-  },
-  {
-    point: 15,
-    text: "text 2",
-    answer: "answer 2",
-    category: "2",
-    id: "2",
-  },
-  {
-    point: 70,
-    text: "text 3",
-    answer: "answer 3",
-    category: "3",
-    id: "3",
-  },
-  {
-    point: 5,
-    text: "text 4",
-    answer: "answer 4",
-    category: "4",
-    id: "4",
-  },
-  {
-    point: 77,
-    text: "text 6",
-    answer: "answer 6",
-    category: "6",
-    id: "6",
-  },
-  {
-    point: 32,
-    text: "text 7",
-    answer: "answer 7",
-    category: "7",
-    id: "7",
-  },
-  {
-    point: 84,
-    text: "text 8",
-    answer: "answer 8",
-    category: "8",
-    id: "8",
-  },
-  {
-    point: 69,
-    text: "text 9",
-    answer: "answer 9",
-    category: "9",
-    id: "9",
-  },
-  {
-    point: 11,
-    text: "text 10",
-    answer: "answer 10",
-    category: "10",
-    id: "10",
-  },
-  {
-    point: 12,
-    text: "text 11",
-    answer: "answer 11",
-    category: "11",
-    id: "11",
-  },
-  {
-    point: 78,
-    text: "text 12",
-    answer: "answer 12",
-    category: "12",
-    id: "12",
-  },
-  {
-    point: 19,
-    text: "text 13",
-    answer: "answer 13",
-    category: "13",
-    id: "13",
-  },
-];
+import { useRoute } from "vue-router";
+import { useQuestionStore } from "../../stores/questions";
+import { onMounted, ref } from "vue";
+
+const questionsList = ref([]);
+const route = useRoute();
 
 function deleteQuestion() {
   console.log("delete button");
 }
+onMounted(async () => {
+  try {
+    const { getAllQuestions } = useQuestionStore();
+    const { data } = await getAllQuestions(route.params.title);
+    questionsList.value = [...data];
+  } catch (e) {
+    console.log(e);
+  }
+});
 </script>
 
 <template>
@@ -99,13 +28,13 @@ function deleteQuestion() {
     <h2 class="text-primary">Category</h2>
     <ul class="list-unstyled">
       <li
-        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow"
+        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-sm-start ps-sm-3"
         v-for="item in questionsList"
         :key="item.id"
       >
         <h4 class="text-secondary mt-2">{{ item.text }}</h4>
         <p class="text-secondary">{{ item.answer }}</p>
-        <div class="row text-primary">
+        <div class="row justify-content-center text-primary text-sm-end">
           <div class="col-12 col-sm-6 col-xl-8">
             <h5>Score: {{ item.point }}</h5>
           </div>
