@@ -1,7 +1,5 @@
 <template>
-  <button class="btn btn-outline-danger rounded-pill">
-    Delete
-  </button>
+  <button class="btn btn-outline-danger rounded-pill">Delete</button>
 </template>
 
 <style scoped>
