@@ -7,8 +7,8 @@ const props = defineProps({
 const obj = ref(props.item);
 </script>
 
-<template>
-  <li
+<template  data-sly-template.step>
+  <!-- //NOSONAR --><li
     class="border border-secondary mt-3 p-2 rounded-3 text-secondary mx-auto shadow-sm"
   >
     <div class="row">
