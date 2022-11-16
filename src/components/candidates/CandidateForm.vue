@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { required, minLength, maxLength } from "@vuelidate/validators";
 import { v4 as uuidv4 } from "uuid";
-import useValidate from "../service/useValidate";
+import useValidate from "../../utils/useValidate";
 
 const initState = {
   position: "",

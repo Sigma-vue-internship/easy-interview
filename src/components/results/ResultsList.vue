@@ -1,5 +1,5 @@
 <script setup>
-import formattingDate from "../service/dateFormatting";
+import formattingDate from "../../utils/dateFormatting";
 
 let quizResults = [
   {
