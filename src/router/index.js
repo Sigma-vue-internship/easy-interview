@@ -8,7 +8,6 @@ import CategoryView from "../views/CategoryView.vue";
 import StatisticsView from "../views/StatisticsView.vue";
 import QuizView from "../views/QuizView.vue";
 import QuizResultsView from "../views/QuizResultsView.vue";
-import HomeView from "../views/HomeView.vue";
 
 // const guardedRoutes = [
 //   "dashboard"
@@ -24,14 +23,8 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      name: "home",
-      component: HomeView,
-    },
-    {
-      path: "/dashboard",
       name: "dashboard",
       component: DashboardView,
-      beforeEnter: authGuard,
     },
     {
       path: "/quiz",

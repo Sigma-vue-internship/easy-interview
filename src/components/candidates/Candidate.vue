@@ -75,7 +75,7 @@ function deleteProfile() {
         >
           <font-awesome-icon
             icon="fa-brands fa-linkedin"
-            class="text-primary me-2"
+            class="text-primary me-2 fs-3"
           />
           {{ singleCandidate.linkedinUrl }}
         </div>
@@ -107,17 +107,3 @@ function deleteProfile() {
     </div>
   </div>
 </template>
-
-<style class="scoped">
-.img-fluid {
-  max-height: 350px;
-}
-
-.fa-linkedin {
-  height: 2rem;
-}
-
-.show-more {
-  width: 7rem;
-}
-</style>
