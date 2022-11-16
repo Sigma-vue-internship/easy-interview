@@ -27,7 +27,6 @@ function resetForm() {
 
 async function onSubmit() {
   const isFormCorrect = await v$.value.$validate();
-  console.log(v$.value.$errors);
   if (!isFormCorrect) return;
   candidateData.value.id = uuidv4();
   console.log(candidateData.value);
