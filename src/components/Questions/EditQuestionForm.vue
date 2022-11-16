@@ -52,7 +52,7 @@ async function onSubmit() {
 </script>
 <template>
   <EasyModal>
-    <template #open-btn>Edit question</template>
+    <template #open-btn>Edit</template>
     <template #header>
       <h5 class="modal-title" id="exampleModalLab el">Edit form</h5>
       <button

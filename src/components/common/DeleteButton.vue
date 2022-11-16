@@ -1,9 +1,3 @@
 <template>
-  <button class="btn btn-outline-danger rounded-pill">Delete</button>
+  <button class="btn btn-outline-danger">Delete</button>
 </template>
-
-<style scoped>
-button {
-  width: 6rem;
-}
-</style>
