@@ -1,21 +1,26 @@
 <script setup>
 import EditButton from "../common/EditButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
-
-let singleCandidate = {
-  position: "position 1",
-  username: "username 1",
-  linkedinUrl: "linkedinUrl 1",
-  feedback: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip 
-    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse 
-    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
-    sunt in culpa qui officia deserunt mollit anim id est laborum.`,
-  avatarUrl:
-    "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/682.jpg",
-  id: "1",
-};
+import { useRoute } from "vue-router";
+import { onMounted, ref } from "vue";
+import { useCandidateStore } from "../../stores/candidates";
+const { params } = useRoute();
+const currentCandidate = ref({});
+onMounted(async () => {
+  try {
+    const { getCandidateById } = useCandidateStore();
+    const { data } = await getCandidateById(params.id);
+    if (data.length > 1) {
+      currentCandidate.value = data.filter((candidate) => {
+        return candidate.id === params.id;
+      })[0];
+      return;
+    }
+    currentCandidate.value = data[0];
+  } catch (e) {
+    console.log(e);
+  }
+});
 
 let candidateResults = [
   {
@@ -62,14 +67,19 @@ function deleteProfile() {
     <div class="row">
       <div class="col-12 col-lg-5 d-flex justify-content-center">
         <img
-          :src="singleCandidate.avatarUrl"
+          id="avatarUrl"
+          :src="currentCandidate.avatarUrl"
           alt="candidateAvatar"
           class="img-fluid"
         />
       </div>
       <div class="col-12 col-lg-7 text-center text-lg-start">
-        <h2 class="text-primary">{{ singleCandidate.username }}</h2>
-        <h3 class="text-secondary">{{ singleCandidate.position }}</h3>
+        <h2 id="username" class="text-primary">
+          {{ currentCandidate.username }}
+        </h2>
+        <h3 id="position" class="text-secondary">
+          {{ currentCandidate.position }}
+        </h3>
         <div
           class="text-secondary my-4 d-flex align-items-center justify-content-center justify-content-lg-start"
         >
@@ -77,13 +87,13 @@ function deleteProfile() {
             icon="fa-brands fa-linkedin"
             class="text-primary me-2"
           />
-          {{ singleCandidate.linkedinUrl }}
+          {{ currentCandidate.linkedinUrl }}
         </div>
         <EditButton @click="editProfile" />
         <DeleteButton @click="deleteProfile" />
-        <p class="text-secondary mt-4">
+        <p id="feedback" class="text-secondary mt-4">
           <span class="text-primary">Feedback:</span>
-          {{ singleCandidate.feedback }}
+          {{ currentCandidate.feedback }}
         </p>
       </div>
     </div>
