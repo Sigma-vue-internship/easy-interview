@@ -20,7 +20,8 @@
 }
 */
 [class^="icon-"]:before, [class*=" icon-"]:before {
-  /* //NOSONAR */ font-family: "fontello";
+  /* //NOSONAR */
+  font-family: "fontello", serif;
   font-style: normal;
   font-weight: normal;
   speak: never;
