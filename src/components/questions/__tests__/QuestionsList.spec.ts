@@ -28,7 +28,3 @@ describe("QuestionsList.vue", () => {
     expect(getAllQuestions).toBeCalledWith("test_category");
   });
 });
-
-    expect(questionsListArray).toEqual(questionsLength);
-  });
-});
