@@ -3,6 +3,7 @@ import ListItem from "./ListItem.vue";
 
 const props = defineProps({
   item: String,
+  array: Array,
 });
 </script>
 
@@ -13,7 +14,7 @@ const props = defineProps({
         class="btn btn-outline-primary mt-2"
         type="button"
         data-bs-toggle="collapse"
-        data-bs-target="#multiCollapseExample1"
+        data-bs-target="#multiCollapseExample"
         aria-expanded="false"
         aria-controls="multiCollapseExample1"
       >
@@ -25,7 +26,7 @@ const props = defineProps({
         <ul class="list-unstyled">
           <ListItem
             class="answers-item"
-            v-for="item in array"
+            v-for="item in array.filter((obj) => obj.category === item)"
             :key="item.question"
             :question="item.question"
             :questionScore="item.questionScore"

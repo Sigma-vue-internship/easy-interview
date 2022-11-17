@@ -20,9 +20,6 @@ const props = defineProps({
       <div class="row text-center text-md-start fst-italic">
         {{ props.answer }}
       </div>
-      <div class="row fw-bolder text-md-start">
-        {{ props.category }}
-      </div>
     </div>
     <div class="col-3">
       <div class="text-md-end">Question score: {{ props.questionScore }}</div>

@@ -2,7 +2,7 @@
 import formattingDate from "../../utils/dateFormatting";
 // import ListItem from "./ListItem.vue";
 import CategoryListItem from "./CategoryListItem.vue";
-import { computed } from "vue";
+// import { computed } from "vue";
 import _uniq from "lodash/uniq";
 
 let result = {
@@ -119,125 +119,8 @@ const categories = result.questionAnswer.map((obj) => obj.category);
         v-for="category in _uniq(categories)"
         :key="category"
         :item="category"
+        :array="result.questionAnswer"
       />
-      <!-- <p>
-        <button
-          class="btn btn-outline-primary mt-2"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#multiCollapseExample1"
-          aria-expanded="false"
-          aria-controls="multiCollapseExample1"
-        >
-          Correct:
-          {{ correctAnswers.length }}
-        </button>
-      </p>
-      <div class="collapse multi-collapse" id="multiCollapseExample1">
-        <div class="card card-body bg-light">
-          <ul class="list-unstyled">
-            <ListItem
-              class="answers-item"
-              v-for="item in correctAnswers"
-              :key="item.question"
-              :question="item.question"
-              :questionScore="item.questionScore"
-              :answerPoints="item.answerPoints"
-              :category="item.category"
-              :answer="item.answer"
-            />
-          </ul>
-        </div>
-      </div>
-
-      <p>
-        <button
-          class="btn btn-outline-warning mt-4"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#multiCollapseExample2"
-          aria-expanded="false"
-          aria-controls="multiCollapseExample2"
-        >
-          Partially:
-          {{ partiallyAnswers.length }}
-        </button>
-      </p>
-      <div class="collapse multi-collapse" id="multiCollapseExample2">
-        <div class="card card-body bg-light">
-          <ul class="list-unstyled">
-            <ListItem
-              class="answers-item"
-              v-for="item in partiallyAnswers"
-              :key="item.question"
-              :question="item.question"
-              :questionScore="item.questionScore"
-              :answerPoints="item.answerPoints"
-              :category="item.category"
-              :answer="item.answer"
-            />
-          </ul>
-        </div>
-      </div>
-
-      <p>
-        <button
-          class="btn btn-outline-danger mt-4"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#multiCollapseExample3"
-          aria-expanded="false"
-          aria-controls="multiCollapseExample3"
-        >
-          Wrong:
-          {{ wrongAnswers.length }}
-        </button>
-      </p>
-      <div class="collapse multi-collapse" id="multiCollapseExample3">
-        <div class="card card-body bg-light">
-          <ul class="list-unstyled">
-            <ListItem
-              class="answers-item"
-              v-for="item in wrongAnswers"
-              :key="item.question"
-              :question="item.question"
-              :questionScore="item.questionScore"
-              :answerPoints="item.answerPoints"
-              :category="item.category"
-              :answer="item.answer"
-            />
-          </ul>
-        </div>
-      </div>
-
-      <p>
-        <button
-          class="btn btn-outline-primary mt-4"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#multiCollapseExample4"
-          aria-expanded="false"
-          aria-controls="multiCollapseExample4"
-        >
-          Total: {{ totalQuestions.length }}
-        </button>
-      </p>
-      <div class="collapse multi-collapse" id="multiCollapseExample4">
-        <div class="card card-body bg-light">
-          <ul class="list-unstyled">
-            <ListItem
-              class="full-answers-list"
-              v-for="item in totalQuestions"
-              :key="item.question"
-              :question="item.question"
-              :questionScore="item.questionScore"
-              :answerPoints="item.answerPoints"
-              :category="item.category"
-              :answer="item.answer"
-            />
-          </ul>
-        </div>
-      </div> -->
 
       <div class="col-12 text-center text-md-end mt-3">
         Start Date: {{ formattingDate(result.startedAt) }}
