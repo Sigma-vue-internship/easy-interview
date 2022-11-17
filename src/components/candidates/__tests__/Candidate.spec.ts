@@ -1,3 +1,4 @@
+import { nextTick } from "vue";
 import { createTestingPinia } from "@pinia/testing";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mount } from "@vue/test-utils";
@@ -35,7 +36,6 @@ describe("Candidate.vue", () => {
     });
     const candidateResultsArrayLength = wrapper.vm.candidateResults.length;
     const resultsLength = wrapper.findAll("li").length;
-
     expect(candidateResultsArrayLength).toEqual(resultsLength);
   });
 });

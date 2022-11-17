@@ -3,22 +3,11 @@ import EditButton from "../common/EditButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
 
 import { useRoute } from "vue-router";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useCandidateStore } from "../../stores/candidates";
 const { params } = useRoute();
 const currentCandidate = ref({});
-onMounted(async () => {
-  try {
-    const { getCandidateById } = useCandidateStore();
-    const { data } = await getCandidateById(params.id);
-
-    currentCandidate.value = data;
-  } catch (e) {
-    console.log(e);
-  }
-});
-
-let candidateResults = [
+let candidateResults = ref([
   {
     questionAnswer: [],
     startedAt: 1666948101,
@@ -43,7 +32,20 @@ let candidateResults = [
     id: "5523",
     candidateId: "1",
   },
-];
+]);
+
+async function getCandidateData() {
+  try {
+    const { getCandidateById } = useCandidateStore();
+    const { data } = await getCandidateById(params.id);
+    currentCandidate.value = data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+getCandidateData();
+
 function resultsID(id) {
   console.log(id);
 }
