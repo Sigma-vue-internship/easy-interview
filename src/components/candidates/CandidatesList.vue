@@ -1,6 +1,5 @@
 <script setup>
 import CandidateForm from "./CandidateForm.vue";
-
 const candidatesList = [
   {
     position: "position 1",
