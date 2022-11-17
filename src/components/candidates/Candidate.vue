@@ -1,7 +1,6 @@
 <script setup>
 import EditButton from "../common/EditButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
-
 let singleCandidate = {
   position: "position 1",
   username: "username 1",
@@ -16,7 +15,6 @@ let singleCandidate = {
     "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/682.jpg",
   id: "1",
 };
-
 let candidateResults = [
   {
     questionAnswer: [],
@@ -43,15 +41,12 @@ let candidateResults = [
     candidateId: "1",
   },
 ];
-
 function resultsID(id) {
   console.log(id);
 }
-
 function editProfile() {
   console.log("edit button");
 }
-
 function deleteProfile() {
   console.log("delete button");
 }
@@ -112,11 +107,9 @@ function deleteProfile() {
 .img-fluid {
   max-height: 350px;
 }
-
 .fa-linkedin {
   height: 2rem;
 }
-
 .show-more {
   width: 7rem;
 }

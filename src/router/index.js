@@ -7,7 +7,6 @@ import CategoriesListView from "../views/CategoriesListView.vue";
 import CategoryView from "../views/CategoryView.vue";
 import QuizView from "../views/QuizView.vue";
 import QuizResultsView from "../views/QuizResultsView.vue";
-import HomeView from "../views/HomeView.vue";
 
 // const guardedRoutes = [
 //   "dashboard"
@@ -22,15 +21,9 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
-      name: "home",
-      component: HomeView,
-    },
-    {
       path: "/dashboard",
       name: "dashboard",
       component: DashboardView,
-      beforeEnter: authGuard,
     },
     {
       path: "/candidates",
