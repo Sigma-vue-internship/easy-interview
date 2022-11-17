@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import useValidate from "../service/useValidate";
+import useValidate from "../../utils/useValidate";
 import {
   required,
   maxValue,
