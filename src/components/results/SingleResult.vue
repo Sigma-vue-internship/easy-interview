@@ -1,6 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import formattingDate from "../../utils/dateFormatting";
 import ListItem from "./ListItem.vue";
+import { computed } from "vue";
 
 let result = {
   questionAnswer: [
@@ -69,6 +70,26 @@ let result = {
     id: "1",
   },
 };
+
+const correctAnswers = computed(() => {
+  return result.questionAnswer.filter(
+    (obj) => obj.questionScore === obj.answerPoints
+  ).length;
+});
+
+const partiallyAnswers = computed(() => {
+  return result.questionAnswer.filter(
+    (obj) => obj.answerPoints != 0 && obj.answerPoints < obj.questionScore
+  ).length;
+});
+
+const wrongAnswers = computed(() => {
+  return result.questionAnswer.filter((obj) => obj.answerPoints === 0).length;
+});
+
+const totalQuestions = computed(() => {
+  return result.questionAnswer.length;
+});
 </script>
 
 <template>
@@ -97,11 +118,7 @@ let result = {
           aria-controls="multiCollapseExample1"
         >
           Correct:
-          {{
-            result.questionAnswer.filter(
-              (obj) => obj.questionScore === obj.answerPoints
-            ).length
-          }}
+          {{ correctAnswers }}
         </button>
       </p>
       <div class="collapse multi-collapse" id="multiCollapseExample1">
@@ -112,7 +129,7 @@ let result = {
               v-for="item in result.questionAnswer.filter(
                 (item) => item.questionScore === item.answerPoints
               )"
-              :key="item"
+              :key="item.question"
               :item="item"
             />
           </ul>
@@ -129,12 +146,7 @@ let result = {
           aria-controls="multiCollapseExample2"
         >
           Partially:
-          {{
-            result.questionAnswer.filter(
-              (obj) =>
-                obj.answerPoints != 0 && obj.answerPoints < obj.questionScore
-            ).length
-          }}
+          {{ partiallyAnswers }}
         </button>
       </p>
       <div class="collapse multi-collapse" id="multiCollapseExample2">
@@ -147,7 +159,7 @@ let result = {
                   item.answerPoints != 0 &&
                   item.answerPoints < item.questionScore
               )"
-              :key="item"
+              :key="item.question"
               :item="item"
             />
           </ul>
@@ -164,9 +176,7 @@ let result = {
           aria-controls="multiCollapseExample3"
         >
           Wrong:
-          {{
-            result.questionAnswer.filter((obj) => obj.answerPoints === 0).length
-          }}
+          {{ wrongAnswers }}
         </button>
       </p>
       <div class="collapse multi-collapse" id="multiCollapseExample3">
@@ -177,7 +187,7 @@ let result = {
               v-for="item in result.questionAnswer.filter(
                 (item) => item.answerPoints === 0
               )"
-              :key="item"
+              :key="item.question"
               :item="item"
             />
           </ul>
@@ -193,7 +203,7 @@ let result = {
           aria-expanded="false"
           aria-controls="multiCollapseExample4"
         >
-          Total: {{ result.questionAnswer.length }}
+          Total: {{ totalQuestions }}
         </button>
       </p>
       <div class="collapse multi-collapse" id="multiCollapseExample4">
@@ -202,7 +212,7 @@ let result = {
             <ListItem
               class="full-answers-list"
               v-for="item in result.questionAnswer"
-              :key="item"
+              :key="item.question"
               :item="item"
             />
           </ul>
