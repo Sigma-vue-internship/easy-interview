@@ -11,13 +11,8 @@ onMounted(async () => {
   try {
     const { getCandidateById } = useCandidateStore();
     const { data } = await getCandidateById(params.id);
-    if (data.length > 1) {
-      currentCandidate.value = data.filter((candidate) => {
-        return candidate.id === params.id;
-      })[0];
-      return;
-    }
-    currentCandidate.value = data[0];
+
+    currentCandidate.value = data;
   } catch (e) {
     console.log(e);
   }

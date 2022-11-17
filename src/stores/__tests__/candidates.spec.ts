@@ -23,11 +23,7 @@ describe("Candidate Store", () => {
     const { data } = await candidateStore.getCandidateById("1");
     expect(axiosInstance.get).toBeCalled();
 
-    expect(axiosInstance.get).toBeCalledWith(`/candidates`, {
-      params: {
-        id: "1",
-      },
-    });
+    expect(axiosInstance.get).toBeCalledWith(`/candidates/1`);
     expect(data).toBe("123");
   });
 });
