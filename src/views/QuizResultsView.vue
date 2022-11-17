@@ -1,9 +1,11 @@
 <template>
   <div>
-    <h1>Quiz Results</h1>
+    <ResultsList />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import ResultsList from "../components/results/ResultsList.vue";
+</script>
 
 <style></style>
