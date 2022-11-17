@@ -19,12 +19,12 @@ function logoutUser() {
     <nav class="navbar navbar-light bg-light">
       <div class="container">
         <div class="row justify-content-between w-100 gx-0">
-          <img
-            src="../icons/easylogo.svg"
-            alt="logo"
-            height="30"
+          <router-link
             class="my-1 col-8 col-sm-4 col-md-3 align-self-start mt-2 mt-md-0"
-          />
+            to="/"
+          >
+            <img src="../icons/easylogo.svg" alt="logo" height="30" class="" />
+          </router-link>
           <div
             class="d-none d-md-flex col-md-8 row gx-5 gx-lg-0 justify-content-end justify-content-md-around"
           >
