@@ -1,37 +1,32 @@
-<script setup>
-import {ref} from 'vue';
-
+<script setup lang="ts">
 const props = defineProps({
-  item: Object,
+  question: String,
+  questionScore: Number,
+  answerPoints: Number,
+  category: String,
+  answer: String,
 });
-const obj = ref(props.item);
 </script>
 
-<template  data-sly-template.step>
-  <!-- //NOSONAR --><li
-    class="border border-secondary mt-3 p-2 rounded-3 text-secondary mx-auto shadow-sm"
+<template data-sly-template.step>
+  <!-- //NOSONAR -->
+  <li
+    class="border border-secondary mt-3 p-2 rounded-3 text-secondary mx-auto shadow-sm row"
   >
-    <div class="row">
-      <p class="text-center">
-        {{ obj.question }}
-      </p>
+    <div class="col-9 ps-3">
+      <div class="row text-center text-md-start">
+        {{ props.question }}
+      </div>
+      <div class="row text-center text-md-start fst-italic">
+        {{ props.answer }}
+      </div>
+      <div class="row fw-bolder text-md-start">
+        {{ props.category }}
+      </div>
     </div>
-    <div class="row">
-      <p class="text-center fst-italic">
-        {{ obj.answer }}
-      </p>
-    </div>
-    <div class="row">
-      <div class="col-12 col-md-4 fw-bolder">
-        {{ obj.category }}
-      </div>
-      <div class="col-12 col-md-4 fw-bolder">
-        Answer points: {{ obj.answerPoints }}
-      </div>
-      <div class="col-12 col-md-4 fw-bolder">
-        Question score: {{ obj.questionScore }}
-      </div>
+    <div class="col-3">
+      <div class="text-md-end">Question score: {{ props.questionScore }}</div>
+      <div class="text-md-end">Answer points: {{ props.answerPoints }}</div>
     </div>
   </li>
 </template>
-

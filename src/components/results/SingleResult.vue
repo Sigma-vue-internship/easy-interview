@@ -1,7 +1,9 @@
-<script setup lang="ts">
+<script setup>
 import formattingDate from "../../utils/dateFormatting";
-import ListItem from "./ListItem.vue";
+// import ListItem from "./ListItem.vue";
+import CategoryListItem from "./CategoryListItem.vue";
 import { computed } from "vue";
+import _uniq from "lodash/uniq";
 
 let result = {
   questionAnswer: [
@@ -16,14 +18,14 @@ let result = {
       question: "question2",
       questionScore: 5,
       answerPoints: 3,
-      category: "category 2",
+      category: "category 1",
       answer: "answer 2",
     },
     {
       question: "question3",
       questionScore: 1,
       answerPoints: 0,
-      category: "category 3",
+      category: "category 1",
       answer: "answer 3",
     },
     {
@@ -71,46 +73,56 @@ let result = {
   },
 };
 
-const correctAnswers = computed(() => {
-  return result.questionAnswer.filter(
-    (obj) => obj.questionScore === obj.answerPoints
-  ).length;
-});
+// const correctAnswers = computed(() =>
+//   result.questionAnswer.filter((obj) => obj.questionScore === obj.answerPoints)
+// );
 
-const partiallyAnswers = computed(() => {
-  return result.questionAnswer.filter(
-    (obj) => obj.answerPoints != 0 && obj.answerPoints < obj.questionScore
-  ).length;
-});
+// const partiallyAnswers = computed(() =>
+//   result.questionAnswer.filter(
+//     (obj) => obj.answerPoints != 0 && obj.answerPoints < obj.questionScore
+//   )
+// );
 
-const wrongAnswers = computed(() => {
-  return result.questionAnswer.filter((obj) => obj.answerPoints === 0).length;
-});
+// const wrongAnswers = computed(() =>
+//   result.questionAnswer.filter((obj) => obj.answerPoints === 0)
+// );
 
-const totalQuestions = computed(() => {
-  return result.questionAnswer.length;
-});
+// const totalQuestions = computed(() => result.questionAnswer);
+
+const totalScore = result.questionAnswer.reduce(
+  (summ, item) => (summ = summ + item.questionScore),
+  0
+);
+
+const answerScore = result.questionAnswer.reduce(
+  (summ, item) => (summ = summ + item.answerPoints),
+  0
+);
+
+const categories = result.questionAnswer.map((obj) => obj.category);
 </script>
 
 <template>
-  <div class="container mt-3 text-center text-secondary">
-    <h2 class="text-primary">{{ result.title }}</h2>
+  <div class="container mt-3 text-secondary">
+    <h2 class="text-primary text-md-start">{{ result.title }}</h2>
     <div class="row">
-      <div class="col-12">
+      <div class="col-12 text-md-start">
         <h3>{{ result.parent.username }}</h3>
       </div>
-      <div class="col-12">
+      <div class="col-12 text-md-start">
         <h3>{{ result.parent.position }}</h3>
       </div>
-      <div class="col-12 text-center text-md-end">
-        Start Date: {{ formattingDate(result.startedAt) }}
+      <div class="col-12">
+        <h4>Result: {{ ((answerScore * 100) / totalScore).toFixed(1) }}%</h4>
       </div>
-      <div class="col-12 text-center text-md-end">
-        End Date: {{ formattingDate(result.endedAt) }}
-      </div>
-      <p>
+      <CategoryListItem
+        v-for="category in _uniq(categories)"
+        :key="category"
+        :item="category"
+      />
+      <!-- <p>
         <button
-          class="btn btn-outline-primary rounded-pill mt-2"
+          class="btn btn-outline-primary mt-2"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#multiCollapseExample1"
@@ -118,7 +130,7 @@ const totalQuestions = computed(() => {
           aria-controls="multiCollapseExample1"
         >
           Correct:
-          {{ correctAnswers }}
+          {{ correctAnswers.length }}
         </button>
       </p>
       <div class="collapse multi-collapse" id="multiCollapseExample1">
@@ -126,11 +138,13 @@ const totalQuestions = computed(() => {
           <ul class="list-unstyled">
             <ListItem
               class="answers-item"
-              v-for="item in result.questionAnswer.filter(
-                (item) => item.questionScore === item.answerPoints
-              )"
+              v-for="item in correctAnswers"
               :key="item.question"
-              :item="item"
+              :question="item.question"
+              :questionScore="item.questionScore"
+              :answerPoints="item.answerPoints"
+              :category="item.category"
+              :answer="item.answer"
             />
           </ul>
         </div>
@@ -138,7 +152,7 @@ const totalQuestions = computed(() => {
 
       <p>
         <button
-          class="btn btn-outline-warning mt-4 rounded-pill"
+          class="btn btn-outline-warning mt-4"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#multiCollapseExample2"
@@ -146,7 +160,7 @@ const totalQuestions = computed(() => {
           aria-controls="multiCollapseExample2"
         >
           Partially:
-          {{ partiallyAnswers }}
+          {{ partiallyAnswers.length }}
         </button>
       </p>
       <div class="collapse multi-collapse" id="multiCollapseExample2">
@@ -154,13 +168,13 @@ const totalQuestions = computed(() => {
           <ul class="list-unstyled">
             <ListItem
               class="answers-item"
-              v-for="item in result.questionAnswer.filter(
-                (item) =>
-                  item.answerPoints != 0 &&
-                  item.answerPoints < item.questionScore
-              )"
+              v-for="item in partiallyAnswers"
               :key="item.question"
-              :item="item"
+              :question="item.question"
+              :questionScore="item.questionScore"
+              :answerPoints="item.answerPoints"
+              :category="item.category"
+              :answer="item.answer"
             />
           </ul>
         </div>
@@ -168,7 +182,7 @@ const totalQuestions = computed(() => {
 
       <p>
         <button
-          class="btn btn-outline-danger mt-4 rounded-pill"
+          class="btn btn-outline-danger mt-4"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#multiCollapseExample3"
@@ -176,7 +190,7 @@ const totalQuestions = computed(() => {
           aria-controls="multiCollapseExample3"
         >
           Wrong:
-          {{ wrongAnswers }}
+          {{ wrongAnswers.length }}
         </button>
       </p>
       <div class="collapse multi-collapse" id="multiCollapseExample3">
@@ -184,11 +198,13 @@ const totalQuestions = computed(() => {
           <ul class="list-unstyled">
             <ListItem
               class="answers-item"
-              v-for="item in result.questionAnswer.filter(
-                (item) => item.answerPoints === 0
-              )"
+              v-for="item in wrongAnswers"
               :key="item.question"
-              :item="item"
+              :question="item.question"
+              :questionScore="item.questionScore"
+              :answerPoints="item.answerPoints"
+              :category="item.category"
+              :answer="item.answer"
             />
           </ul>
         </div>
@@ -196,14 +212,14 @@ const totalQuestions = computed(() => {
 
       <p>
         <button
-          class="btn btn-outline-primary mt-4 rounded-pill"
+          class="btn btn-outline-primary mt-4"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#multiCollapseExample4"
           aria-expanded="false"
           aria-controls="multiCollapseExample4"
         >
-          Total: {{ totalQuestions }}
+          Total: {{ totalQuestions.length }}
         </button>
       </p>
       <div class="collapse multi-collapse" id="multiCollapseExample4">
@@ -211,12 +227,23 @@ const totalQuestions = computed(() => {
           <ul class="list-unstyled">
             <ListItem
               class="full-answers-list"
-              v-for="item in result.questionAnswer"
+              v-for="item in totalQuestions"
               :key="item.question"
-              :item="item"
+              :question="item.question"
+              :questionScore="item.questionScore"
+              :answerPoints="item.answerPoints"
+              :category="item.category"
+              :answer="item.answer"
             />
           </ul>
         </div>
+      </div> -->
+
+      <div class="col-12 text-center text-md-end mt-3">
+        Start Date: {{ formattingDate(result.startedAt) }}
+      </div>
+      <div class="col-12 text-center text-md-end">
+        End Date: {{ formattingDate(result.endedAt) }}
       </div>
     </div>
   </div>
