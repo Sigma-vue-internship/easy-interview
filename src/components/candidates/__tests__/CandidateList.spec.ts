@@ -15,3 +15,7 @@ describe("CandidateList.vue", () => {
     expect(candidateItemsLength).toEqual(allCandidatesLength);
   });
 });
+
+    expect(candidateItemsLength).toEqual(allCandidatesLength);
+  });
+});
