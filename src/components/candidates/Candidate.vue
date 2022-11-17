@@ -1,6 +1,7 @@
 <script setup>
 import EditButton from "../common/EditButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
+
 import { useRoute } from "vue-router";
 import { onMounted, ref } from "vue";
 import { useCandidateStore } from "../../stores/candidates";
@@ -48,15 +49,12 @@ let candidateResults = [
     candidateId: "1",
   },
 ];
-
 function resultsID(id) {
   console.log(id);
 }
-
 function editProfile() {
   console.log("edit button");
 }
-
 function deleteProfile() {
   console.log("delete button");
 }
@@ -122,11 +120,9 @@ function deleteProfile() {
 .img-fluid {
   max-height: 350px;
 }
-
 .fa-linkedin {
   height: 2rem;
 }
-
 .show-more {
   width: 7rem;
 }

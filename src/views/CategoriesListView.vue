@@ -5,5 +5,5 @@
 </template>
 
 <script setup>
-import CategoriesList from "../components/Questions/CategoriesList.vue";
+import CategoriesList from "../components/questions/CategoriesList.vue";
 </script>

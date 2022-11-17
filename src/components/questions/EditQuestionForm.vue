@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from "vue";
-import { v4 as uuidv4 } from "uuid";
+import { onMounted, ref } from "vue";
+import useValidate from "../../utils/useValidate";
 import {
   required,
   maxValue,
@@ -8,47 +8,53 @@ import {
   minLength,
   maxLength,
 } from "@vuelidate/validators";
-import useValidate from "../service/useValidate";
-
-const categories = ["Vue.js", "Native Java Script", "React"];
+const prevState = ref({});
 
 const initState = {
   point: 0,
-  text: "",
+  title: "",
   answer: "",
   category: "HTML",
   id: 0,
 };
 
-const questionData = ref({ ...initState });
+const categories = ["Vue.js", "Native Java Script", "React"];
+
 const rules = {
   point: { required, minValue: minValue(1), maxValue: maxValue(5) },
-  text: { required, minLength: minLength(5), maxLength: maxLength(50) },
+  title: { required, minLength: minLength(5), maxLength: maxLength(50) },
   category: { required },
   answer: { required, minLength: minLength(5), maxLength: maxLength(50) },
 };
-const { v$ } = useValidate(rules, questionData);
+onMounted(() => {
+  prevState.value = {
+    point: 3,
+    title: "avcxvxc",
+    answer: "xcvvbn",
+    category: "HTML",
+    id: 0,
+  };
+});
+
+const { v$ } = useValidate(rules, prevState);
 
 function resetForm() {
-  questionData.value = { ...initState };
+  prevState.value = { ...initState };
   v$.value.$reset();
 }
 
 async function onSubmit() {
   const isFormCorrect = await v$.value.$validate();
   if (!isFormCorrect) return;
-
-  questionData.value.id = uuidv4();
-  console.log(questionData.value);
-  // TODO:send candidateData to mockAPI, test api call
+  console.log(prevState.value);
   resetForm();
 }
 </script>
 <template>
   <EasyModal>
-    <template #open-btn>Add question</template>
+    <template #open-btn>Edit question</template>
     <template #header>
-      <h5 class="modal-title" id="exampleModalLabel">Question form</h5>
+      <h5 class="modal-title" id="exampleModalLab el">Edit form</h5>
       <button
         type="button"
         @click="resetForm"
@@ -59,9 +65,21 @@ async function onSubmit() {
     </template>
     <template #body>
       <form class="needs-validation" @submit.prevent="onSubmit">
+        <label for="title" class="form-label">Title:</label>
+        <textarea
+          v-model="prevState.title"
+          name="title"
+          type="text"
+          id="title"
+          placeholder="How to centre div ?"
+          class="form-control border-0 text-secondary"
+        />
+        <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
+          <span v-if="v$.title.$error">{{ v$.title.$errors[0].$message }}</span>
+        </p>
         <label for="point" class="form-label">Max point:</label>
         <input
-          v-model="questionData.point"
+          v-model="prevState.point"
           name="point"
           type="number"
           id="point"
@@ -72,21 +90,9 @@ async function onSubmit() {
         <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
           <span v-if="v$.point.$error">{{ v$.point.$errors[0].$message }}</span>
         </p>
-        <label for="text" class="form-label">Text:</label>
-        <input
-          v-model="questionData.text"
-          name="text"
-          type="text"
-          id="text"
-          placeholder="How to centre div ?"
-          class="form-control border-0 text-secondary"
-        />
-        <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
-          <span v-if="v$.text.$error">{{ v$.text.$errors[0].$message }}</span>
-        </p>
         <label for="category" class="form-label">Category:</label>
         <select
-          v-model="questionData.category"
+          v-model="prevState.category"
           name="category"
           id="category"
           class="form-select border-0 text-secondary"
@@ -108,7 +114,7 @@ async function onSubmit() {
         </p>
         <div class="form-floating my-4">
           <textarea
-            v-model="questionData.answer"
+            v-model="prevState.answer"
             name="answer"
             id="answer"
             style="height: 100px"
@@ -135,7 +141,7 @@ async function onSubmit() {
             type="submit"
             class="btn btn-primary question__submit-btn ms-2"
           >
-            Add question
+            Edit question
           </button>
         </div>
       </form>

@@ -1,13 +1,17 @@
 <script setup>
+import DeleteButton from "../common/DeleteButton.vue";
+import EditQuestionForm from "./EditQuestionForm.vue";
+
 import { useRoute } from "vue-router";
 import { useQuestionStore } from "../../stores/questions";
-import EditButton from "../common/EditButton.vue";
-import DeleteButton from "../common/DeleteButton.vue";
 import { onMounted, ref } from "vue";
 
 const questionsList = ref([]);
 const route = useRoute();
 
+function deleteQuestion() {
+  console.log("delete button");
+}
 onMounted(async () => {
   try {
     const { getAllQuestions } = useQuestionStore();
@@ -35,7 +39,8 @@ onMounted(async () => {
             <h5>Score: {{ item.point }}</h5>
           </div>
           <div class="col-6 col-sm-3 col-xl-1 me-xl-2">
-            <EditButton @click="editQuestion" />
+            <EditQuestionForm />
+            <!-- <EditButton @click="editQuestion" /> -->
           </div>
           <div class="col-6 col-sm-3 col-xl-1">
             <DeleteButton @click="deleteQuestion" />

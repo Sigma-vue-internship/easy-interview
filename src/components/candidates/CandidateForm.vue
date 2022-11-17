@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { required, minLength, maxLength } from "@vuelidate/validators";
 import { v4 as uuidv4 } from "uuid";
-import useValidate from "../service/useValidate";
+import useValidate from "../../utils/useValidate";
 
 const initState = {
   position: "",
@@ -27,7 +27,6 @@ function resetForm() {
 
 async function onSubmit() {
   const isFormCorrect = await v$.value.$validate();
-  console.log(v$.value.$errors);
   if (!isFormCorrect) return;
   candidateData.value.id = uuidv4();
   console.log(candidateData.value);
