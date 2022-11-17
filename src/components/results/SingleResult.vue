@@ -73,29 +73,13 @@ let result = {
   },
 };
 
-// const correctAnswers = computed(() =>
-//   result.questionAnswer.filter((obj) => obj.questionScore === obj.answerPoints)
-// );
-
-// const partiallyAnswers = computed(() =>
-//   result.questionAnswer.filter(
-//     (obj) => obj.answerPoints != 0 && obj.answerPoints < obj.questionScore
-//   )
-// );
-
-// const wrongAnswers = computed(() =>
-//   result.questionAnswer.filter((obj) => obj.answerPoints === 0)
-// );
-
-// const totalQuestions = computed(() => result.questionAnswer);
-
 const totalScore = result.questionAnswer.reduce(
-  (summ, item) => (summ = summ + item.questionScore),
+  (summ, item) => summ + item.questionScore,
   0
 );
 
 const answerScore = result.questionAnswer.reduce(
-  (summ, item) => (summ = summ + item.answerPoints),
+  (summ, item) => summ + item.answerPoints,
   0
 );
 
@@ -104,15 +88,15 @@ const categories = result.questionAnswer.map((obj) => obj.category);
 
 <template>
   <div class="container mt-3 text-secondary">
-    <h2 class="text-primary text-md-start">{{ result.title }}</h2>
+    <h2 class="text-primary text-center text-md-start">{{ result.title }}</h2>
     <div class="row">
-      <div class="col-12 text-md-start">
+      <div class="col-12 text-center text-md-start">
         <h3>{{ result.parent.username }}</h3>
       </div>
-      <div class="col-12 text-md-start">
+      <div class="col-12 text-center text-md-start">
         <h3>{{ result.parent.position }}</h3>
       </div>
-      <div class="col-12">
+      <div class="col-12  text-center text-md-start">
         <h4>Result: {{ ((answerScore * 100) / totalScore).toFixed(1) }}%</h4>
       </div>
       <CategoryListItem

@@ -9,7 +9,7 @@ const props = defineProps({
 
 <template>
   <div>
-    <p>
+    <p class="text-center text-md-start">
       <button
         class="btn btn-outline-primary mt-2"
         type="button"
