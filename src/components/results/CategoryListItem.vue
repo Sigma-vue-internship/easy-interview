@@ -11,7 +11,7 @@ const props = defineProps({
     <p>
       <button
         class="btn btn-outline-primary mt-2"
-        type="button"/
+        type="button"
         data-bs-toggle="collapse"
         data-bs-target="#multiCollapseExample1"
         aria-expanded="false"
