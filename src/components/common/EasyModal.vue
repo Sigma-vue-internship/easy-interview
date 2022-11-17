@@ -23,7 +23,7 @@ export default {
     aria-hidden="true"
   >
     <div class="modal-dialog">
-      <div class="modal-content bg-dark text-primary">
+      <div class="modal-content text-primary">
         <div class="modal-header">
           <slot name="header" />
         </div>

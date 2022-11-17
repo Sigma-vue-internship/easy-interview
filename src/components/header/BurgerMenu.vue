@@ -10,7 +10,7 @@ console.log();
       data-bs-toggle="offcanvas"
       data-bs-target="#offcanvasRight"
       aria-controls="offcanvasRight"
-      class="btn btn-outline-primary text-primary fs-5"
+      class="btn btn-outline-primary fs-5"
       icon="fa-solid fa-bars"
     />
     <div
@@ -19,7 +19,7 @@ console.log();
       id="offcanvasRight"
       aria-labelledby="offcanvasRightLabel"
     >
-      <div class="offcanvas-header bg-dark text-primary">
+      <div class="offcanvas-header text-primary">
         <h5 id="offcanvasRightLabel">Menu</h5>
         <button
           type="button"
@@ -28,38 +28,44 @@ console.log();
           aria-label="Close"
         ></button>
       </div>
-      <div class="offcanvas-body p-0 bg-dark">
+      <div class="offcanvas-body p-0">
         <ul class="list-group">
-          <li class="list-group-item bg-dark text-primary">
+          <li class="list-group-item text-dark">
             <router-link
               class="text-decoration-none"
-              :class="{ 'text-white': route.path === '/' }"
+              :class="[route.path === '/' ? 'text-primary' : 'text-black']"
               to="/"
               >Dashboard</router-link
             >
           </li>
-          <li class="list-group-item bg-dark text-primary">
+          <li class="list-group-item">
             <router-link
               class="text-decoration-none"
-              :class="{ 'text-white': route.path === '/categories' }"
+              :class="[
+                route.path === '/categories' ? 'text-primary' : 'text-black',
+              ]"
               to="/categories"
               >Questions</router-link
             >
           </li>
 
-          <li class="list-group-item bg-dark text-primary">
+          <li class="list-group-item text-primary">
             <router-link
               class="text-decoration-none"
-              :class="{ 'text-white': route.path === '/candidates' }"
+              :class="[
+                route.path === '/candidates' ? 'text-primary' : 'text-black',
+              ]"
               to="/candidates"
               >Candidates</router-link
             >
           </li>
 
-          <li class="list-group-item bg-dark text-primary">
+          <li class="list-group-item text-primary">
             <router-link
               class="text-decoration-none"
-              :class="{ 'text-white': route.path === '/results' }"
+              :class="[
+                route.path === '/results' ? 'text-primary' : 'text-black',
+              ]"
               to="/results"
               >Quiz results</router-link
             >
