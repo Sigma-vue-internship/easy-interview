@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mount } from "@vue/test-utils";
 import Header from "../Header.vue";
+import { useRoute } from "vue-router";
 
 const loginWithRedirect = vi.fn();
 const logout = vi.fn();
@@ -14,6 +15,13 @@ vi.mock("@auth0/auth0-vue", () => ({
   }),
 }));
 
+vi.mock("vue-router/dist/vue-router.mjs", () => ({
+  useRoute: () => ({
+    params: {
+      title: "test_category",
+    },
+  }),
+}));
 describe("Header.vue", () => {
   beforeEach(() => {
     vi.clearAllMocks();
