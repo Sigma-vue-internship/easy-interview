@@ -16,7 +16,7 @@
         <div class="dropdown col-md-1">
           <font-awesome-icon
             icon="fa-solid fa-filter "
-            class="dropdown-toggle drop-img text-primary"
+            class="dropdown-toggle drop-img text-primary fs-3 text-center"
             type="button"
             id="dropdownMenuButton"
             data-bs-toggle="dropdown"
@@ -70,10 +70,3 @@
     </div>
   </form>
 </template>
-
-<style class="scoped">
-#dropdownMenuButton {
-  height: 3.5vh;
-  display: block;
-}
-</style>

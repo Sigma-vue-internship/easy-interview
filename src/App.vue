@@ -13,5 +13,3 @@ const isLoading = auth0.isLoading;
   <SpinnerLoader v-if="isLoading" />
   <RouterView v-else />
 </template>
-
-<style scoped></style>
