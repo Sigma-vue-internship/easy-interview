@@ -14,14 +14,17 @@ const props = defineProps({
         class="btn btn-outline-primary mt-2"
         type="button"
         data-bs-toggle="collapse"
-        data-bs-target="#multiCollapseExample"
+        :data-bs-target="'#multiCollapseExample1' + props.item.trim()"
         aria-expanded="false"
-        aria-controls="multiCollapseExample1"
+        :aria-controls="'multiCollapseExample1' + props.item.trim()"
       >
         {{ props.item }}
       </button>
     </p>
-    <div class="collapse multi-collapse" id="multiCollapseExample1">
+    <div
+      class="collapse multi-collapse"
+      :id="'multiCollapseExample1' + props.item.trim()"
+    >
       <div class="card card-body bg-light">
         <ul class="list-unstyled">
           <ListItem
