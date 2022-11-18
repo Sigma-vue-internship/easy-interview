@@ -1,10 +1,22 @@
 <script setup lang="ts">
 import ListItem from "./ListItem.vue";
+import { computed } from "vue";
+import { IquestionAnswer } from "./types";
 
 const props = defineProps({
-  item: String,
-  array: Array,
+  category: {
+    type: String,
+    required: true,
+  },
+  questionsArray: {
+    type: Array,
+    required: true,
+  },
 });
+
+const filter = computed(() =>
+  props.questionsArray.filter((answer: IquestionAnswer) => answer.category === props.category)
+);
 </script>
 
 <template>
@@ -15,25 +27,25 @@ const props = defineProps({
         type="button"
         data-bs-toggle="collapse"
         :data-bs-target="
-          '#multiCollapseExample1' + props.item.split(' ').join('')
+          '#multiCollapseExample1' + props.category.split(' ').join('')
         "
         aria-expanded="false"
         :aria-controls="
-          'multiCollapseExample1' + props.item.split(' ').join('')
+          'multiCollapseExample1' + props.category.split(' ').join('')
         "
       >
-        {{ props.item }}
+        {{ props.category }}
       </button>
     </p>
     <div
       class="collapse multi-collapse"
-      :id="'multiCollapseExample1' + props.item.split(' ').join('')"
+      :id="'multiCollapseExample1' + props.category.split(' ').join('')"
     >
       <div class="card card-body bg-light">
         <ul class="list-unstyled">
           <ListItem
             class="answers-item"
-            v-for="item in array.filter((obj) => obj.category === item)"
+            v-for="item in filter"
             :key="item.question"
             :question="item.question"
             :questionScore="item.questionScore"

@@ -100,8 +100,8 @@ const categories = result.questionAnswer.map((obj) => obj.category);
       <CategoryListItem
         v-for="category in _uniq(categories)"
         :key="category"
-        :item="category"
-        :array="result.questionAnswer"
+        :category="category"
+        :questionsArray="result.questionAnswer"
       />
 
       <div class="col-12 text-center text-md-end mt-3">
