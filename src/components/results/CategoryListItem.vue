@@ -9,13 +9,13 @@ const props = defineProps({
     required: true,
   },
   questionsArray: {
-    type: Array,
+    type: Array as () => IquestionAnswer[],
     required: true,
   },
 });
 
 const filter = computed(() =>
-  props.questionsArray.filter((answer: IquestionAnswer) => answer.category === props.category)
+  props.questionsArray.filter((answer) => answer.category === props.category)
 );
 </script>
 
