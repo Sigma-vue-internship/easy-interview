@@ -1,8 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import formattingDate from "../../utils/dateFormatting";
-// import ListItem from "./ListItem.vue";
 import CategoryListItem from "./CategoryListItem.vue";
-// import { computed } from "vue";
 import _uniq from "lodash/uniq";
 
 let result = {
