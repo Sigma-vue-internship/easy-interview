@@ -10,8 +10,7 @@ defineProps({
 </script>
 
 <template>
-  <!-- //NOSONAR -->
-  <li
+  <!-- //NOSONAR --><li
     class="border border-secondary mt-3 p-2 rounded-3 text-secondary mx-auto shadow-sm row"
   >
     <div class="col-12 col-md-9 ps-3">
