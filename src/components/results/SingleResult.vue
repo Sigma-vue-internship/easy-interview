@@ -2,8 +2,9 @@
 import formattingDate from "../../utils/dateFormatting";
 import CategoryListItem from "./CategoryListItem.vue";
 import _uniq from "lodash/uniq";
+import { computed } from "vue";
 
-let result = {
+const result = {
   questionAnswer: [
     {
       question: "question1",
@@ -71,17 +72,17 @@ let result = {
   },
 };
 
-const totalScore = result.questionAnswer.reduce(
-  (summ, item) => summ + item.questionScore,
-  0
+const resultPercentage = computed(() =>
+  (
+    (result.questionAnswer.reduce((summ, item) => summ + item.answerPoints, 0) *
+      100) /
+    result.questionAnswer.reduce((summ, item) => summ + item.questionScore, 0)
+  ).toFixed(1)
 );
 
-const answerScore = result.questionAnswer.reduce(
-  (summ, item) => summ + item.answerPoints,
-  0
+const categories = computed(() =>
+  _uniq(result.questionAnswer.map((obj) => obj.category))
 );
-
-const categories = result.questionAnswer.map((obj) => obj.category);
 </script>
 
 <template>
@@ -94,12 +95,13 @@ const categories = result.questionAnswer.map((obj) => obj.category);
       <div class="col-12 text-center text-md-start">
         <h3>{{ result.parent.position }}</h3>
       </div>
-      <div class="col-12  text-center text-md-start">
-        <h4>Result: {{ ((answerScore * 100) / totalScore).toFixed(1) }}%</h4>
+      <div class="col-12 text-center text-md-start">
+        <h4>Result: {{ resultPercentage }}%</h4>
       </div>
       <CategoryListItem
-        v-for="category in _uniq(categories)"
+        v-for="(category, index) in categories"
         :key="category"
+        :itemId="index"
         :category="category"
         :questionsArray="result.questionAnswer"
       />
@@ -113,9 +115,3 @@ const categories = result.questionAnswer.map((obj) => obj.category);
     </div>
   </div>
 </template>
-
-<style scoped>
-button {
-  width: 15rem;
-}
-</style>

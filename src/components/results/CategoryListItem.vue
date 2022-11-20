@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ListItem from "./ListItem.vue";
 import { computed } from "vue";
-import { IquestionAnswer } from "./types";
+import { QuestionAnswer } from "../../../dto/results";
 
 const props = defineProps({
   category: {
@@ -9,12 +9,16 @@ const props = defineProps({
     required: true,
   },
   questionsArray: {
-    type: Array as () => IquestionAnswer[],
+    type: Array as () => QuestionAnswer[],
+    required: true,
+  },
+  itemId: {
+    type: Number,
     required: true,
   },
 });
 
-const filter = computed(() =>
+const questionsSegregation = computed(() =>
   props.questionsArray.filter((answer) => answer.category === props.category)
 );
 </script>
@@ -26,32 +30,20 @@ const filter = computed(() =>
         class="btn btn-outline-primary mt-2"
         type="button"
         data-bs-toggle="collapse"
-        :data-bs-target="
-          '#multiCollapseExample1' + props.category.split(' ').join('')
-        "
+        :data-bs-target="'#collapseButton' + itemId"
         aria-expanded="false"
-        :aria-controls="
-          'multiCollapseExample1' + props.category.split(' ').join('')
-        "
+        :aria-controls="'collapseButton' + itemId"
       >
         {{ props.category }}
       </button>
     </p>
-    <div
-      class="collapse multi-collapse"
-      :id="'multiCollapseExample1' + props.category.split(' ').join('')"
-    >
+    <div class="collapse multi-collapse" :id="'collapseButton' + itemId">
       <div class="card card-body bg-light">
         <ul class="list-unstyled">
           <ListItem
-            class="answers-item"
-            v-for="item in filter"
-            :key="item.question"
-            :question="item.question"
-            :questionScore="item.questionScore"
-            :answerPoints="item.answerPoints"
-            :category="item.category"
-            :answer="item.answer"
+            v-for="oneQuestion in questionsSegregation"
+            :key="oneQuestion.question"
+            :oneQuestion="oneQuestion"
           />
         </ul>
       </div>
