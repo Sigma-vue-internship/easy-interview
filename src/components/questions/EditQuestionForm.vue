@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import useValidate from "../../utils/useValidate";
+// import useValidate from "../../utils/useValidate";
+import useVuelidate from "@vuelidate/core";
 import { useQuestionStore } from "../../stores/questions";
 
 import {
@@ -9,7 +10,7 @@ import {
   minLength,
   maxLength,
 } from "@vuelidate/validators";
-import { computed } from "vue";
+import { computed, onMounted, onUpdated, ref, toRef, watch } from "vue";
 
 const props = defineProps({
   item: {
@@ -17,13 +18,9 @@ const props = defineProps({
     required: true,
   },
 });
-
-const item = computed(() => props.item);
-
+// const question = toRef(props, "item");
+const question = computed(() => props.item);
 const questionStore = useQuestionStore();
-const prevState = computed(() => {
-  return questionStore.currentEditQuestion;
-});
 
 const rules = {
   point: { required, minValue: minValue(1), maxValue: maxValue(5) },
@@ -31,25 +28,24 @@ const rules = {
   category: { required },
   answer: { required, minLength: minLength(5), maxLength: maxLength(50) },
 };
-const { v$ } = useValidate(rules, prevState);
-const categories = ["Vue.js", "Native Java Script", "React"];
-
-const isFormValid = computed(async () => {
-  return (await v$.value.$validate()) ? "modal" : "";
-});
+const categories = ["HTML", "Vue.js", "Native Java Script", "React"];
+const v$ = useVuelidate(rules, question);
 
 function resetForm() {
   v$.value.$reset();
 }
 
 async function sendData() {
-  // const isFormCorrect = await v$.value.$validate();
-  // if (!isFormCorrect) return;
+  const isFormCorrect = await v$.value.$validate();
+  // console.log(v$.value.text.$error);
+  if (!isFormCorrect) return;
   try {
-    await questionStore.sendQuestion(props.item);
-    // resetForm();
+    console.log(question.value);
+    // { data: { answer, category, id, point, text } } =
+    await questionStore.sendQuestion(question.value);
+    resetForm();
   } catch (e) {
-    // resetForm();
+    resetForm();
     console.log(e);
   }
 }
@@ -57,7 +53,7 @@ async function sendData() {
 <template>
   <EasyModal>
     <template #header>
-      <pre>{{item}}</pre>
+      <!-- <pre>{{ item }}</pre> -->
       <h5 class="modal-title" id="exampleModalLab el">Edit form</h5>
       <button
         type="button"
@@ -71,18 +67,20 @@ async function sendData() {
       <form @submit.prevent="resetForm">
         <label for="title" class="form-label">Title:</label>
         <textarea
-          v-model="item.text"
+          v-model="question.text"
           name="title"
           id="title"
           placeholder="How to centre div ?"
           class="form-control text-secondary"
         />
         <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
-          <span v-if="v$.text.$error">{{ v$.text.$errors[0].$message }}</span>
+          <span v-if="v$.text.$silentErrors.length">{{
+            v$.text.$silentErrors[0].$message
+          }}</span>
         </p>
         <label for="point" class="form-label">Max point:</label>
         <input
-          v-model="item.point"
+          v-model="question.point"
           name="point"
           type="number"
           id="point"
@@ -91,16 +89,17 @@ async function sendData() {
           required
         />
         <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
-          <span v-if="v$.point.$error">{{ v$.point.$errors[0].$message }}</span>
+          <span v-if="v$.point.$silentErrors.length">{{
+            v$.point.$silentErrors[0].$message
+          }}</span>
         </p>
         <label for="category" class="form-label">Category:</label>
         <select
-          v-model="item.category"
+          v-model="question.category"
           name="category"
           id="category"
           class="form-select text-secondary"
         >
-          <option selected value="HTML">HTML</option>
           <option
             v-for="category in categories"
             class="category__option"
@@ -111,13 +110,13 @@ async function sendData() {
           </option>
         </select>
         <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
-          <span v-if="v$.category.$error">{{
-            v$.category.$errors[0].$message
+          <span v-if="v$.category.$silentErrors.length">{{
+            v$.category.$silentErrors[0].$message
           }}</span>
         </p>
         <div class="form-floating my-4">
           <textarea
-            v-model="item.answer"
+            v-model="question.answer"
             name="answer"
             id="answer"
             style="height: 100px"
@@ -127,15 +126,14 @@ async function sendData() {
           <label for="answer">Answer:</label>
         </div>
         <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
-          <span v-if="v$.answer.$error">{{
-            v$.answer.$errors[0].$message
+          <span v-if="v$.answer.$silentErrors.length">{{
+            v$.answer.$silentErrors[0].$message
           }}</span>
         </p>
         <div class="pt-2 d-flex justify-content-end">
           <button
             type="submit"
             class="btn btn-primary question__submit-btn ms-2"
-            :data-bs-dismiss="isFormValid"
             @click.self="sendData"
           >
             Submit

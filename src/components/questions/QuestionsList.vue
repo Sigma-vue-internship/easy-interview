@@ -6,7 +6,8 @@ import { useRoute } from "vue-router";
 import { useQuestionStore } from "../../stores/questions";
 import { onMounted, ref } from "vue";
 
-const item = ref({});
+const currentQuestion = ref({});
+const allQuestions = ref([]);
 const route = useRoute();
 
 function deleteQuestion() {
@@ -16,15 +17,13 @@ const questionStore = useQuestionStore();
 onMounted(async () => {
   try {
     const { data } = await questionStore.getAllQuestions(route.params.title);
-    questionStore.$patch({
-      questions: [...data],
-    });
+    allQuestions.value = [...data];
   } catch (e) {
     console.log(e);
   }
 });
 function setModalItem(item) {
-  this.item = item;
+  currentQuestion.value = item;
 }
 </script>
 
@@ -34,7 +33,7 @@ function setModalItem(item) {
     <ul class="list-unstyled">
       <li
         class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-sm-start ps-sm-3"
-        v-for="item in questionStore.questions"
+        v-for="item in allQuestions"
         :key="item.id"
       >
         <h4 class="text-secondary mt-2">{{ item.text }}</h4>
@@ -61,6 +60,5 @@ function setModalItem(item) {
       </li>
     </ul>
   </div>
-  <!-- <EditQuestionForm :question="item" /> -->
-  <EditQuestionForm :item="item" />
+  <EditQuestionForm :item="currentQuestion" />
 </template>
