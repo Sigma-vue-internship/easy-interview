@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
 import useValidate from "../../utils/useValidate";
 import { useQuestionStore } from "../../stores/questions";
 
@@ -10,7 +9,16 @@ import {
   minLength,
   maxLength,
 } from "@vuelidate/validators";
-import { computed } from "@vue/reactivity";
+import { computed } from "vue";
+
+const props = defineProps({
+  item: {
+    type: Object,
+    required: true,
+  },
+});
+
+const item = computed(() => props.item);
 
 const questionStore = useQuestionStore();
 const prevState = computed(() => {
@@ -27,7 +35,6 @@ const { v$ } = useValidate(rules, prevState);
 const categories = ["Vue.js", "Native Java Script", "React"];
 
 const isFormValid = computed(async () => {
-  console.log(await v$.value.$validate());
   return (await v$.value.$validate()) ? "modal" : "";
 });
 
@@ -35,13 +42,14 @@ function resetForm() {
   v$.value.$reset();
 }
 
-async function onSubmit() {
-  const isFormCorrect = await v$.value.$validate();
-  if (!isFormCorrect) return;
+async function sendData() {
+  // const isFormCorrect = await v$.value.$validate();
+  // if (!isFormCorrect) return;
   try {
-    await questionStore.editQuestion(prevState.value, prevState.value.id);
-    resetForm();
+    await questionStore.sendQuestion(props.item);
+    // resetForm();
   } catch (e) {
+    // resetForm();
     console.log(e);
   }
 }
@@ -49,6 +57,7 @@ async function onSubmit() {
 <template>
   <EasyModal>
     <template #header>
+      <pre>{{item}}</pre>
       <h5 class="modal-title" id="exampleModalLab el">Edit form</h5>
       <button
         type="button"
@@ -59,12 +68,11 @@ async function onSubmit() {
       ></button>
     </template>
     <template #body>
-      <form @submit.prevent="onSubmit">
+      <form @submit.prevent="resetForm">
         <label for="title" class="form-label">Title:</label>
         <textarea
-          v-model="prevState.text"
+          v-model="item.text"
           name="title"
-          type="text"
           id="title"
           placeholder="How to centre div ?"
           class="form-control text-secondary"
@@ -74,7 +82,7 @@ async function onSubmit() {
         </p>
         <label for="point" class="form-label">Max point:</label>
         <input
-          v-model="prevState.point"
+          v-model="item.point"
           name="point"
           type="number"
           id="point"
@@ -87,7 +95,7 @@ async function onSubmit() {
         </p>
         <label for="category" class="form-label">Category:</label>
         <select
-          v-model="prevState.category"
+          v-model="item.category"
           name="category"
           id="category"
           class="form-select text-secondary"
@@ -109,7 +117,7 @@ async function onSubmit() {
         </p>
         <div class="form-floating my-4">
           <textarea
-            v-model="prevState.answer"
+            v-model="item.answer"
             name="answer"
             id="answer"
             style="height: 100px"
@@ -125,19 +133,12 @@ async function onSubmit() {
         </p>
         <div class="pt-2 d-flex justify-content-end">
           <button
-            type="button"
-            @click.self="resetForm"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            Close
-          </button>
-          <button
             type="submit"
             class="btn btn-primary question__submit-btn ms-2"
             :data-bs-dismiss="isFormValid"
+            @click.self="sendData"
           >
-            Edit question
+            Submit
           </button>
         </div>
       </form>

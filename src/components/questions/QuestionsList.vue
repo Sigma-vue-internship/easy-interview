@@ -4,8 +4,9 @@ import EditQuestionForm from "./EditQuestionForm.vue";
 
 import { useRoute } from "vue-router";
 import { useQuestionStore } from "../../stores/questions";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 
+const item = ref({});
 const route = useRoute();
 
 function deleteQuestion() {
@@ -23,7 +24,7 @@ onMounted(async () => {
   }
 });
 function setModalItem(item) {
-  questionStore.setCurrentEditQuestion(item);
+  this.item = item;
 }
 </script>
 
@@ -61,5 +62,5 @@ function setModalItem(item) {
     </ul>
   </div>
   <!-- <EditQuestionForm :question="item" /> -->
-  <EditQuestionForm />
+  <EditQuestionForm :item="item" />
 </template>
