@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import formattingDate from "../../utils/dateFormatting";
 
 let quizResults = [
