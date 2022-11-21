@@ -4,8 +4,6 @@ import router from "./router";
 import { createAuth0 } from "@auth0/auth0-vue";
 import App from "./App.vue";
 
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap";
 // import "./assets/scss/custom.scss";
 
 import components from "@/components/common";
@@ -15,6 +13,8 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faFilter, faBars } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import "./assets/fonts/css/fontello.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap";
 
 import axiosInstance from "./service/axiosInstance";
 const app = createApp(App);
