@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import useValidate from "../service/useValidate";
+import useValidate from "../../utils/useValidate";
 import {
   required,
   maxValue,
@@ -64,7 +64,7 @@ async function onSubmit() {
       ></button>
     </template>
     <template #body>
-      <form class="needs-validation" @submit.prevent="onSubmit">
+      <form @submit.prevent="onSubmit">
         <label for="title" class="form-label">Title:</label>
         <textarea
           v-model="prevState.title"
@@ -72,7 +72,7 @@ async function onSubmit() {
           type="text"
           id="title"
           placeholder="How to centre div ?"
-          class="form-control border-0 text-secondary"
+          class="form-control text-secondary"
         />
         <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
           <span v-if="v$.title.$error">{{ v$.title.$errors[0].$message }}</span>
@@ -84,7 +84,7 @@ async function onSubmit() {
           type="number"
           id="point"
           placeholder="1"
-          class="form-control border-0 text-secondary"
+          class="form-control text-secondary"
           required
         />
         <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
@@ -95,7 +95,7 @@ async function onSubmit() {
           v-model="prevState.category"
           name="category"
           id="category"
-          class="form-select border-0 text-secondary"
+          class="form-select text-secondary"
         >
           <option selected value="HTML">HTML</option>
           <option
@@ -118,7 +118,7 @@ async function onSubmit() {
             name="answer"
             id="answer"
             style="height: 100px"
-            class="form-control border-0 text-secondary"
+            class="form-control text-secondary"
             placeholder="Answer:"
           />
           <label for="answer">Answer:</label>

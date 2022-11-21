@@ -2,12 +2,9 @@ import { createApp } from "vue";
 import { createPinia } from "pinia";
 import router from "./router";
 import { createAuth0 } from "@auth0/auth0-vue";
-
 import App from "./App.vue";
 
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap";
-import "./assets/scss/custom.scss";
+// import "./assets/scss/custom.scss";
 
 import components from "@/components/common";
 
@@ -15,6 +12,10 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faFilter, faBars } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import "./assets/fonts/css/fontello.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap";
+
 import axiosInstance from "./service/axiosInstance";
 const app = createApp(App);
 const pinia = createPinia();
@@ -39,4 +40,5 @@ components.forEach((component) => {
   app.component(component.name, component);
 });
 app.component("font-awesome-icon", FontAwesomeIcon);
+
 app.mount("#app");

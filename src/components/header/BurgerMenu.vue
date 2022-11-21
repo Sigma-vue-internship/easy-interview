@@ -1,3 +1,8 @@
+<script setup>
+import { useRoute } from "vue-router";
+const route = useRoute();
+console.log();
+</script>
 <template>
   <div>
     <font-awesome-icon
@@ -5,7 +10,7 @@
       data-bs-toggle="offcanvas"
       data-bs-target="#offcanvasRight"
       aria-controls="offcanvasRight"
-      class="btn btn-outline-primary text-primary burger__btn"
+      class="btn btn-outline-primary fs-5"
       icon="fa-solid fa-bars"
     />
     <div
@@ -14,7 +19,7 @@
       id="offcanvasRight"
       aria-labelledby="offcanvasRightLabel"
     >
-      <div class="offcanvas-header bg-dark text-primary">
+      <div class="offcanvas-header text-primary">
         <h5 id="offcanvasRightLabel">Menu</h5>
         <button
           type="button"
@@ -23,52 +28,50 @@
           aria-label="Close"
         ></button>
       </div>
-      <div class="offcanvas-body p-0 bg-dark">
+      <div class="offcanvas-body p-0">
         <ul class="list-group">
-          <router-link class="text-decoration-none" to="/dashboard"
-            ><li class="list-group-item bg-dark text-primary">
-              Dashboard
-            </li></router-link
-          >
+          <li class="list-group-item text-dark">
+            <router-link
+              class="text-decoration-none"
+              :class="[route.path === '/' ? 'text-primary' : 'text-black']"
+              to="/"
+              >Dashboard</router-link
+            >
+          </li>
+          <li class="list-group-item">
+            <router-link
+              class="text-decoration-none"
+              :class="[
+                route.path === '/categories' ? 'text-primary' : 'text-black',
+              ]"
+              to="/categories"
+              >Questions</router-link
+            >
+          </li>
 
-          <router-link class="text-decoration-none" to="/categories"
-            ><li class="list-group-item bg-dark text-primary">
-              Questions
-            </li></router-link
-          >
+          <li class="list-group-item text-primary">
+            <router-link
+              class="text-decoration-none"
+              :class="[
+                route.path === '/candidates' ? 'text-primary' : 'text-black',
+              ]"
+              to="/candidates"
+              >Candidates</router-link
+            >
+          </li>
 
-          <router-link class="text-decoration-none" to="/candidates"
-            ><li class="list-group-item bg-dark text-primary">
-              Candidates
-            </li></router-link
-          >
-
-          <router-link class="text-decoration-none" to="/results"
-            ><li class="list-group-item bg-dark text-primary">
-              Quiz results
-            </li></router-link
-          >
+          <li class="list-group-item text-primary">
+            <router-link
+              class="text-decoration-none"
+              :class="[
+                route.path === '/results' ? 'text-primary' : 'text-black',
+              ]"
+              to="/results"
+              >Quiz results</router-link
+            >
+          </li>
         </ul>
       </div>
     </div>
   </div>
 </template>
-
-<style lang="scss">
-@import "../../assets/scss/custom.scss";
-#dropdownMenuButton {
-  height: 4.5vh;
-  display: block;
-}
-.burger__btn {
-  &:hover {
-    color: black !important;
-  }
-}
-.router-link-active.router-link-exact-active {
-  .list-group-item {
-    color: white !important;
-    background-color: $primary !important;
-  }
-}
-</style>

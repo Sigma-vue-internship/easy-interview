@@ -1,9 +1,9 @@
 <template>
   <div>
-    <h1>Dashboard</h1>
+    <Dashboard />
   </div>
 </template>
 
-<script setup></script>
-
-<style></style>
+<script setup>
+import Dashboard from "../components/dashboard/Dashboard.vue";
+</script>

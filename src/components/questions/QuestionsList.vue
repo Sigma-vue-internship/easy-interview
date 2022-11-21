@@ -51,7 +51,6 @@ onMounted(async () => {
           </div>
           <div class="col-6 col-sm-3 col-xl-1 me-xl-2">
             <EditQuestionForm />
-            <!-- <EditButton @click="editQuestion" /> -->
           </div>
           <div class="col-6 col-sm-3 col-xl-1">
             <DeleteButton @click="deleteQuestion" />

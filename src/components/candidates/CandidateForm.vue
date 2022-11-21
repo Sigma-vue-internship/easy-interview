@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { required, minLength, maxLength } from "@vuelidate/validators";
 import { v4 as uuidv4 } from "uuid";
-import useValidate from "../service/useValidate";
+import useValidate from "../../utils/useValidate";
 
 const initState = {
   position: "",
@@ -57,7 +57,7 @@ async function onSubmit() {
             type="position"
             id="position"
             placeholder="Junior front-end developer"
-            class="form-control border-0 text-secondary"
+            class="form-control text-dark"
           />
           <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
             <span v-if="v$.position.$error">{{
@@ -71,7 +71,7 @@ async function onSubmit() {
             type="username"
             id="username"
             placeholder="tyler111"
-            class="form-control border-0 text-secondary"
+            class="form-control text-secondary"
           />
           <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
             <span v-if="v$.username.$error">{{
@@ -85,7 +85,7 @@ async function onSubmit() {
             type="linkedin"
             id="linkedin"
             placeholder="https://www.linkedin.com/"
-            class="form-control border-0 text-secondary mb-4"
+            class="form-control text-secondary mb-4"
           />
           <label for="avatar" class="form-label">Avatar:</label>
           <input
@@ -94,7 +94,7 @@ async function onSubmit() {
             type="avatar"
             id="avatar"
             placeholder="https://myavatar"
-            class="form-control border-0 text-secondary"
+            class="form-control text-secondary"
           />
           <div class="form-floating my-4">
             <textarea
@@ -102,7 +102,7 @@ async function onSubmit() {
               name="feedback"
               id="feedback"
               style="height: 120px"
-              class="form-control border-0 text-secondary"
+              class="form-control text-secondary"
               placeholder="Feedback:"
             />
             <label for="feedback">Feedback:</label>

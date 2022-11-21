@@ -5,8 +5,11 @@ import CandidatesListView from "../views/CandidatesListView.vue";
 import CandidateView from "../views/CandidateView.vue";
 import CategoriesListView from "../views/CategoriesListView.vue";
 import CategoryView from "../views/CategoryView.vue";
+import StatisticsView from "../views/StatisticsView.vue";
 import QuizView from "../views/QuizView.vue";
 import QuizResultsView from "../views/QuizResultsView.vue";
+
+import SingleResultView from "../views/SingleResultView.vue";
 
 // const guardedRoutes = [
 //   "dashboard"
@@ -21,10 +24,23 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/dashboard",
+      path: "/",
       name: "dashboard",
       component: DashboardView,
     },
+    {
+      path: "/quiz",
+      name: "quiz",
+      component: QuizView,
+      beforeEnter: authGuard,
+    },
+    {
+      path: "/statistics",
+      name: "statistics",
+      component: StatisticsView,
+      beforeEnter: authGuard,
+    },
+
     {
       path: "/candidates",
       name: "candidates",
@@ -39,7 +55,7 @@ const router = createRouter({
     },
     {
       path: "/categories",
-      name: "сategoriesList",
+      name: "categoriesList",
       component: CategoriesListView,
       beforeEnter: authGuard,
     },
@@ -50,17 +66,17 @@ const router = createRouter({
       beforeEnter: authGuard,
     },
     {
-      path: "/quiz",
-      name: "quiz",
-      component: QuizView,
-      beforeEnter: authGuard,
-    },
-    {
       path: "/results",
       name: "quizResults",
       component: QuizResultsView,
       beforeEnter: authGuard,
     },
+    {
+      path: "/results/:id",
+      name: "singleResult",
+      component: SingleResultView,
+      beforeEnter: authGuard,
+    }
   ],
 });
 // router.beforeEach((to, from, next) =>
