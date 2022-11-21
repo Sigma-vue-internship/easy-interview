@@ -37,12 +37,12 @@ function resetForm() {
 
 async function onSubmit() {
   const isFormCorrect = await v$.value.$validate();
+  const store = useQuestionStore();
   if (!isFormCorrect) return;
-
+  
   questionData.value.id = uuidv4();
   try {
-    const store = useQuestionStore();
-    store.postQuestion(questionData.value);
+    await store.postQuestion(questionData.value);
   } catch (e) {
     console.log(e);
   }
