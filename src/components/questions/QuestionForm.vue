@@ -8,7 +8,7 @@ import {
   minLength,
   maxLength,
 } from "@vuelidate/validators";
-import useValidate from "../service/useValidate";
+import useValidate from "../../utils/useValidate";
 import { useQuestionStore } from "../../stores/questions";
 
 const categories = ["Vue.js", "Native Java Script", "React"];
