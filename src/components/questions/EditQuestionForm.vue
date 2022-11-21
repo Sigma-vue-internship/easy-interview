@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import useValidate from "../../utils/useValidate";
 import { useQuestionStore } from "../../stores/questions";
 
@@ -10,18 +10,12 @@ import {
   minLength,
   maxLength,
 } from "@vuelidate/validators";
-const props = defineProps({
-  question: {
-    type: Object,
-    required: true,
-  },
-});
-
-const prevState = ref({});
+import { computed } from "@vue/reactivity";
 
 const questionStore = useQuestionStore();
-
-const categories = ["Vue.js", "Native Java Script", "React"];
+const prevState = computed(() => {
+  return questionStore.currentEditQuestion;
+});
 
 const rules = {
   point: { required, minValue: minValue(1), maxValue: maxValue(5) },
@@ -29,11 +23,13 @@ const rules = {
   category: { required },
   answer: { required, minLength: minLength(5), maxLength: maxLength(50) },
 };
-prevState.value = {
-  ...props.question,
-};
-console.log(prevState.value);
 const { v$ } = useValidate(rules, prevState);
+const categories = ["Vue.js", "Native Java Script", "React"];
+
+const isFormValid = computed(async () => {
+  console.log(await v$.value.$validate());
+  return (await v$.value.$validate()) ? "modal" : "";
+});
 
 function resetForm() {
   v$.value.$reset();
@@ -52,7 +48,6 @@ async function onSubmit() {
 </script>
 <template>
   <EasyModal>
-    <template #open-btn>Edit question</template>
     <template #header>
       <h5 class="modal-title" id="exampleModalLab el">Edit form</h5>
       <button
@@ -140,6 +135,7 @@ async function onSubmit() {
           <button
             type="submit"
             class="btn btn-primary question__submit-btn ms-2"
+            :data-bs-dismiss="isFormValid"
           >
             Edit question
           </button>

@@ -22,6 +22,9 @@ onMounted(async () => {
     console.log(e);
   }
 });
+function setModalItem(item) {
+  questionStore.setCurrentEditQuestion(item);
+}
 </script>
 
 <template>
@@ -40,7 +43,15 @@ onMounted(async () => {
             <h5>Score: {{ item.point }}</h5>
           </div>
           <div class="col-6 col-sm-3 col-xl-1 me-xl-2">
-            <EditQuestionForm :question="item" />
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              @click="setModalItem(item)"
+            >
+              Edit
+            </button>
           </div>
           <div class="col-6 col-sm-3 col-xl-1">
             <DeleteButton @click="deleteQuestion" />
@@ -49,4 +60,6 @@ onMounted(async () => {
       </li>
     </ul>
   </div>
+  <!-- <EditQuestionForm :question="item" /> -->
+  <EditQuestionForm />
 </template>

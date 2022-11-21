@@ -3,6 +3,7 @@ export const useQuestionStore = defineStore("question", {
   state: () => {
     return {
       questions: [],
+      currentEditQuestion: {},
     };
   },
   actions: {
@@ -12,6 +13,9 @@ export const useQuestionStore = defineStore("question", {
           category,
         },
       });
+    },
+    setCurrentEditQuestion(question) {
+      this.currentEditQuestion = { ...question };
     },
     async editQuestion(questionData, questionId) {
       const {
@@ -23,6 +27,7 @@ export const useQuestionStore = defineStore("question", {
         (question) => question.id === id
       );
       this.questions[questionIndex] = { answer, category, id, point, text };
+      this.currentEditQuestion = {};
     },
   },
 });
