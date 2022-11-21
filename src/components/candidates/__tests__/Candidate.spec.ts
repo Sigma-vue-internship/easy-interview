@@ -39,7 +39,3 @@ describe("Candidate.vue", () => {
     expect(candidateResultsArrayLength).toEqual(resultsLength);
   });
 });
-
-    expect(candidateResultsArrayLength).toEqual(resultsLength);
-  });
-});

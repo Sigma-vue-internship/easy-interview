@@ -1,3 +1,9 @@
 <template>
-  <h1 class="text-primary">Quiz Constructor</h1>
+  <div>
+    <QuizConstructor />
+  </div>
 </template>
+
+<script setup>
+import QuizConstructor from "../components/quiz/QuizConstructor.vue";
+</script>
