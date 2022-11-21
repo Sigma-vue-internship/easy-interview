@@ -11,5 +11,8 @@ export const useQuestionStore = defineStore("question", {
     async sendQuestion(questionData) {
       return this.$axios.put(`/questions/${questionData.id}`, questionData);
     },
+    async postQuestion(question) {
+      return this.$axios.post("/questions", question);
+    },
   },
 });

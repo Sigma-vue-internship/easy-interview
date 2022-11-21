@@ -44,4 +44,16 @@ describe("Question Store", () => {
     });
     expect(data).toBe("123");
   });
+
+  it("should call action", async () => {
+    axiosInstance.post = vi.fn().mockImplementation(() =>
+      Promise.resolve({
+        data: "123",
+      })
+    );
+    const questionStore = useQuestionStore();
+    const { data } = await questionStore.postQuestion("123");
+    expect(axiosInstance.post).toBeCalledWith(`/questions`, "123");
+    expect(data).toBe("123");
+  });
 });

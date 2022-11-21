@@ -9,6 +9,7 @@ import {
   maxLength,
 } from "@vuelidate/validators";
 import useValidate from "../../utils/useValidate";
+import { useQuestionStore } from "../../stores/questions";
 
 const categories = ["Vue.js", "Native Java Script", "React"];
 
@@ -36,11 +37,15 @@ function resetForm() {
 
 async function onSubmit() {
   const isFormCorrect = await v$.value.$validate();
+  const store = useQuestionStore();
   if (!isFormCorrect) return;
-
+  
   questionData.value.id = uuidv4();
-  console.log(questionData.value);
-  // TODO:send candidateData to mockAPI, test api call
+  try {
+    await store.postQuestion(questionData.value);
+  } catch (e) {
+    console.log(e);
+  }
   resetForm();
 }
 </script>
