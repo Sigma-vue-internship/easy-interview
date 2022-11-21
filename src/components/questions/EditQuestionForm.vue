@@ -1,6 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from "vue";
 import useValidate from "../../utils/useValidate";
+import { useQuestionStore } from "../../stores/questions";
+
 import {
   required,
   maxValue,
@@ -8,46 +10,44 @@ import {
   minLength,
   maxLength,
 } from "@vuelidate/validators";
+const props = defineProps({
+  question: {
+    type: Object,
+    required: true,
+  },
+});
+
 const prevState = ref({});
 
-const initState = {
-  point: 0,
-  title: "",
-  answer: "",
-  category: "HTML",
-  id: 0,
-};
+const questionStore = useQuestionStore();
 
 const categories = ["Vue.js", "Native Java Script", "React"];
 
 const rules = {
   point: { required, minValue: minValue(1), maxValue: maxValue(5) },
-  title: { required, minLength: minLength(5), maxLength: maxLength(50) },
+  text: { required, minLength: minLength(5), maxLength: maxLength(50) },
   category: { required },
   answer: { required, minLength: minLength(5), maxLength: maxLength(50) },
 };
-onMounted(() => {
-  prevState.value = {
-    point: 3,
-    title: "avcxvxc",
-    answer: "xcvvbn",
-    category: "HTML",
-    id: 0,
-  };
-});
-
+prevState.value = {
+  ...props.question,
+};
+console.log(prevState.value);
 const { v$ } = useValidate(rules, prevState);
 
 function resetForm() {
-  prevState.value = { ...initState };
   v$.value.$reset();
 }
 
 async function onSubmit() {
   const isFormCorrect = await v$.value.$validate();
   if (!isFormCorrect) return;
-  console.log(prevState.value);
-  resetForm();
+  try {
+    await questionStore.editQuestion(prevState.value, prevState.value.id);
+    resetForm();
+  } catch (e) {
+    console.log(e);
+  }
 }
 </script>
 <template>
@@ -67,7 +67,7 @@ async function onSubmit() {
       <form @submit.prevent="onSubmit">
         <label for="title" class="form-label">Title:</label>
         <textarea
-          v-model="prevState.title"
+          v-model="prevState.text"
           name="title"
           type="text"
           id="title"
@@ -75,7 +75,7 @@ async function onSubmit() {
           class="form-control text-secondary"
         />
         <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
-          <span v-if="v$.title.$error">{{ v$.title.$errors[0].$message }}</span>
+          <span v-if="v$.text.$error">{{ v$.text.$errors[0].$message }}</span>
         </p>
         <label for="point" class="form-label">Max point:</label>
         <input

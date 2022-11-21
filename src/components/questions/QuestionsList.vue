@@ -4,19 +4,20 @@ import EditQuestionForm from "./EditQuestionForm.vue";
 
 import { useRoute } from "vue-router";
 import { useQuestionStore } from "../../stores/questions";
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 
-const questionsList = ref([]);
 const route = useRoute();
 
 function deleteQuestion() {
   console.log("delete button");
 }
+const questionStore = useQuestionStore();
 onMounted(async () => {
   try {
-    const { getAllQuestions } = useQuestionStore();
-    const { data } = await getAllQuestions(route.params.title);
-    questionsList.value = [...data];
+    const { data } = await questionStore.getAllQuestions(route.params.title);
+    questionStore.$patch({
+      questions: [...data],
+    });
   } catch (e) {
     console.log(e);
   }
@@ -29,7 +30,7 @@ onMounted(async () => {
     <ul class="list-unstyled">
       <li
         class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-sm-start ps-sm-3"
-        v-for="item in questionsList"
+        v-for="item in questionStore.questions"
         :key="item.id"
       >
         <h4 class="text-secondary mt-2">{{ item.text }}</h4>
@@ -39,7 +40,7 @@ onMounted(async () => {
             <h5>Score: {{ item.point }}</h5>
           </div>
           <div class="col-6 col-sm-3 col-xl-1 me-xl-2">
-            <EditQuestionForm />
+            <EditQuestionForm :question="item" />
           </div>
           <div class="col-6 col-sm-3 col-xl-1">
             <DeleteButton @click="deleteQuestion" />
