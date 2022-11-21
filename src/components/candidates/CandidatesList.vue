@@ -300,7 +300,7 @@ const candidatesList = [
         v-for="candidate in candidatesList"
         :key="candidate.id"
       >
-        <div class="card rounded-3 bg-dark">
+        <div class="card rounded-3">
           <img
             class="card-img-top"
             :src="candidate.avatarUrl"
