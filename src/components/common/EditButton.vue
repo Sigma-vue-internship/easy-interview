@@ -1,11 +1,5 @@
 <template>
-  <button class="btn btn-outline-primary me-4 rounded-pill">
+  <button class="btn btn-outline-primary me-4 rounded-pill py-2 px-5">
     Edit
   </button>
 </template>
-
-<style scoped>
-button {
-  width: 6rem;
-}
-</style>

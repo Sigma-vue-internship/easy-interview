@@ -1,4 +1,5 @@
 <script setup>
+import { useRouter } from "vue-router";
 let categoriesList = [
   "HTML",
   "CSS",
@@ -102,8 +103,15 @@ let questionsList = [
   },
 ];
 
-function categoryTitle(item) {
-  console.log(item);
+const router = useRouter();
+
+function pushRoute(item) {
+  router.push({
+    name: "category",
+    params: {
+      title: item,
+    },
+  });
 }
 </script>
 
@@ -112,10 +120,10 @@ function categoryTitle(item) {
     <h2 class="text-primary">Categories List</h2>
     <ul class="list-unstyled mt-5">
       <li
-        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow"
+        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow-sm"
         v-for="item in categoriesList"
         :key="item"
-        @click="categoryTitle(item)"
+        @click="pushRoute(item)"
       >
         <div class="row">
           <div class="col-9">
@@ -124,25 +132,14 @@ function categoryTitle(item) {
             </h5>
           </div>
           <div
-            class="col-3 text-primary text-center badge bg-light rounded-circle quantity-background"
+            class="col-1 d-flex text-primary align-items-center justify-content-center rounded-5 badge bg-light"
           >
-            <h5 class="questions-quantity">
+            <h4 class="m-0 pb-1 fs-5">
               {{ questionsList.filter((obj) => obj.category === item).length }}
-            </h5>
+            </h4>
           </div>
         </div>
       </li>
     </ul>
   </div>
 </template>
-
-<style class="scoped">
-li {
-  cursor: pointer;
-}
-
-.row .quantity-background {
-  width: 2.5rem;
-  height: 2.5rem;
-}
-</style>

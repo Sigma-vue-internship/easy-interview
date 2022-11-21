@@ -1,30 +1,26 @@
 <template>
   <form>
-    <div class="row">
-      <div class="col-8 ms-md-4">
-        <input
-          class="form-control text-secondary border-primary"
-          type="search"
-          placeholder="Search"
-          aria-label="Search"
-        />
-      </div>
-      <div class="col-2">
-        <button 
-          class="btn btn-outline-primary" 
-          type="submit"
-        >
-          Search
-        </button>
-      </div>
-      <div class="col-1">
-        <div class="dropdown ms-3 ms-md-1">
-          <font-awesome-icon 
-            icon="fa-solid fa-filter"
-            class="dropdown-toggle pt-1 drop-img text-primary"
+    <div class="row justify-content-evenly gx-0">
+      <div
+        class="col-md-10 row gx-2 justify-content-center justify-content-xl-end"
+      >
+        <div class="col-12 col-md-9 align-self-center">
+          <input
+            class="form-control text-secondary border-primary"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+        </div>
+
+        <div class="dropdown col-md-1">
+          <font-awesome-icon
+            icon="fa-solid fa-filter "
+            class="dropdown-toggle drop-img text-primary fs-3 text-center"
             type="button"
             id="dropdownMenuButton"
-            data-bs-toggle="dropdown"/>
+            data-bs-toggle="dropdown"
+          />
           <ul
             class="dropdown-menu p-2 bg-secondary"
             aria-labelledby="dropdownMenuButton"
@@ -36,10 +32,7 @@
                   type="checkbox"
                   id="flexSwitchCheckDefault"
                 />
-                <label
-                  class="form-check-label" 
-                  for="flexSwitchCheckDefault"
-                >
+                <label class="form-check-label" for="flexSwitchCheckDefault">
                   Candidates
                 </label>
               </div>
@@ -51,10 +44,7 @@
                   type="checkbox"
                   id="flexSwitchCheckDefault"
                 />
-                <label 
-                  class="form-check-label" 
-                  for="flexSwitchCheckDefault"
-                >
+                <label class="form-check-label" for="flexSwitchCheckDefault">
                   Categories
                 </label>
               </div>
@@ -66,10 +56,7 @@
                   type="checkbox"
                   id="flexSwitchCheckDefault"
                 />
-                <label 
-                  class="form-check-label" 
-                  for="flexSwitchCheckDefault"
-                >
+                <label class="form-check-label" for="flexSwitchCheckDefault">
                   Questions
                 </label>
               </div>
@@ -77,12 +64,9 @@
           </ul>
         </div>
       </div>
+      <div class="col-2 align-self-center">
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+      </div>
     </div>
   </form>
 </template>
-
-<style class="scoped">
-#dropdownMenuButton {
-  height: 2rem;
-}
-</style>

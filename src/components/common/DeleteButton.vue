@@ -1,11 +1,3 @@
 <template>
-  <button class="btn btn-outline-danger rounded-pill">
-    Delete
-  </button>
+  <button class="btn btn-outline-danger rounded-pill py-2 px-5">Delete</button>
 </template>
-
-<style scoped>
-button {
-  width: 6rem;
-}
-</style>

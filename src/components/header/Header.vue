@@ -1,5 +1,6 @@
 <script setup>
 import { useAuth0 } from "@auth0/auth0-vue";
+import BurgerMenu from "./BurgerMenu.vue";
 import SearchComponent from "./SearchComponent.vue";
 const auth0 = useAuth0();
 
@@ -17,26 +18,35 @@ function logoutUser() {
   <header>
     <nav class="navbar navbar-light bg-light">
       <div class="container">
-        <img src="../icons/easylogo.svg" alt="logo" height="30" class="my-1" />
-        <SearchComponent class="w-50 d-none d-lg-block ms-auto" />
-        <button
-          class="btn btn-outline-primary rounded-3 log-in"
-          v-if="!isUserAuthenticated"
-          @click="login"
-        >
-          Log in
-        </button>
-        <button
-          class="btn btn-outline-secondary rounded-3 log-out"
-          v-else
-          @click="logoutUser"
-        >
-          Log out
-        </button>
-        <div
-          class="col-12 mt-2 d-block d-lg-none d-flex justify-content-evenly"
-        >
-          <SearchComponent class="w-100" />
+        <div class="row justify-content-between w-100 gx-0">
+          <router-link
+            class="my-1 col-8 col-sm-4 col-md-3 align-self-start mt-2 mt-md-0"
+            to="/"
+          >
+            <img src="../icons/easylogo.svg" alt="logo" height="30" class="" />
+          </router-link>
+          <div
+            class="d-none d-md-flex col-md-8 row gx-5 gx-lg-0 justify-content-end justify-content-md-around"
+          >
+            <SearchComponent class="d-none d-md-block col-12 col-md-9" />
+            <button
+              class="btn btn-outline-primary rounded-3 log-in col-md-2 d-none d-md-block"
+              v-if="!isUserAuthenticated"
+              @click="login"
+            >
+              Log in
+            </button>
+            <button
+              class="btn btn-outline-secondary rounded-3 log-out col-md-2 d-none d-md-block"
+              v-else
+              @click="logoutUser"
+            >
+              Logout
+            </button>
+          </div>
+          <BurgerMenu
+            class="d-block col-3 col-sm-1 justify-content-end col-md-1 my-auto"
+          />
         </div>
       </div>
     </nav>

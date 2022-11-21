@@ -2,20 +2,30 @@ import { createApp } from "vue";
 import { createPinia } from "pinia";
 import router from "./router";
 import { createAuth0 } from "@auth0/auth0-vue";
-
 import App from "./App.vue";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
-import "./assets/scss/custom.scss";
+// import "./assets/scss/custom.scss";
+
 import components from "@/components/common";
+
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import { faFilter, faBars } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import "./assets/fonts/css/fontello.css";
 
-library.add(faFilter, faLinkedin);
-
+import axiosInstance from "./service/axiosInstance";
 const app = createApp(App);
+const pinia = createPinia();
+
+pinia.use(() => ({ $axios: axiosInstance }));
+
+app.use(pinia);
+
+library.add(faFilter, faLinkedin, faBars);
+
 app.use(router);
 app.use(
   createAuth0({
@@ -26,10 +36,9 @@ app.use(
   })
 );
 
-app.use(createPinia());
-
 components.forEach((component) => {
   app.component(component.name, component);
 });
+app.component("font-awesome-icon", FontAwesomeIcon);
 
-app.component("font-awesome-icon", FontAwesomeIcon).mount("#app");
+app.mount("#app");
