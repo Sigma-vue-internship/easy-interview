@@ -4,19 +4,10 @@ export default {
 };
 </script>
 <template>
-  <button
-    type="button"
-    class="btn btn-outline-primary"
-    data-bs-toggle="modal"
-    data-bs-target="#exampleModal"
-  >
-    <slot name="open-btn">Click me</slot>
-  </button>
   <div
     class="modal fade"
-    id="exampleModal"
-    ref="easyModal"
     tabindex="-1"
+    id="exampleModal"
     data-bs-backdrop="static"
     data-bs-keyboard="false"
     aria-labelledby="exampleModalLabel"

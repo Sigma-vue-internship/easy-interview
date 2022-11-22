@@ -7,6 +7,7 @@ import { onMounted, ref } from "vue";
 
 const currentQuestion = ref({});
 const allQuestions = ref([]);
+const modalInfo = ref({});
 const route = useRoute();
 const initQuestion = ref({
   text: "",
@@ -26,20 +27,21 @@ onMounted(async () => {
     console.log(e);
   }
 });
-function setModalItem(item) {
+function setModalItem(item, formId, formTitle) {
   currentQuestion.value = { ...item };
+  modalInfo.value = { formId, formTitle };
 }
-function setUpdatedItem(item) {
+function updateItem(item) {
   const questionI = allQuestions.value.findIndex(
     (question) => question.id === item.id
   );
+  if (questionI === -1) {
+    allQuestions.value = [...allQuestions.value, item];
+    return;
+  }
   allQuestions.value[questionI] = { ...item };
 }
-function setNewItem(item) {
-  allQuestions.value = [...allQuestions.value, item];
-}
 </script>
-
 <template>
   <div class="container mt-3 text-center">
     <div class="row mb-3 align-items-center">
@@ -51,13 +53,15 @@ function setNewItem(item) {
       <div
         class="col-lg-2 my-xs-4 my-lg-0 ms-lg-5 ms-xl-4 ms-xxl-0 text-center text-md-start"
       >
-        <QuestionForm
-          @submit="setNewItem"
-          :item="initQuestion"
-          :btnText="'Add question'"
-          :formId="'addQuestion'"
-          :formTitle="'Question form'"
-        />
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+          @click="setModalItem(initQuestion, 'addModal', 'Add new question')"
+        >
+          Add question
+        </button>
       </div>
     </div>
     <ul class="list-unstyled">
@@ -79,8 +83,8 @@ function setNewItem(item) {
               type="button"
               class="btn btn-primary"
               data-bs-toggle="modal"
-              data-bs-target="#editModal"
-              @click="setModalItem(item)"
+              data-bs-target="#exampleModal"
+              @click="setModalItem(item, 'editModal', 'Edit question')"
             >
               Edit
             </button>
@@ -93,10 +97,8 @@ function setNewItem(item) {
     </ul>
   </div>
   <QuestionForm
-    @submit="setUpdatedItem"
-    :formId="'editModal'"
-    :showBtn="false"
+    @submit="updateItem"
     :item="currentQuestion"
-    :formTitle="'Edit question form'"
+    :modalInfo="modalInfo"
   />
 </template>

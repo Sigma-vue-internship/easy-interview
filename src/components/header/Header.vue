@@ -37,7 +37,7 @@ function logoutUser() {
               Log in
             </button>
             <button
-              class="btn btn-outline-secondary rounded-3 log-out col-md-2 d-none d-md-block"
+              class="btn btn-outline-secondary rounded-3 log-out col-md-3 col-lg-2 d-none d-md-block"
               v-else
               @click="logoutUser"
             >
@@ -45,7 +45,7 @@ function logoutUser() {
             </button>
           </div>
           <BurgerMenu
-            class="d-block col-3 col-sm-1 justify-content-end col-md-1 my-auto"
+            class="d-block col-3 col-sm-1 justify-content-end text-end col-md-1 my-auto"
           />
         </div>
       </div>

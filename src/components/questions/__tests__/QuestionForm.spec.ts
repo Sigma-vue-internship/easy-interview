@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
 import QuestionForm from "../QuestionForm.vue";
+import EasyModal from "../../common/EasyModal.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { useQuestionStore } from "../../../stores/questions";
 
@@ -10,6 +11,9 @@ const getWrapper = (props = {}) =>
       ...props,
     },
     global: {
+      components: {
+        EasyModal,
+      },
       plugins: [createTestingPinia()],
     },
   });
@@ -27,7 +31,10 @@ describe("QuestionForm.vue", () => {
         category: "HTML",
         answer: "",
       },
-      formId: "addQuestion",
+      modalInfo: {
+        formId: "addModal",
+        formTitle: "Add new question",
+      },
     });
     wrapper.find("#point").setValue(1);
     wrapper.find("#text").setValue("question");
@@ -54,7 +61,10 @@ describe("QuestionForm.vue", () => {
         category: "HTML",
         answer: "test_answer",
       },
-      formId: "editModal",
+      modalInfo: {
+        formId: "editModal",
+        formTitle: "Edit question",
+      },
     });
     wrapper.find("#point").setValue(1);
     wrapper.find("#text").setValue("question");
@@ -66,8 +76,8 @@ describe("QuestionForm.vue", () => {
     await flushPromises();
     expect(sendQuestion).toBeCalledWith(
       expect.objectContaining({
-        point: 1,
         text: "question",
+        point: 1,
         category: "React",
         answer: "answer",
       })
