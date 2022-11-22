@@ -45,8 +45,10 @@ onMounted(async () => {
       >
         <h4 class="text-secondary mt-2">{{ item.text }}</h4>
         <p class="text-secondary">{{ item.answer }}</p>
-        <div class="row justify-content-center text-primary text-sm-end">
-          <div class="col-12 col-sm-6 col-xl-8">
+        <div
+          class="row justify-content-center text-primary text-md-end align-items-center"
+        >
+          <div class="col-12 col-sm-3 col-xl-8">
             <h5>Score: {{ item.point }}</h5>
           </div>
           <div class="col-6 col-sm-3 col-xl-1 me-xl-2">
