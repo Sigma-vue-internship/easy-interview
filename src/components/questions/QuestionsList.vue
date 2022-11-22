@@ -1,6 +1,5 @@
 <script setup>
 import DeleteButton from "../common/DeleteButton.vue";
-import EditQuestionForm from "./EditQuestionForm.vue";
 import QuestionForm from "./QuestionForm.vue";
 import { useRoute } from "vue-router";
 import { useQuestionStore } from "../../stores/questions";
@@ -9,7 +8,12 @@ import { onMounted, ref } from "vue";
 const currentQuestion = ref({});
 const allQuestions = ref([]);
 const route = useRoute();
-
+const initQuestion = ref({
+  text: "",
+  point: 0,
+  category: "HTML",
+  answer: "",
+});
 function deleteQuestion() {
   console.log("delete button");
 }
@@ -31,6 +35,9 @@ function setUpdatedItem(item) {
   );
   allQuestions.value[questionI] = { ...item };
 }
+function setNewItem(item) {
+  allQuestions.value = [...allQuestions.value, item];
+}
 </script>
 
 <template>
@@ -44,7 +51,13 @@ function setUpdatedItem(item) {
       <div
         class="col-lg-2 my-xs-4 my-lg-0 ms-lg-5 ms-xl-4 ms-xxl-0 text-center text-md-start"
       >
-        <QuestionForm />
+        <QuestionForm
+          @submit="setNewItem"
+          :item="initQuestion"
+          :btnText="'Add question'"
+          :formId="'addQuestion'"
+          :formTitle="'Question form'"
+        />
       </div>
     </div>
     <ul class="list-unstyled">
@@ -77,5 +90,11 @@ function setUpdatedItem(item) {
       </li>
     </ul>
   </div>
-  <EditQuestionForm @submitEdit="setUpdatedItem" :item="currentQuestion" />
+  <QuestionForm
+    @submit="setUpdatedItem"
+    :formId="'editModal'"
+    :showBtn="false"
+    :item="currentQuestion"
+    :formTitle="'Edit question form'"
+  />
 </template>
