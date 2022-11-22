@@ -10,26 +10,17 @@ import {
   minLength,
   maxLength,
 } from "@vuelidate/validators";
-import {
-  computed,
-  onMounted,
-  onUpdated,
-  reactive,
-  ref,
-  toRaw,
-  toRef,
-  toRefs,
-  watch,
-} from "vue";
-
+import { ref, toRef, watch } from "vue";
 const props = defineProps({
   item: {
     type: Object as () => Question,
     required: true,
   },
 });
+const emit = defineEmits(["submitEdit"]);
 const question = toRef(props, "item");
 const questionStore = useQuestionStore();
+const showModal = ref(false);
 
 const rules = {
   point: { required, minValue: minValue(1), maxValue: maxValue(5) },
@@ -44,13 +35,23 @@ function resetForm() {
   v$.value.$reset();
 }
 
+watch(v$, async (newValidation) => {
+  if (newValidation.$silentErrors.length) {
+    showModal.value = true;
+    return;
+  }
+  showModal.value = false;
+});
+
 async function sendData() {
   const isFormCorrect = await v$.value.$validate();
-  if (!isFormCorrect) return;
+  if (!isFormCorrect) {
+    showModal.value = true;
+    return;
+  }
   try {
-    console.log(question.value);
     await questionStore.sendQuestion(question.value);
-    resetForm();
+    emit("submitEdit", { ...question.value });
   } catch (e) {
     resetForm();
     console.log(e);
@@ -71,7 +72,6 @@ async function sendData() {
     <div class="modal-dialog">
       <div class="modal-content text-primary">
         <div class="modal-header">
-          <!-- <pre>{{ item }}</pre> -->
           <h5 class="modal-title" id="edit_modal">Edit form</h5>
           <button
             type="button"
@@ -155,6 +155,7 @@ async function sendData() {
               <button
                 type="submit"
                 class="btn btn-primary question__submit-btn ms-2"
+                :data-bs-dismiss="showModal ? '' : 'modal'"
                 @click.self="sendData"
               >
                 Submit

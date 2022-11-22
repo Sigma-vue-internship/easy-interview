@@ -23,7 +23,13 @@ onMounted(async () => {
   }
 });
 function setModalItem(item) {
-  currentQuestion.value = item;
+  currentQuestion.value = { ...item };
+}
+function setUpdatedItem(item) {
+  const questionI = allQuestions.value.findIndex(
+    (question) => question.id === item.id
+  );
+  allQuestions.value[questionI] = { ...item };
 }
 </script>
 
@@ -71,5 +77,5 @@ function setModalItem(item) {
       </li>
     </ul>
   </div>
-  <EditQuestionForm :item="currentQuestion" />
+  <EditQuestionForm @submitEdit="setUpdatedItem" :item="currentQuestion" />
 </template>
