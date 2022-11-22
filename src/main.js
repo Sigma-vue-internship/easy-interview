@@ -10,7 +10,11 @@ import components from "@/components/common";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faFilter, faBars } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFilter,
+  faBars,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import "./assets/fonts/css/fontello.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -24,7 +28,7 @@ pinia.use(() => ({ $axios: axiosInstance }));
 
 app.use(pinia);
 
-library.add(faFilter, faLinkedin, faBars);
+library.add(faFilter, faLinkedin, faBars, faMagnifyingGlass);
 
 app.use(router);
 app.use(

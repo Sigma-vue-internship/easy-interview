@@ -123,7 +123,9 @@ function pushRoute(item) {
       <div
         class="col-lg-2 mb-md-4 mb-lg-0 col-xl-2 col-xxl-2 text-center text-md-start text-primary"
       >
-        <h2>Category</h2>
+        <h2 class="text-center mb-4 text-md-start mb-md-0 text-primary">
+          Categories
+        </h2>
       </div>
       <div
         class="col-lg-2 my-xs-4 my-lg-0 ms-lg-5 ms-xl-4 ms-xxl-0 text-center text-md-start"
