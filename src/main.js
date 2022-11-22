@@ -2,7 +2,6 @@ import { createApp } from "vue";
 import { createPinia } from "pinia";
 import router from "./router";
 import { createAuth0 } from "@auth0/auth0-vue";
-
 import App from "./App.vue";
 
 // import "./assets/scss/custom.scss";
@@ -45,4 +44,5 @@ components.forEach((component) => {
   app.component(component.name, component);
 });
 app.component("font-awesome-icon", FontAwesomeIcon);
+
 app.mount("#app");

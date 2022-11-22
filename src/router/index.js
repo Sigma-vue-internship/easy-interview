@@ -9,6 +9,8 @@ import StatisticsView from "../views/StatisticsView.vue";
 import QuizView from "../views/QuizView.vue";
 import QuizResultsView from "../views/QuizResultsView.vue";
 
+import SingleResultView from "../views/SingleResultView.vue";
+
 // const guardedRoutes = [
 //   "dashboard"
 //   "candidates",
@@ -69,6 +71,12 @@ const router = createRouter({
       component: QuizResultsView,
       beforeEnter: authGuard,
     },
+    {
+      path: "/results/:id",
+      name: "singleResult",
+      component: SingleResultView,
+      beforeEnter: authGuard,
+    }
   ],
 });
 // router.beforeEach((to, from, next) =>
