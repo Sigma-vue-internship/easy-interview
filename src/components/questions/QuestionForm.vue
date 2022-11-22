@@ -114,11 +114,11 @@ async function sendData() {
         </div>
         <div class="modal-body text-start">
           <form @submit.prevent="resetForm">
-            <label for="title" class="form-label">Title:</label>
+            <label for="text" class="form-label">Title:</label>
             <textarea
               v-model="question.text"
-              name="title"
-              id="title"
+              name="text"
+              id="text"
               placeholder="How to centre div ?"
               class="form-control text-secondary"
             />
