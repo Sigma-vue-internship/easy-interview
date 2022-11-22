@@ -137,38 +137,43 @@ function deleteQuestion(index) {
     </div>
 
     <h4 class="text-primary text-center text-md-start mt-5">Question List</h4>
-    <ul class="list-unstyled">
-      <li
-        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-center text-md-start ps-sm-3"
-        v-for="(question, index) in quizList"
-        :key="index"
-      >
-        <div class="row">
-          <div class="col-12 col-md-9 col-lg-10">
-            <div class="row ps-2">
-              <span class="text-center text-md-start">
-                {{ question.text }}
-              </span>
+    <div v-if="quizList.length">
+      <ul class="list-unstyled">
+        <li
+          class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-center text-md-start ps-sm-3"
+          v-for="(question, index) in quizList"
+          :key="index"
+        >
+          <div class="row">
+            <div class="col-12 col-md-9 col-lg-10">
+              <div class="row ps-2">
+                <span class="text-center text-md-start">
+                  {{ question.text }}
+                </span>
+              </div>
+              <div class="row ps-2">
+                <span class="text-center text-md-start">
+                  Category: {{ question.category }}
+                </span>
+              </div>
+              <div class="row ps-2">
+                <span class="text-center text-md-start">
+                  Question Score: {{ question.point }}
+                </span>
+              </div>
             </div>
-            <div class="row ps-2">
-              <span class="text-center text-md-start">
-                Category: {{ question.category }}
-              </span>
-            </div>
-            <div class="row ps-2">
-              <span class="text-center text-md-start">
-                Question Score: {{ question.point }}
-              </span>
+            <div class="col-12 col-md-3 col-lg-2 text-center mt-3 ps-4 ps-md-1">
+              <DeleteButton @click="deleteQuestion(index)" />
             </div>
           </div>
-          <div class="col-12 col-md-3 col-lg-2 text-center mt-3 ps-4 ps-md-1">
-            <DeleteButton @click="deleteQuestion(index)" />
-          </div>
-        </div>
-      </li>
-    </ul>
-    <div class="text-center text-md-end mt-md-4 ps-5 ps-md-2">
-      <EditButton @click="postQuiz">Save Quiz</EditButton>
+        </li>
+      </ul>
+      <div class="text-center text-md-end mt-md-4 ps-5 ps-md-2">
+        <EditButton @click="postQuiz">Save Quiz</EditButton>
+      </div>
+    </div>
+    <div v-else>
+      <p>Choosed questions will display here</p>
     </div>
   </div>
 </template>
