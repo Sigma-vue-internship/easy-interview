@@ -58,7 +58,7 @@ function setModalItem(item) {
               type="button"
               class="btn btn-primary"
               data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
+              data-bs-target="#editModal"
               @click="setModalItem(item)"
             >
               Edit
