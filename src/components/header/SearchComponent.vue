@@ -13,14 +13,19 @@
           />
         </div>
 
-        <div class="dropdown col-md-1">
-          <font-awesome-icon
-            icon="fa-solid fa-filter "
-            class="dropdown-toggle drop-img text-primary fs-3 text-center"
-            type="button"
+        <div class="dropdown d-flex col-md-1 align-items-center">
+          <button
+            class="btn btn-outline-primary rounded-pill border-0 dropdown-toggle drop-img"
+            type="submit"
             id="dropdownMenuButton"
             data-bs-toggle="dropdown"
-          />
+          >
+            <font-awesome-icon
+              icon="fa-solid fa-filter"
+              class="text-center"
+              type="button"
+            />
+          </button>
           <ul
             class="dropdown-menu p-2 bg-secondary"
             aria-labelledby="dropdownMenuButton"
@@ -64,8 +69,15 @@
           </ul>
         </div>
       </div>
-      <div class="col-2 align-self-center">
-        <button class="btn btn-outline-primary" type="submit">Search</button>
+      <div class="col-2 ps-2 align-self-center">
+        <button
+          class="btn btn-outline-primary border-0 rounded-pill"
+          type="submit"
+        >
+          <font-awesome-icon
+            icon="btn fa-solid fa-magnifying-glass text-primary"
+          />
+        </button>
       </div>
     </div>
   </form>

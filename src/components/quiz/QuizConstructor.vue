@@ -109,7 +109,7 @@ function deleteQuestion(index: number) {
     </select>
     <ul class="list-unstyled">
       <li
-        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-sm-start ps-sm-3"
+        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-start ps-sm-3"
         v-for="item in categoryQuestions"
         :key="item.id"
       >
@@ -134,7 +134,7 @@ function deleteQuestion(index: number) {
       <EditButton @click="addQuestions"> Add </EditButton>
     </div>
 
-    <h4 class="text-primary text-center text-md-start mt-5">Question List</h4>
+    <h4 class="text-primary text-start mt-5">Question List</h4>
     <div v-if="quizList.length">
       <ul class="list-unstyled">
         <li
@@ -145,17 +145,17 @@ function deleteQuestion(index: number) {
           <div class="row">
             <div class="col-12 col-md-9 col-lg-10">
               <div class="row ps-2">
-                <span class="text-center text-md-start">
+                <span class="text-start">
                   {{ question.text }}
                 </span>
               </div>
               <div class="row ps-2">
-                <span class="text-center text-md-start">
+                <span class="text-start">
                   Category: {{ question.category }}
                 </span>
               </div>
               <div class="row ps-2">
-                <span class="text-center text-md-start">
+                <span class="text-start">
                   Question Score: {{ question.point }}
                 </span>
               </div>
