@@ -131,7 +131,7 @@ function deleteQuestion(index: number) {
     </ul>
 
     <div class="text-center text-md-end pe-md-4 mt-md-4 mb-md-5 ps-5 ps-md-2">
-      <EditButton @click="addQuestions"> Add </EditButton>
+      <EditButton @click="addQuestions" /> 
     </div>
 
     <h4 class="text-primary text-start mt-5">Question List</h4>
@@ -167,7 +167,7 @@ function deleteQuestion(index: number) {
         </li>
       </ul>
       <div class="text-center text-md-end mt-md-4 ps-5 ps-md-2">
-        <EditButton @click="postQuiz">Save Quiz</EditButton>
+        <EditButton @click="postQuiz" />
       </div>
     </div>
     <div v-else>

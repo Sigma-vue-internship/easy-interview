@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useRouter } from "vue-router";
 import formattingDate from "../../utils/dateFormatting";
 
@@ -92,13 +92,11 @@ let quizResults = [
 
 const router = useRouter();
 
-function pushRoute(id) {
+function pushRoute(id: string) {
   router.push({
     name: "singleResult",
-    params: {
-      id: id,
-    }
-  })
+    params: { id },
+  });
 }
 </script>
 
