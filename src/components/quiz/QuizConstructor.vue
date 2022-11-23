@@ -12,7 +12,7 @@ defineProps({
 });
 
 const selectedCategory = ref();
-let checked = ref([]);
+const checkedQuestion = ref([]);
 onMounted(() => {
   selectedCategory.value = "Select category for displaying questions";
 });
@@ -27,7 +27,7 @@ const categoryQuestions = computed(() =>
   )
 );
 
-let quizList = ref<QuizQuestion[]>([]);
+const quizList = ref<QuizQuestion[]>([]);
 
 const questionList = [
   {
@@ -75,9 +75,9 @@ const questionList = [
 ];
 
 function addQuestions() {
-  const checkedArray = checked.value;
+  const checkedArray = checkedQuestion.value;
   quizList.value = _uniq([...quizList.value, ...checkedArray]);
-  checked.value = [];
+  checkedQuestion.value = [];
 }
 
 function postQuiz() {
@@ -85,10 +85,8 @@ function postQuiz() {
   quizList.value = [];
 }
 
-function deleteQuestion(index) {
-  console.log(index);
+function deleteQuestion(index: number) {
   quizList.value.splice(index, 1);
-  console.log(quizList.value);
 }
 </script>
 
@@ -121,7 +119,7 @@ function deleteQuestion(index) {
             type="checkbox"
             :value="item"
             :id="item.id"
-            v-model="checked"
+            v-model="checkedQuestion"
           />
           <label class="form-check-label ps-2" :for="item.id">
             <div class="col">{{ item.text }}</div>
