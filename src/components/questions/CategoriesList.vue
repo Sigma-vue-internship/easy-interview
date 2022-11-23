@@ -1,6 +1,5 @@
 <script setup>
 import { useRouter } from "vue-router";
-import QuestionForm from "./QuestionForm.vue";
 
 let categoriesList = [
   "HTML",
@@ -129,9 +128,7 @@ function pushRoute(item) {
       </div>
       <div
         class="col-lg-2 my-xs-4 my-lg-0 ms-lg-5 ms-xl-4 ms-xxl-0 text-center text-md-start"
-      >
-        <QuestionForm />
-      </div>
+      ></div>
     </div>
     <ul class="list-unstyled mt-5">
       <li

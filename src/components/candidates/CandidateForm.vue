@@ -1,10 +1,10 @@
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+import { ref, watch } from "vue";
 import { required, minLength, maxLength } from "@vuelidate/validators";
-import { v4 as uuidv4 } from "uuid";
 import useValidate from "../../utils/useValidate";
 
-const initState = {
+const showModal = ref(true);
+const initCandidate = {
   position: "",
   username: "",
   linkedinUrl: "",
@@ -12,24 +12,32 @@ const initState = {
   avatarUrl: "",
   id: 0,
 };
-const candidateData = ref({ ...initState });
+const candidate = ref({ ...initCandidate });
+
 const rules = {
   position: { required, minLength: minLength(5), maxLength: maxLength(50) },
   username: { required, minLength: minLength(5), maxLength: maxLength(50) },
-  feedback: { required, minLength: minLength(5), maxLength: maxLength(150) },
+  feedback: { required, minLength: minLength(5), maxLength: maxLength(250) },
 };
-const { v$ } = useValidate(rules, candidateData);
+const { v$ } = useValidate(rules, candidate);
 
 function resetForm() {
-  candidateData.value = { ...initState };
+  candidate.value = { ...initCandidate };
   v$.value.$reset();
 }
+
+watch(v$, async (newValidation) => {
+  if (newValidation.$silentErrors.length) {
+    showModal.value = true;
+    return;
+  }
+  showModal.value = false;
+});
 
 async function onSubmit() {
   const isFormCorrect = await v$.value.$validate();
   if (!isFormCorrect) return;
-  candidateData.value.id = uuidv4();
-  console.log(candidateData.value);
+  console.log(candidate.value);
   // TODO:send candidateData to mockAPI, test api call
   resetForm();
 }
@@ -52,7 +60,7 @@ async function onSubmit() {
         <form @submit.prevent="onSubmit">
           <label for="position" class="form-label">Position:</label>
           <input
-            v-model="candidateData.position"
+            v-model="candidate.position"
             name="position"
             type="position"
             id="position"
@@ -66,7 +74,7 @@ async function onSubmit() {
           </p>
           <label for="username" class="form-label">Username:</label>
           <input
-            v-model="candidateData.username"
+            v-model="candidate.username"
             name="username"
             type="username"
             id="username"
@@ -80,7 +88,7 @@ async function onSubmit() {
           </p>
           <label for="linkedin" class="form-label">Linkedin:</label>
           <input
-            v-model="candidateData.linkedinUrl"
+            v-model="candidate.linkedinUrl"
             name="linkedin"
             type="linkedin"
             id="linkedin"
@@ -89,7 +97,7 @@ async function onSubmit() {
           />
           <label for="avatar" class="form-label">Avatar:</label>
           <input
-            v-model="candidateData.avatarUrl"
+            v-model="candidate.avatarUrl"
             name="avatar"
             type="avatar"
             id="avatar"
@@ -98,7 +106,7 @@ async function onSubmit() {
           />
           <div class="form-floating my-4">
             <textarea
-              v-model="candidateData.feedback"
+              v-model="candidate.feedback"
               name="feedback"
               id="feedback"
               style="height: 120px"
@@ -124,6 +132,7 @@ async function onSubmit() {
             <button
               type="submit"
               class="btn btn-primary candidate__submit-btn ms-2"
+              :data-bs-dismiss="showModal ? '' : 'modal'"
             >
               Add candidate
             </button>
