@@ -1,17 +1,8 @@
 <script setup>
 import { useRouter } from "vue-router";
+import useCategories from "../../utils/useCategories";
 
-let categoriesList = [
-  "HTML",
-  "CSS",
-  "JavaScript",
-  "Frameworks",
-  "OOP",
-  "Security",
-  "Network",
-  "Database",
-  "Browser",
-];
+const categoriesList = useCategories();
 
 let questionsList = [
   {
