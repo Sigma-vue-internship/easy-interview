@@ -48,31 +48,45 @@ async function sendData() {
 <template>
   <EasyModal>
     <template #header>
-      <h5 class="modal-title" id="edit_modal">
+      <h5
+        id="edit_modal"
+        class="modal-title"
+      >
         {{ modalInfo.formTitle }}
       </h5>
       <button
         type="button"
-        @click="resetForm"
         class="btn-close"
         data-bs-dismiss="modal"
         aria-label="Close"
+        @click="resetForm"
       />
     </template>
     <template #body>
       <form @submit.prevent="sendData">
-        <label for="text" class="form-label">Title:</label>
+        <label
+          for="text"
+          class="form-label"
+          >Title:</label
+        >
         <textarea
+          id="text"
           v-model="question.text"
           name="text"
-          id="text"
           placeholder="How to centre div ?"
           class="form-control text-secondary"
         />
-        <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
+        <p
+          style="height: 25px"
+          class="pt-1 ps-1 text-danger mb-2"
+        >
           <span v-if="v$.text.$error">{{ v$.text.$errors[0].$message }}</span>
         </p>
-        <label for="point" class="form-label">Max point:</label>
+        <label
+          for="point"
+          class="form-label"
+          >Max point:</label
+        >
         <input
           id="point"
           v-model="question.point"
@@ -81,10 +95,17 @@ async function sendData() {
           placeholder="1"
           class="form-control text-secondary"
         />
-        <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
+        <p
+          style="height: 25px"
+          class="pt-1 ps-1 text-danger mb-2"
+        >
           <span v-if="v$.point.$error">{{ v$.point.$errors[0].$message }}</span>
         </p>
-        <label for="category" class="form-label">Category:</label>
+        <label
+          for="category"
+          class="form-label"
+          >Category:</label
+        >
         <select
           id="category"
           v-model="question.category"
@@ -100,23 +121,29 @@ async function sendData() {
             {{ category }}
           </option>
         </select>
-        <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
+        <p
+          style="height: 25px"
+          class="pt-1 ps-1 text-danger mb-2"
+        >
           <span v-if="v$.category.$error">{{
             v$.category.$errors[0].$message
           }}</span>
         </p>
         <div class="form-floating my-4">
           <textarea
+            id="answer"
             v-model="question.answer"
             name="answer"
-            id="answer"
             style="height: 100px"
             class="form-control text-secondary"
             placeholder="Answer:"
           />
           <label for="answer">Answer:</label>
         </div>
-        <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
+        <p
+          style="height: 25px"
+          class="pt-1 ps-1 text-danger mb-2"
+        >
           <span v-if="v$.answer.$error">{{
             v$.answer.$errors[0].$message
           }}</span>

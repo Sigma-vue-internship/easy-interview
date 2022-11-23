@@ -19,7 +19,7 @@ const props = defineProps({
 });
 
 const questionsSegregation = computed(() =>
-  props.questionsArray.filter((answer) => answer.category === props.category)
+  props.questionsArray.filter(answer => answer.category === props.category),
 );
 </script>
 
@@ -37,13 +37,16 @@ const questionsSegregation = computed(() =>
         {{ props.category }}
       </button>
     </p>
-    <div class="collapse multi-collapse" :id="'collapseButton' + itemId">
+    <div
+      :id="'collapseButton' + itemId"
+      class="collapse multi-collapse"
+    >
       <div class="card card-body bg-light">
         <ul class="list-unstyled">
           <ListItem
             v-for="oneQuestion in questionsSegregation"
             :key="oneQuestion.question"
-            :oneQuestion="oneQuestion"
+            :one-question="oneQuestion"
           />
         </ul>
       </div>

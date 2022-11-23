@@ -304,9 +304,9 @@ const candidatesList = [
     </div>
     <ul class="list-unstyled row g-md-4 g-lg-4 g-2">
       <li
-        class="col-8 col-md-4 col-lg-3 mx-auto mx-md-0 mb-3 mb-md-0 text-center text-primary candidate__item"
         v-for="candidate in candidatesList"
         :key="candidate.id"
+        class="col-8 col-md-4 col-lg-3 mx-auto mx-md-0 mb-3 mb-md-0 text-center text-primary candidate__item"
       >
         <div class="card rounded-3">
           <img

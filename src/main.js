@@ -37,12 +37,12 @@ app.use(
     client_id: import.meta.env.VITE_AUTH_CLIENT_ID,
     redirect_uri: import.meta.env.VITE_AUTH_REDIRECT_URL,
     audience: import.meta.env.VITE_API_AUDIENCE,
-  })
+  }),
 );
 
-components.forEach((component) => {
+components.forEach(component => {
   app.component(component.name, component);
 });
-app.component("font-awesome-icon", FontAwesomeIcon);
+app.component("FontAwesomeIcon", FontAwesomeIcon);
 
 app.mount("#app");

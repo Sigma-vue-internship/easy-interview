@@ -14,9 +14,9 @@ console.log();
       icon="fa-solid fa-bars"
     />
     <div
+      id="offcanvasRight"
       class="offcanvas offcanvas-end"
       tabindex="-1"
-      id="offcanvasRight"
       aria-labelledby="offcanvasRightLabel"
     >
       <div class="offcanvas-header text-primary">
