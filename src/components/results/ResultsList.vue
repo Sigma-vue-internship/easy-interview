@@ -2,7 +2,7 @@
 import { useRouter } from "vue-router";
 import formattingDate from "../../utils/dateFormatting";
 
-let quizResults = [
+const quizResults = [
   {
     questionAnswer: [],
     startedAt: 1668092016,
@@ -105,9 +105,9 @@ function pushRoute(id: string) {
     <h2 class="text-primary text-center">Quiz Results</h2>
     <ul class="list-unstyled">
       <li
-        class="border border-light mt-4 p-2 rounded-3 text-secondary mx-auto shadow-sm ps-4"
         v-for="item in quizResults"
         :key="item.id"
+        class="border border-light mt-4 p-2 rounded-3 text-secondary mx-auto shadow-sm ps-4"
         @click="pushRoute(item.id)"
       >
         <div class="row">

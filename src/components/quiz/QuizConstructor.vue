@@ -8,6 +8,7 @@ import { QuizQuestion } from "../../../dto/quiz";
 defineProps({
   question: {
     type: Object as () => QuizQuestion,
+    default: () => ({}),
   },
 });
 
@@ -18,13 +19,11 @@ onMounted(() => {
 });
 
 const categories = computed(() =>
-  _uniq(questionList.map((item) => item.category))
+  _uniq(questionList.map(item => item.category)),
 );
 
 const categoryQuestions = computed(() =>
-  questionList.filter(
-    (question) => question.category === selectedCategory.value
-  )
+  questionList.filter(question => question.category === selectedCategory.value),
 );
 
 const quizList = ref<QuizQuestion[]>([]);
@@ -99,9 +98,9 @@ function deleteQuestion(index: number) {
       aria-label=".form-select-sm"
     >
       <option selected>Select category for displaying questions</option>
-      <option 
-        v-for="category in categories" 
-        :key="category" 
+      <option
+        v-for="category in categories"
+        :key="category"
         :value="category"
       >
         {{ category }}
@@ -109,19 +108,22 @@ function deleteQuestion(index: number) {
     </select>
     <ul class="list-unstyled">
       <li
-        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-start ps-sm-3"
         v-for="item in categoryQuestions"
         :key="item.id"
+        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-start ps-sm-3"
       >
         <div class="form-check">
           <input
+            :id="item.id"
+            v-model="checkedQuestion"
             class="form-check-input"
             type="checkbox"
             :value="item"
-            :id="item.id"
-            v-model="checkedQuestion"
           />
-          <label class="form-check-label ps-2" :for="item.id">
+          <label
+            class="form-check-label ps-2"
+            :for="item.id"
+          >
             <div class="col">{{ item.text }}</div>
             <div class="col">{{ item.answer }}</div>
             <div class="col">Question Score: {{ item.point }}</div>
@@ -131,16 +133,16 @@ function deleteQuestion(index: number) {
     </ul>
 
     <div class="text-center text-md-end pe-md-4 mt-md-4 mb-md-5 ps-5 ps-md-2">
-      <EditButton @click="addQuestions" /> 
+      <EditButton @click="addQuestions" />
     </div>
 
     <h4 class="text-primary text-start mt-5">Question List</h4>
     <div v-if="quizList.length">
       <ul class="list-unstyled">
         <li
-          class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-center text-md-start ps-sm-3"
           v-for="(question, index) in quizList"
           :key="index"
+          class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-center text-md-start ps-sm-3"
         >
           <div class="row">
             <div class="col-12 col-md-9 col-lg-10">
