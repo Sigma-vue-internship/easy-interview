@@ -3,10 +3,11 @@ import DeleteButton from "../common/DeleteButton.vue";
 import QuestionForm from "./QuestionForm.vue";
 import { useRoute } from "vue-router";
 import { useQuestionStore } from "../../stores/questions";
-import { onMounted, ref } from "vue";
+import { ref, onBeforeMount } from "vue";
 
+const questionStore = useQuestionStore();
 const currentQuestion = ref({});
-const allQuestions = ref([]);
+const questionsList = ref([]);
 const modalInfo = ref({});
 const route = useRoute();
 const initQuestion = ref({
@@ -15,31 +16,23 @@ const initQuestion = ref({
   category: "HTML",
   answer: "",
 });
-function deleteQuestion() {
-  console.log("delete button");
-}
-const questionStore = useQuestionStore();
-onMounted(async () => {
+
+onBeforeMount(() => getQuestionList());
+
+async function getQuestionList() {
   try {
     const { data } = await questionStore.getAllQuestions(route.params.title);
-    allQuestions.value = [...data];
+    questionsList.value = [...data];
   } catch (e) {
     console.log(e);
   }
-});
+}
+function deleteQuestion() {
+  console.log("delete button");
+}
 function setModalItem(item, formId, formTitle) {
   currentQuestion.value = { ...item };
   modalInfo.value = { formId, formTitle };
-}
-function updateItem(item) {
-  const questionI = allQuestions.value.findIndex(
-    (question) => question.id === item.id
-  );
-  if (questionI === -1) {
-    allQuestions.value = [...allQuestions.value, item];
-    return;
-  }
-  allQuestions.value[questionI] = { ...item };
 }
 </script>
 <template>
@@ -67,7 +60,7 @@ function updateItem(item) {
     <ul class="list-unstyled">
       <li
         class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-sm-start ps-sm-3"
-        v-for="item in allQuestions"
+        v-for="item in questionsList"
         :key="item.id"
       >
         <h4 class="text-secondary mt-2">{{ item.text }}</h4>
@@ -97,8 +90,8 @@ function updateItem(item) {
     </ul>
   </div>
   <QuestionForm
-    @submit="updateItem"
-    :item="currentQuestion"
+    @updateQuestionsList="getQuestionList"
+    :singleQuestion="currentQuestion"
     :modalInfo="modalInfo"
   />
 </template>

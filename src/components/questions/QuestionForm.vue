@@ -11,8 +11,9 @@ import {
 } from "@vuelidate/validators";
 import { ref, toRef, watch } from "vue";
 import EasyModal from "../common/EasyModal.vue";
+
 const props = defineProps({
-  item: {
+  singleQuestion: {
     type: Object as () => Question,
     required: true,
   },
@@ -21,8 +22,8 @@ const props = defineProps({
     required: false,
   },
 });
-const emit = defineEmits(["submit"]);
-const question = toRef(props, "item");
+const emit = defineEmits(["updateQuestionsList"]);
+const question = toRef(props, "singleQuestion");
 // const modalInfo = toRef(props, "modalInfo");
 const questionStore = useQuestionStore();
 const showModal = ref(true);
@@ -56,11 +57,11 @@ async function sendData() {
   try {
     if (props.modalInfo.formId === "editModal") {
       await questionStore.sendQuestion(question.value);
-      emit("submit", { ...question.value });
+      emit("updateQuestionsList", { ...question.value });
       return;
     }
     await questionStore.postQuestion(question.value);
-    emit("submit", { ...question.value });
+    emit("updateQuestionsList", { ...question.value });
   } catch (e) {
     resetForm();
     console.log(e);
