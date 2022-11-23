@@ -8,18 +8,14 @@ const getWrapper = () => mount(QuizConstructor);
 describe("QuizConstructor.vue", () => {
   it("should render a checkbox after category selction", async () => {
     const wrapper = getWrapper();
-    const categoriesArray = wrapper.vm.categories;
-    const questionsArray = wrapper.vm.categoryQuestions.length;
-    const inputsQuantity = wrapper.findAll("input").length;
     expect(wrapper.find("input").exists()).toBe(false);
-    await wrapper.find("select").setValue(categoriesArray[0]);
-    expect(inputsQuantity).toEqual(questionsArray);
+    await wrapper.find("select").setValue("HTML");
+    expect(wrapper.findAll("input")).toHaveLength(2);
   });
 
   it("should add questions", async () => {
     const wrapper = getWrapper();
-    const categoriesArray = wrapper.vm.categories;
-    await wrapper.find("select").setValue(categoriesArray[0]);
+    await wrapper.find("select").setValue("HTML");
     await wrapper.find("input").setValue(true);
     expect(wrapper.findAll(".list-unstyled")).toHaveLength(1);
     wrapper.findComponent(EditButton).vm.$emit("click");
