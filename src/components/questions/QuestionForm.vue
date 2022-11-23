@@ -60,6 +60,7 @@ async function sendData() {
       emit("updateQuestionsList", { ...question.value });
       return;
     }
+    console.log(question.value);
     await questionStore.postQuestion(question.value);
     emit("updateQuestionsList", { ...question.value });
   } catch (e) {

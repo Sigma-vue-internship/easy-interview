@@ -25,7 +25,7 @@ describe("QuestionForm.vue", () => {
 
   it("should post question", async () => {
     const wrapper = getWrapper({
-      item: {
+      singleQuestion: {
         text: "",
         point: 0,
         category: "HTML",
@@ -55,7 +55,7 @@ describe("QuestionForm.vue", () => {
   });
   it("should edit question", async () => {
     const wrapper = getWrapper({
-      item: {
+      singleQuestion: {
         text: "test_question",
         point: 5,
         category: "HTML",
