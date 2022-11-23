@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { required, minLength, maxLength } from "@vuelidate/validators";
-import useValidate from "../../utils/useValidate";
+import { ref } from "vue";
+import useFormValidator from "../../utils/useFormValidator";
 
-const showModal = ref(true);
 const initCandidate = {
   position: "",
   username: "",
@@ -14,29 +12,17 @@ const initCandidate = {
 };
 const candidate = ref({ ...initCandidate });
 
-const rules = {
-  position: { required, minLength: minLength(5), maxLength: maxLength(50) },
-  username: { required, minLength: minLength(5), maxLength: maxLength(50) },
-  feedback: { required, minLength: minLength(5), maxLength: maxLength(250) },
-};
-const { v$ } = useValidate(rules, candidate);
-
-function resetForm() {
-  candidate.value = { ...initCandidate };
-  v$.value.$reset();
-}
-
-watch(v$, async (newValidation) => {
-  if (newValidation.$silentErrors.length) {
-    showModal.value = true;
-    return;
-  }
-  showModal.value = false;
-});
+const { v$, resetForm, showModal } = useFormValidator(
+  candidate,
+  "candidate",
+  initCandidate
+);
 
 async function onSubmit() {
   const isFormCorrect = await v$.value.$validate();
-  if (!isFormCorrect) return;
+  if (!isFormCorrect) {
+    return;
+  }
   console.log(candidate.value);
   // TODO:send candidateData to mockAPI, test api call
   resetForm();

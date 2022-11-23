@@ -29,7 +29,7 @@ console.log();
         ></button>
       </div>
       <div class="offcanvas-body p-0">
-        <ul class="list-group">
+        <ul class="text-start list-group">
           <li class="list-group-item text-dark">
             <router-link
               class="text-decoration-none"

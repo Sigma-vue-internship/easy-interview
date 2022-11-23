@@ -13,7 +13,7 @@ export default {
     aria-labelledby="exampleModalLabel"
     aria-hidden="true"
   >
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content text-primary">
         <div class="modal-header">
           <slot name="header" />
