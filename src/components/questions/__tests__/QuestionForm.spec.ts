@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
 import QuestionForm from "../QuestionForm.vue";
 import EasyModal from "../../common/EasyModal.vue";
+
 import { createTestingPinia } from "@pinia/testing";
 import { useQuestionStore } from "../../../stores/questions";
 
@@ -38,7 +39,7 @@ describe("QuestionForm.vue", () => {
     });
     wrapper.find("#point").setValue(1);
     wrapper.find("#text").setValue("question");
-    wrapper.find("#category").setValue("React");
+    wrapper.find("#category").setValue("OOP");
     wrapper.find("#answer").setValue("answer");
     const submitButton = wrapper.find(".question__submit-btn");
     const { postQuestion } = useQuestionStore();
@@ -48,7 +49,7 @@ describe("QuestionForm.vue", () => {
       expect.objectContaining({
         point: 1,
         text: "question",
-        category: "React",
+        category: "OOP",
         answer: "answer",
       })
     );
@@ -68,7 +69,7 @@ describe("QuestionForm.vue", () => {
     });
     wrapper.find("#point").setValue(1);
     wrapper.find("#text").setValue("question");
-    wrapper.find("#category").setValue("React");
+    wrapper.find("#category").setValue("OOP");
     wrapper.find("#answer").setValue("answer");
     const submitButton = wrapper.find(".question__submit-btn");
     const { sendQuestion } = useQuestionStore();
@@ -78,7 +79,7 @@ describe("QuestionForm.vue", () => {
       expect.objectContaining({
         text: "question",
         point: 1,
-        category: "React",
+        category: "OOP",
         answer: "answer",
       })
     );

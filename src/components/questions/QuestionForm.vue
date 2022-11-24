@@ -5,6 +5,7 @@ import { Question } from "../../../dto/questions";
 import { toRef } from "vue";
 import EasyModal from "../common/EasyModal.vue";
 import { useFormValidator } from "../../utils/useFormValidator";
+import Categories from "../../utils/useCategories";
 
 const props = defineProps({
   singleQuestion: {
@@ -26,8 +27,6 @@ const emit = defineEmits(["updateQuestionsList"]);
 const question = toRef(props, "singleQuestion");
 const questionStore = useQuestionStore();
 const { v$, resetForm, showModal } = useFormValidator(question, "question");
-const categories = ["HTML", "Vue.js", "Native Java Script", "React"];
-
 async function sendData() {
   const isFormCorrect = await v$.value.$validate();
   if (!isFormCorrect) {
@@ -41,7 +40,6 @@ async function sendData() {
       resetForm();
       return;
     }
-    console.log(question.value);
     await questionStore.postQuestion(question.value);
     emit("updateQuestionsList", { ...question.value });
     resetForm();
@@ -63,8 +61,8 @@ async function sendData() {
       <button
         type="button"
         class="btn-close"
-        data-bs-dismiss="modal"
         aria-label="Close"
+        data-bs-dismiss="modal"
         @click="resetForm"
       />
     </template>
@@ -112,6 +110,7 @@ async function sendData() {
           class="form-label"
           >Category:</label
         >
+
         <select
           id="category"
           v-model="question.category"
@@ -119,7 +118,7 @@ async function sendData() {
           class="form-select text-secondary"
         >
           <option
-            v-for="category in categories"
+            v-for="category in Categories()"
             :key="category"
             class="category__option"
             :value="category"

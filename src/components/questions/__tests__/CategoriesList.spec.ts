@@ -9,7 +9,7 @@ describe("CategoriesList.vue", () => {
 
   it("should render all categories", async () => {
     const wrapper = mount(CategoriesList);
-    const categoriesListArrayLength = wrapper.vm.categoriesList.length;
+    const categoriesListArrayLength = wrapper.vm.Categories().length;
     const categoriesLength = wrapper.findAll("li").length;
 
     expect(categoriesListArrayLength).toEqual(categoriesLength);
