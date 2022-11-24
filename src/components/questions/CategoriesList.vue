@@ -1,17 +1,6 @@
 <script setup>
 import { useRouter } from "vue-router";
-
-let categoriesList = [
-  "HTML",
-  "CSS",
-  "JavaScript",
-  "Frameworks",
-  "OOP",
-  "Security",
-  "Network",
-  "Database",
-  "Browser",
-];
+import Categories from "../../utils/useCategories";
 
 let questionsList = [
   {
@@ -133,7 +122,7 @@ function pushRoute(item) {
     <ul class="list-unstyled mt-5">
       <li
         class="border border-light mt-4 p-2 rounded-3 mx-auto shadow-sm"
-        v-for="item in categoriesList"
+        v-for="item in Categories()"
         :key="item"
         @click="pushRoute(item)"
       >

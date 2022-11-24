@@ -11,6 +11,7 @@ import {
 } from "@vuelidate/validators";
 import { ref, toRef, watch } from "vue";
 import EasyModal from "../common/EasyModal.vue";
+import Categories from "../../utils/useCategories";
 
 const props = defineProps({
   singleQuestion: {
@@ -24,7 +25,6 @@ const props = defineProps({
 });
 const emit = defineEmits(["updateQuestionsList"]);
 const question = toRef(props, "singleQuestion");
-// const modalInfo = toRef(props, "modalInfo");
 const questionStore = useQuestionStore();
 const showModal = ref(true);
 
@@ -34,7 +34,6 @@ const rules = {
   category: { required },
   answer: { required, minLength: minLength(5), maxLength: maxLength(250) },
 };
-const categories = ["HTML", "Vue.js", "Native Java Script", "React"];
 const v$ = useVuelidate(rules, question);
 
 function resetForm() {
@@ -60,7 +59,6 @@ async function sendData() {
       emit("updateQuestionsList", { ...question.value });
       return;
     }
-    console.log(question.value);
     await questionStore.postQuestion(question.value);
     emit("updateQuestionsList", { ...question.value });
   } catch (e) {
@@ -77,19 +75,19 @@ async function sendData() {
       </h5>
       <button
         type="button"
-        @click="resetForm"
         class="btn-close"
-        data-bs-dismiss="modal"
         aria-label="Close"
+        data-bs-dismiss="modal"
+        @click="resetForm"
       />
     </template>
     <template #body>
       <form @submit.prevent="resetForm">
         <label for="text" class="form-label">Title:</label>
         <textarea
+          id="text"
           v-model="question.text"
           name="text"
-          id="text"
           placeholder="How to centre div ?"
           class="form-control text-secondary"
         />
@@ -100,10 +98,10 @@ async function sendData() {
         </p>
         <label for="point" class="form-label">Max point:</label>
         <input
+          id="point"
           v-model="question.point"
           name="point"
           type="number"
-          id="point"
           placeholder="1"
           class="form-control text-secondary"
           required
@@ -113,20 +111,20 @@ async function sendData() {
             v$.point.$silentErrors[0].$message
           }}</span>
         </p>
-        <label for="category" class="form-label">Category:</label>
+        <label class="form-label" for="category">Category:</label>
         <select
+          id="category"
           v-model="question.category"
           name="category"
-          id="category"
           class="form-select text-secondary"
         >
           <option :value="question.category" selected>
             {{ question.category }}
           </option>
           <option
-            v-for="category in categories"
-            class="category__option"
+            v-for="category in Categories()"
             :key="category"
+            class="category__option"
             :value="category"
           >
             {{ category }}
@@ -139,9 +137,9 @@ async function sendData() {
         </p>
         <div class="form-floating my-4">
           <textarea
+            id="answer"
             v-model="question.answer"
             name="answer"
-            id="answer"
             style="height: 100px"
             class="form-control text-secondary"
             placeholder="Answer:"
