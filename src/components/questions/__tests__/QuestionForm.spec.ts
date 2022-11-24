@@ -50,7 +50,7 @@ describe("QuestionForm.vue", () => {
         text: "question",
         category: "React",
         answer: "answer",
-      })
+      }),
     );
   });
   it("should edit question", async () => {
@@ -80,7 +80,7 @@ describe("QuestionForm.vue", () => {
         point: 1,
         category: "React",
         answer: "answer",
-      })
+      }),
     );
   });
 });
