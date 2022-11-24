@@ -4,7 +4,7 @@ import { Question } from "../../../dto/questions";
 
 import { toRef } from "vue";
 import EasyModal from "../common/EasyModal.vue";
-import useFormValidator from "../../utils/useFormValidator";
+import { useFormValidator } from "../../utils/useFormValidator";
 
 const props = defineProps({
   singleQuestion: {

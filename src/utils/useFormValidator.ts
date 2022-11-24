@@ -8,7 +8,7 @@ import {
   maxLength,
 } from "@vuelidate/validators";
 
-export default function (data, formType, initState = {}) {
+export function useFormValidator(data, formType, initState = {}) {
   const showModal = ref(true);
   let v$;
   const questionRules = {
@@ -24,15 +24,15 @@ export default function (data, formType, initState = {}) {
   };
 
   switch (formType) {
-  case "question":
-    v$ = useVuelidate(questionRules, data);
-    break;
-  case "candidate":
-    v$ = useVuelidate(candidateRules, data);
-    break;
-  default:
-    v$ = useVuelidate(questionRules, data);
-    break;
+    case "question":
+      v$ = useVuelidate(questionRules, data);
+      break;
+    case "candidate":
+      v$ = useVuelidate(candidateRules, data);
+      break;
+    default:
+      v$ = useVuelidate(questionRules, data);
+      break;
   }
 
   watch(v$, async newValidation => {

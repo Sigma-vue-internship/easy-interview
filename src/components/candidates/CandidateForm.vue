@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import useFormValidator from "../../utils/useFormValidator";
+import { useFormValidator } from "../../utils/useFormValidator";
 
 const initCandidate = {
   position: "",
