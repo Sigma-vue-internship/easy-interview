@@ -14,6 +14,8 @@ defineProps({
 
 const selectedCategory = ref();
 const checkedQuestion = ref([]);
+const checkedAnswer = ref([]);
+
 onMounted(() => {
   selectedCategory.value = "Select category for displaying questions";
 });
@@ -30,21 +32,21 @@ const quizList = ref<QuizQuestion[]>([]);
 
 const questionList = [
   {
-    point: 99,
+    point: 1,
     text: "text 1",
     answer: "answer 1",
     category: "HTML",
     id: "1",
   },
   {
-    point: 15,
+    point: 5,
     text: "text 2",
     answer: "answer 2",
     category: "HTML",
     id: "2",
   },
   {
-    point: 70,
+    point: 5,
     text: "text 3",
     answer: "answer 3",
     category: "CSS",
@@ -58,14 +60,14 @@ const questionList = [
     id: "4",
   },
   {
-    point: 77,
+    point: 1,
     text: "text 6",
     answer: "answer 6",
     category: "Vue",
     id: "6",
   },
   {
-    point: 32,
+    point: 1,
     text: "text 7",
     answer: "answer 7",
     category: "JavaScript",
@@ -82,10 +84,20 @@ function addQuestions() {
 function postQuiz() {
   console.log(quizList.value);
   quizList.value = [];
+  console.log(checkedAnswer.value);
 }
 
 function deleteQuestion(index: number) {
   quizList.value.splice(index, 1);
+}
+
+function pointsArray(point: number) {
+  let start: number = 0;
+  const numbersArray: number[] = [];
+  while (start <= point) {
+    numbersArray.push(start++);
+  }
+  return numbersArray;
 }
 </script>
 
@@ -136,7 +148,7 @@ function deleteQuestion(index: number) {
       <EditButton @click="addQuestions" />
     </div>
 
-    <h4 class="text-primary text-start mt-5">Question List</h4>
+    <h2 class="text-primary text-start mt-5">Question List</h2>
     <div v-if="quizList.length">
       <ul class="list-unstyled">
         <li
@@ -144,31 +156,45 @@ function deleteQuestion(index: number) {
           :key="index"
           class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-center text-md-start ps-sm-3"
         >
-          <div class="row">
-            <div class="col-12 col-md-9 col-lg-10">
-              <div class="row ps-2">
-                <span class="text-start">
-                  {{ question.text }}
-                </span>
-              </div>
-              <div class="row ps-2">
-                <span class="text-start">
-                  Category: {{ question.category }}
-                </span>
-              </div>
-              <div class="row ps-2">
-                <span class="text-start">
-                  Question Score: {{ question.point }}
-                </span>
-              </div>
+          <div class="row py-3 px-2">
+            <div class="col-8">
+              <h5 class="text-start">
+                {{ question.text }}
+              </h5>
+              <p class="text-secondary mb-1">{{ question.answer }}</p>
+              <p class="text-secondary mb-1">
+                Category: {{ question.category }}
+              </p>
             </div>
-            <div class="col-12 col-md-3 col-lg-2 text-center mt-3 ps-4 ps-md-1">
-              <DeleteButton @click="deleteQuestion(index)" />
+            <div class="col-4 text-start">
+              <h5 class="d-inline pe-3 text-primary">Answer:</h5>
+              <div
+                v-for="number in pointsArray(question.point)"
+                :key="number"
+                class="form-check form-check-inline"
+              >
+                <input
+                  :id="'answer' + number"
+                  v-model="checkedAnswer"
+                  class="form-check-input"
+                  type="checkbox"
+                  :value="number"
+                />
+                <label
+                  class="form-check-label"
+                  for="answerCheckbox"
+                  :value="number"
+                  >{{ number }}</label
+                >
+              </div>
+              <div class="mt-4 me-2 text-end">
+                <DeleteButton @click="deleteQuestion(index)" />
+              </div>
             </div>
           </div>
         </li>
       </ul>
-      <div class="text-center text-md-end mt-md-4 ps-5 ps-md-2">
+      <div class="text-center text-md-end mt-md-4 ps-5 ps-md-2 pe-4">
         <EditButton @click="postQuiz" />
       </div>
     </div>
