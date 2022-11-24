@@ -59,9 +59,9 @@ function setModalItem(item, formId, formTitle) {
     </div>
     <ul class="list-unstyled">
       <li
-        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-sm-start ps-sm-3"
         v-for="item in questionsList"
         :key="item.id"
+        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-sm-start ps-sm-3"
       >
         <h4 class="text-secondary mt-2">{{ item.text }}</h4>
         <p class="text-secondary">{{ item.answer }}</p>
@@ -90,8 +90,8 @@ function setModalItem(item, formId, formTitle) {
     </ul>
   </div>
   <QuestionForm
+    :single-question="currentQuestion"
+    :modal-info="modalInfo"
     @updateQuestionsList="getQuestionList"
-    :singleQuestion="currentQuestion"
-    :modalInfo="modalInfo"
   />
 </template>
