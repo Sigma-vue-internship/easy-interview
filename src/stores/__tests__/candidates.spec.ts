@@ -17,13 +17,13 @@ describe("Candidate Store", () => {
     axiosInstance.get = vi.fn().mockImplementation(() =>
       Promise.resolve({
         data: "123",
-      })
+      }),
     );
     const candidateStore = useCandidateStore();
     const { data } = await candidateStore.getCandidateById("1");
     expect(axiosInstance.get).toBeCalled();
 
-    expect(axiosInstance.get).toBeCalledWith(`/candidates/1`);
+    expect(axiosInstance.get).toBeCalledWith("/candidates/1");
     expect(data).toBe("123");
   });
 });

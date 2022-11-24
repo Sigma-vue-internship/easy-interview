@@ -27,8 +27,13 @@ async function getQuestionList() {
     console.log(e);
   }
 }
-function deleteQuestion() {
-  console.log("delete button");
+async function deleteQuestion(id) {
+  try {
+    await questionStore.deleteQuestion(id);
+    await getQuestionList();
+  } catch (e) {
+    console.log(e);
+  }
 }
 function setModalItem(item, formId, formTitle) {
   currentQuestion.value = { ...item };
@@ -59,9 +64,9 @@ function setModalItem(item, formId, formTitle) {
     </div>
     <ul class="list-unstyled">
       <li
-        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-sm-start ps-sm-3"
         v-for="item in questionsList"
         :key="item.id"
+        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-sm-start ps-sm-3"
       >
         <h4 class="text-secondary mt-2">{{ item.text }}</h4>
         <p class="text-secondary">{{ item.answer }}</p>
@@ -83,15 +88,18 @@ function setModalItem(item, formId, formTitle) {
             </button>
           </div>
           <div class="col-6 col-sm-3 col-xl-1">
-            <DeleteButton @click="deleteQuestion" />
+            <DeleteButton
+              class="delete-question__btn"
+              @click="deleteQuestion(item.id)"
+            />
           </div>
         </div>
       </li>
     </ul>
   </div>
   <QuestionForm
+    :single-question="currentQuestion"
+    :modal-info="modalInfo"
     @updateQuestionsList="getQuestionList"
-    :singleQuestion="currentQuestion"
-    :modalInfo="modalInfo"
   />
 </template>
