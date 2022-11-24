@@ -24,18 +24,18 @@ export default function (data, formType, initState = {}) {
   };
 
   switch (formType) {
-    case "question":
-      v$ = useVuelidate(questionRules, data);
-      break;
-    case "candidate":
-      v$ = useVuelidate(candidateRules, data);
-      break;
-    default:
-      v$ = useVuelidate(questionRules, data);
-      break;
+  case "question":
+    v$ = useVuelidate(questionRules, data);
+    break;
+  case "candidate":
+    v$ = useVuelidate(candidateRules, data);
+    break;
+  default:
+    v$ = useVuelidate(questionRules, data);
+    break;
   }
 
-  watch(v$, async (newValidation) => {
+  watch(v$, async newValidation => {
     if (newValidation.$silentErrors.length) {
       showModal.value = true;
       return;

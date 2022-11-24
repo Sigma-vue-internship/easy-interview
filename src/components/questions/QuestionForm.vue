@@ -14,6 +14,12 @@ const props = defineProps({
   modalInfo: {
     type: Object,
     required: false,
+    default() {
+      return {
+        formId: "editModal",
+        formTitle: "default title",
+      };
+    },
   },
 });
 const emit = defineEmits(["updateQuestionsList"]);
