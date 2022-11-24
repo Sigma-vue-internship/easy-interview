@@ -21,6 +21,23 @@ const getWrapper = (props = {}) =>
       plugins: [
         createTestingPinia({
           createSpy: vi.fn,
+          stubActions: false,
+          plugins: [
+            () => ({
+              getAllQuestions: () =>
+                Promise.resolve({
+                  data: [
+                    {
+                      point: 2,
+                      text: "На чем основывается ООП в JavaScript ",
+                      answer: "На прототипном наследовании",
+                      category: "HTML",
+                      id: "34",
+                    },
+                  ],
+                }),
+            }),
+          ],
         }),
       ],
     },
@@ -46,24 +63,11 @@ describe("QuestionsList.vue", () => {
   });
   it("should call deleteQuestion with proper id ", async () => {
     const wrapper = getWrapper();
-    const questionStore = useQuestionStore();
-    const spy = vi.spyOn(questionStore, "getAllQuestions");
-    spy.mockImplementation(() => [
-      {
-        point: 2,
-        text: "На чем основывается ООП в JavaScript ",
-        answer: "На прототипном наследовании",
-        category: "HTML",
-        id: "34",
-      },
-    ]);
+    const { getAllQuestions, deleteQuestion } = useQuestionStore();
+    expect(getAllQuestions).toBeCalledWith("test_category");
     await flushPromises();
-    expect(spy).toBeCalledWith("test_category");
-
-    // expect(spy).toHaveBeenCalledTimes(1);
-    // const btn = wrapper.find(".btn-outline-danger");
-    // console.log(btn);
-    // await btn.trigger("click");
-    // expect(store.deleteQuestion).toBeCalledWith("34");
+    const btn = wrapper.find(".btn-outline-danger");
+    await btn.trigger("click");
+    expect(deleteQuestion).toBeCalledWith("34");
   });
 });
