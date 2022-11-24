@@ -11,7 +11,7 @@ import {
 } from "@vuelidate/validators";
 import { ref, toRef, watch } from "vue";
 import EasyModal from "../common/EasyModal.vue";
-import useCategories from "../../utils/useCategories";
+import Categories from "../../utils/useCategories";
 
 const props = defineProps({
   singleQuestion: {
@@ -34,7 +34,6 @@ const rules = {
   category: { required },
   answer: { required, minLength: minLength(5), maxLength: maxLength(250) },
 };
-const categories = useCategories();
 const v$ = useVuelidate(rules, question);
 
 function resetForm() {
@@ -123,7 +122,7 @@ async function sendData() {
             {{ question.category }}
           </option>
           <option
-            v-for="category in categories"
+            v-for="category in Categories()"
             :key="category"
             class="category__option"
             :value="category"

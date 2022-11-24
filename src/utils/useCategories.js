@@ -1,5 +1,5 @@
-export default function () {
-  const categories = [
+export function Categories() {
+  return [
     "HTML",
     "CSS",
     "JavaScript",
@@ -10,5 +10,6 @@ export default function () {
     "Database",
     "Browser",
   ];
-  return categories;
 }
+
+export default Categories;
