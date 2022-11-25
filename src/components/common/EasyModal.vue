@@ -1,10 +1,30 @@
-<script>
+<script setup lang="ts">
+defineProps({
+  formTitle: {
+    type: String,
+    required: false,
+    default() {
+      return { formTitle: "Title" };
+    },
+  },
+  showModal: {
+    type: Boolean,
+    required: true,
+    default() {
+      return { showModal: false };
+    },
+  },
+});
+const emit = defineEmits(["closeModal"]);
+</script>
+<script lang="ts">
 export default {
   name: "EasyModal",
 };
 </script>
 <template>
   <div
+    v-show="showModal"
     id="exampleModal"
     class="modal fade"
     tabindex="-1"
@@ -16,7 +36,16 @@ export default {
     <div class="modal-dialog modal-lg">
       <div class="modal-content text-primary">
         <div class="modal-header">
-          <slot name="header" />
+          <h5 class="modal-title">
+            {{ formTitle }}
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            data-bs-dismiss="modal"
+            @click="emit('closeModal')"
+          />
         </div>
         <div class="modal-body text-start">
           <slot name="body" />

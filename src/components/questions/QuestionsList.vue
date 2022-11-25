@@ -6,33 +6,38 @@ import { useQuestionStore } from "../../stores/questions";
 import { ref, onBeforeMount } from "vue";
 
 const questionStore = useQuestionStore();
-const currentQuestion = ref({});
-const questionsList = ref([]);
-const modalInfo = ref({});
-const route = useRoute();
-const initQuestion = ref({
-  text: "",
-  point: 0,
-  category: "HTML",
-  answer: "",
+const questionInitValue = {
+  question: {
+    text: "",
+    point: 0,
+    category: "HTML",
+    answer: "",
+  },
+  formType: "",
+  formTitle: "",
+};
+const currentForm = ref({
+  ...questionInitValue,
 });
+const questionsList = ref([]);
+const route = useRoute();
+const isShowModal = ref(false);
+onBeforeMount(() => getQuestionList(false));
 
-onBeforeMount(() => getQuestionList());
-
-async function getQuestionList() {
+async function getQuestionList(showModal) {
   try {
     const { data } = await questionStore.getAllQuestions(route.params.title);
     questionsList.value = [...data];
+    isShowModal.value = showModal;
   } catch (e) {
     console.log(e);
   }
 }
-function deleteQuestion() {
-  console.log("delete button");
+function setModalItem(item, formType, formTitle) {
+  currentForm.value = { question: { ...item }, formType, formTitle };
 }
-function setModalItem(item, formId, formTitle) {
-  currentQuestion.value = { ...item };
-  modalInfo.value = { formId, formTitle };
+function closeModal() {
+  currentForm.value = { ...questionInitValue };
 }
 </script>
 <template>
@@ -51,7 +56,7 @@ function setModalItem(item, formId, formTitle) {
           class="btn btn-primary"
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
-          @click="setModalItem(initQuestion, 'addModal', 'Add new question')"
+          @click="setModalItem(currentForm.question, 'add', 'Add new question')"
         >
           Add question
         </button>
@@ -77,21 +82,29 @@ function setModalItem(item, formId, formTitle) {
               class="btn btn-primary"
               data-bs-toggle="modal"
               data-bs-target="#exampleModal"
-              @click="setModalItem(item, 'editModal', 'Edit question')"
+              @click="setModalItem(item, 'edit', 'Edit question')"
             >
               Edit
             </button>
           </div>
           <div class="col-6 col-sm-3 col-xl-1">
-            <DeleteButton @click="deleteQuestion" />
+            <DeleteButton />
           </div>
         </div>
       </li>
     </ul>
   </div>
-  <QuestionForm
-    :single-question="currentQuestion"
-    :modal-info="modalInfo"
-    @updateQuestionsList="getQuestionList"
-  />
+  <EasyModal
+    :form-title="currentForm.formTitle"
+    :show-modal="isShowModal"
+    @close-modal="closeModal"
+  >
+    <template #body>
+      <QuestionForm
+        :single-question="currentForm.question"
+        :form-type="currentForm.formType"
+        @updateQuestionsList="getQuestionList"
+      />
+    </template>
+  </EasyModal>
 </template>

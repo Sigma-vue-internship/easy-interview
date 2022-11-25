@@ -37,10 +37,10 @@ export function useFormValidator(data, formType, initState = {}) {
 
   watch(v$, async newValidation => {
     if (newValidation.$silentErrors.length) {
-      showModal.value = true;
+      showModal.value = false;
       return;
     }
-    showModal.value = false;
+    showModal.value = true;
   });
   function resetForm() {
     v$.value.$reset();
