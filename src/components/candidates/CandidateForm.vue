@@ -2,14 +2,15 @@
 import { ref, watch } from "vue";
 import { useFormValidator } from "../../utils/useFormValidator";
 import { Candidate } from "../../../dto/candidates";
-const candidate = ref({
+const candidateInit = {
   position: "",
   username: "",
   linkedinUrl: "",
   feedback: "",
   avatarUrl: "",
   id: 0,
-});
+};
+const candidate = ref({ ...candidateInit });
 const props = defineProps({
   singleCandidate: {
     type: Object as () => Candidate,
@@ -40,6 +41,7 @@ async function onSubmit() {
     return;
   }
   resetForm();
+  candidate.value = { ...candidateInit };
 }
 </script>
 <template>

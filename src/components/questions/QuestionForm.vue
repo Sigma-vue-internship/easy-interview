@@ -4,12 +4,13 @@ import { Question } from "../../../dto/questions";
 import { ref, watch } from "vue";
 import { useFormValidator } from "../../utils/useFormValidator";
 import Categories from "../../utils/useCategories";
-const question = ref({
+const questionInit = {
   text: "",
   point: 0,
   category: "HTML",
   answer: "",
-});
+};
+const question = ref({ ...questionInit });
 
 const props = defineProps({
   singleQuestion: {
@@ -50,11 +51,13 @@ async function sendData() {
       await questionStore.sendQuestion({ ...question.value });
       emit("updateQuestionsList");
       resetForm();
+      question.value = { ...questionInit };
       return;
     }
     await questionStore.postQuestion({ ...question.value });
     emit("updateQuestionsList");
     resetForm();
+    question.value = { ...questionInit };
   } catch (e) {
     resetForm();
     console.log(e);

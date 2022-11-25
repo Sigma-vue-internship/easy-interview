@@ -43,7 +43,7 @@ export function useFormValidator(data, formType) {
     showModal.value = true;
   });
   function resetForm() {
-    v$.value.$silentErrors.length = 0;
+    v$.value.$reset();
   }
   return {
     v$,

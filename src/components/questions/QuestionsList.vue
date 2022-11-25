@@ -24,6 +24,7 @@ async function getQuestionList() {
     const { data } = await questionStore.getAllQuestions(route.params.title);
     questionsList.value = [...data];
     isShowModal.value = false;
+    clearForm();
   } catch (e) {
     console.log(e);
   }
