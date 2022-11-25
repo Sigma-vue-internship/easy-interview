@@ -3,16 +3,28 @@ import { QuizQuestion } from "../../../dto/quiz";
 import EditButton from "../common/EditButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
 import CheckboxItem from "./CheckboxItem.vue";
+import { ref } from "vue";
 
 const props = defineProps({
+  question: {
+    type: Object as () => QuizQuestion,
+    default: () => {},
+  },
   questionArray: {
     type: Array as () => QuizQuestion[],
     default: () => [],
   },
 });
 
+const checkedAnswer = ref(0);
+
 function postQuiz() {
   console.log(props.questionArray);
+}
+
+function answerPoints(point: number) {
+  checkedAnswer.value = point;
+  console.log(checkedAnswer.value);
 }
 
 function deleteQuestion(index: number) {
@@ -31,7 +43,7 @@ function pointsArray(point: number) {
 
 <template>
   <h2 class="text-primary text-start mt-5">Question List</h2>
-  <div v-if="props.questionArray?.length">
+  <div v-if="props.questionArray.length">
     <ul class="list-unstyled">
       <li
         v-for="(question, index) in questionArray"
@@ -56,7 +68,10 @@ function pointsArray(point: number) {
               :key="idNumber"
               class="form-check form-check-inline"
             >
-              <CheckboxItem :id-number="idNumber" />
+              <CheckboxItem
+                :id-number="idNumber"
+                @add-point="answerPoints"
+              />
             </div>
             <div class="mt-4 me-2 text-end">
               <DeleteButton @click="deleteQuestion(index)" />

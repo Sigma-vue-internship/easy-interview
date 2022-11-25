@@ -1,30 +1,32 @@
 <script setup lang="ts">
-import { ref } from "vue";
+const emit = defineEmits(["addPoint"]);
 
-const checkedAnswer = ref([]);
-
-const props = defineProps({
+defineProps({
   idNumber: {
     type: Number,
     default: 0,
   },
 });
+
+function addPoint(point: number) {
+  emit("addPoint", point);
+}
 </script>
 
 <template>
   <div>
     <input
-      :id="'answer' + props.idNumber"
-      v-model="checkedAnswer"
+      :id="'answer' + idNumber"
       class="form-check-input"
       type="checkbox"
-      :value="props.idNumber"
+      :value="idNumber"
+      @click="addPoint(idNumber)"
     />
     <label
       class="form-check-label"
       for="answerCheckbox"
-      :value="props.idNumber"
-      >{{ props.idNumber }}</label
+      :value="idNumber"
+      >{{ idNumber }}</label
     >
   </div>
 </template>
