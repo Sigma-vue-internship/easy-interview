@@ -17,7 +17,7 @@ const formTitle = computed(() =>
 const questionsList = ref([]);
 const route = useRoute();
 const isShowModal = ref(false);
-onBeforeMount(() => getQuestionList(false));
+onBeforeMount(() => getQuestionList());
 
 async function getQuestionList() {
   try {
