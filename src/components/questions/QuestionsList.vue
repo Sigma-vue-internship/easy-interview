@@ -3,41 +3,38 @@ import DeleteButton from "../common/DeleteButton.vue";
 import QuestionForm from "./QuestionForm.vue";
 import { useRoute } from "vue-router";
 import { useQuestionStore } from "../../stores/questions";
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, computed } from "vue";
 
 const questionStore = useQuestionStore();
-const questionInitValue = {
-  question: {
-    text: "",
-    point: 0,
-    category: "HTML",
-    answer: "",
-  },
-  formType: "",
-  formTitle: "",
-};
-const currentQuestion = ref({
-  ...questionInitValue,
-});
+
+const currentQuestion = ref({});
+const formType = ref("");
+
+const formTitle = computed(() =>
+  formType.value === "put" ? "Edit question" : "Add new question",
+);
+
 const questionsList = ref([]);
 const route = useRoute();
 const isShowModal = ref(false);
 onBeforeMount(() => getQuestionList(false));
 
-async function getQuestionList(showModal) {
+async function getQuestionList() {
   try {
     const { data } = await questionStore.getAllQuestions(route.params.title);
     questionsList.value = [...data];
-    isShowModal.value = showModal;
+    isShowModal.value = false;
   } catch (e) {
     console.log(e);
   }
 }
-function setModalItem(item, formType, formTitle) {
-  currentQuestion.value = { question: { ...item }, formType, formTitle };
+function setModalItem(item, action) {
+  formType.value = action;
+  currentQuestion.value = { ...item };
+  isShowModal.value = true;
 }
-function closeModal() {
-  currentQuestion.value = { ...questionInitValue };
+function clearForm() {
+  currentQuestion.value = {};
 }
 </script>
 <template>
@@ -56,7 +53,7 @@ function closeModal() {
           class="btn btn-primary"
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
-          @click="setModalItem(currentQuestion.question, 'add', 'Add new question')"
+          @click="setModalItem(currentQuestion, 'post')"
         >
           Add question
         </button>
@@ -82,7 +79,7 @@ function closeModal() {
               class="btn btn-primary"
               data-bs-toggle="modal"
               data-bs-target="#exampleModal"
-              @click="setModalItem(item, 'edit', 'Edit question')"
+              @click="setModalItem(item, 'put')"
             >
               Edit
             </button>
@@ -95,13 +92,14 @@ function closeModal() {
     </ul>
   </div>
   <EasyModal
-    :title="currentQuestion.formTitle"
+    v-show="isShowModal"
+    :title="formTitle"
     :visible="isShowModal"
-    @close-modal="closeModal"
+    @close-modal="clearForm"
   >
     <QuestionForm
-      :single-question="currentQuestion.question"
-      :form-type="currentQuestion.formType"
+      :single-question="currentQuestion"
+      :form-type="formType"
       @update-questions-list="getQuestionList"
     />
   </EasyModal>

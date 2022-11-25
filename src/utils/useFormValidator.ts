@@ -8,8 +8,8 @@ import {
   maxLength,
 } from "@vuelidate/validators";
 
-export function useFormValidator(data, formType, initState = {}) {
-  const showModal = ref(true);
+export function useFormValidator(data, formType) {
+  const showModal = ref(false);
   let v$;
   const questionRules = {
     point: { required, minValue: minValue(1), maxValue: maxValue(5) },
@@ -24,15 +24,15 @@ export function useFormValidator(data, formType, initState = {}) {
   };
 
   switch (formType) {
-    case "question":
-      v$ = useVuelidate(questionRules, data);
-      break;
-    case "candidate":
-      v$ = useVuelidate(candidateRules, data);
-      break;
-    default:
-      v$ = useVuelidate(questionRules, data);
-      break;
+  case "question":
+    v$ = useVuelidate(questionRules, data);
+    break;
+  case "candidate":
+    v$ = useVuelidate(candidateRules, data);
+    break;
+  default:
+    v$ = useVuelidate(questionRules, data);
+    break;
   }
 
   watch(v$, async newValidation => {
@@ -43,10 +43,7 @@ export function useFormValidator(data, formType, initState = {}) {
     showModal.value = true;
   });
   function resetForm() {
-    v$.value.$reset();
-    if (initState) {
-      data.value = { ...initState };
-    }
+    v$.value.$silentErrors.length = 0;
   }
   return {
     v$,

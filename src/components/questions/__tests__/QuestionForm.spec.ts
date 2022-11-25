@@ -32,10 +32,7 @@ describe("QuestionForm.vue", () => {
         category: "HTML",
         answer: "",
       },
-      modalInfo: {
-        formId: "addModal",
-        formTitle: "Add new question",
-      },
+      formType: "post",
     });
     wrapper.find("#point").setValue(1);
     wrapper.find("#text").setValue("question");
@@ -43,7 +40,7 @@ describe("QuestionForm.vue", () => {
     wrapper.find("#answer").setValue("answer");
     const submitButton = wrapper.find(".question__submit-btn");
     const { postQuestion } = useQuestionStore();
-    await submitButton.trigger("click");
+    await submitButton.trigger("submit");
     await flushPromises();
     expect(postQuestion).toBeCalledWith(
       expect.objectContaining({
@@ -51,7 +48,7 @@ describe("QuestionForm.vue", () => {
         text: "question",
         category: "OOP",
         answer: "answer",
-      })
+      }),
     );
   });
   it("should edit question", async () => {
@@ -62,10 +59,7 @@ describe("QuestionForm.vue", () => {
         category: "HTML",
         answer: "test_answer",
       },
-      modalInfo: {
-        formId: "editModal",
-        formTitle: "Edit question",
-      },
+      formType: "put",
     });
     wrapper.find("#point").setValue(1);
     wrapper.find("#text").setValue("question");
@@ -73,7 +67,7 @@ describe("QuestionForm.vue", () => {
     wrapper.find("#answer").setValue("answer");
     const submitButton = wrapper.find(".question__submit-btn");
     const { sendQuestion } = useQuestionStore();
-    await submitButton.trigger("click");
+    await submitButton.trigger("submit");
     await flushPromises();
     expect(sendQuestion).toBeCalledWith(
       expect.objectContaining({
@@ -81,7 +75,7 @@ describe("QuestionForm.vue", () => {
         point: 1,
         category: "OOP",
         answer: "answer",
-      })
+      }),
     );
   });
 });

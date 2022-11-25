@@ -1,47 +1,59 @@
 <script setup lang="ts">
 import { useQuestionStore } from "../../stores/questions";
 import { Question } from "../../../dto/questions";
-import { computed, onUpdated, reactive, ref, toRef, toRefs } from "vue";
+import { ref, watch } from "vue";
 import { useFormValidator } from "../../utils/useFormValidator";
 import Categories from "../../utils/useCategories";
+const question = ref({
+  text: "",
+  point: 0,
+  category: "HTML",
+  answer: "",
+});
 
 const props = defineProps({
   singleQuestion: {
     type: Object as () => Question,
-    required: true,
+    required: false,
+    default() {
+      return {};
+    },
   },
   formType: {
     type: String,
     required: false,
     default() {
       return {
-        formType: "edit",
+        formType: "put",
       };
     },
   },
 });
-const emit = defineEmits(["updateQuestionsList"]);
-const question = toRef(props, "singleQuestion");
-onUpdated(() => {
-  console.log({ ...question.value });
+
+watch(props, newProps => {
+  question.value = { ...newProps.singleQuestion };
 });
+
+const emit = defineEmits(["updateQuestionsList"]);
+
 const questionStore = useQuestionStore();
 const { v$, resetForm, showModal } = useFormValidator(question, "question");
+
 async function sendData() {
   const isFormCorrect = await v$.value.$validate();
+
   if (!isFormCorrect) {
-    // showModal.value = false;
     return;
   }
   try {
-    if (props.formType === "edit") {
+    if (props.formType === "put") {
       await questionStore.sendQuestion({ ...question.value });
-      emit("updateQuestionsList", showModal.value);
+      emit("updateQuestionsList");
       resetForm();
       return;
     }
     await questionStore.postQuestion({ ...question.value });
-    emit("updateQuestionsList", showModal.value);
+    emit("updateQuestionsList");
     resetForm();
   } catch (e) {
     resetForm();
@@ -138,11 +150,10 @@ async function sendData() {
       <button
         type="submit"
         class="btn btn-primary question__submit-btn ms-2"
-        @click.self="sendData"
+        :data-bs-dismiss="showModal ? 'modal' : ''"
       >
         Submit
       </button>
     </div>
   </form>
 </template>
-<!-- :data-bs-dismiss="showModal ? '' : 'modal'" -->
