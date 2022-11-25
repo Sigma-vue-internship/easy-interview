@@ -6,3 +6,7 @@ export interface QuizQuestion {
   category: string;
   id: string;
 }
+
+export interface QuizList {
+  quizList: QuizQuestion[];
+}
