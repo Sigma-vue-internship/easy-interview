@@ -1,17 +1,17 @@
 <script setup lang="ts">
 defineProps({
-  formTitle: {
+  title: {
     type: String,
     required: false,
     default() {
       return { formTitle: "Title" };
     },
   },
-  showModal: {
+  visible: {
     type: Boolean,
     required: true,
     default() {
-      return { showModal: false };
+      return { visible: false };
     },
   },
 });
@@ -24,7 +24,7 @@ export default {
 </script>
 <template>
   <div
-    v-show="showModal"
+    v-show="visible"
     id="exampleModal"
     class="modal fade"
     tabindex="-1"
@@ -37,7 +37,7 @@ export default {
       <div class="modal-content text-primary">
         <div class="modal-header">
           <h5 class="modal-title">
-            {{ formTitle }}
+            {{ title }}
           </h5>
           <button
             type="button"
@@ -48,7 +48,7 @@ export default {
           />
         </div>
         <div class="modal-body text-start">
-          <slot name="body" />
+          <slot />
         </div>
       </div>
     </div>

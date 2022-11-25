@@ -16,7 +16,7 @@ const questionInitValue = {
   formType: "",
   formTitle: "",
 };
-const currentForm = ref({
+const currentQuestion = ref({
   ...questionInitValue,
 });
 const questionsList = ref([]);
@@ -34,10 +34,10 @@ async function getQuestionList(showModal) {
   }
 }
 function setModalItem(item, formType, formTitle) {
-  currentForm.value = { question: { ...item }, formType, formTitle };
+  currentQuestion.value = { question: { ...item }, formType, formTitle };
 }
 function closeModal() {
-  currentForm.value = { ...questionInitValue };
+  currentQuestion.value = { ...questionInitValue };
 }
 </script>
 <template>
@@ -56,7 +56,7 @@ function closeModal() {
           class="btn btn-primary"
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
-          @click="setModalItem(currentForm.question, 'add', 'Add new question')"
+          @click="setModalItem(currentQuestion.question, 'add', 'Add new question')"
         >
           Add question
         </button>
@@ -95,16 +95,14 @@ function closeModal() {
     </ul>
   </div>
   <EasyModal
-    :form-title="currentForm.formTitle"
-    :show-modal="isShowModal"
+    :title="currentQuestion.formTitle"
+    :visible="isShowModal"
     @close-modal="closeModal"
   >
-    <template #body>
-      <QuestionForm
-        :single-question="currentForm.question"
-        :form-type="currentForm.formType"
-        @updateQuestionsList="getQuestionList"
-      />
-    </template>
+    <QuestionForm
+      :single-question="currentQuestion.question"
+      :form-type="currentQuestion.formType"
+      @update-questions-list="getQuestionList"
+    />
   </EasyModal>
 </template>
