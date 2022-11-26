@@ -1,7 +1,12 @@
 <template>
-  <div>
-    <QuestionsList />
-  </div>
+  <Suspense>
+    <template #default>
+      <QuestionsList />
+    </template>
+    <template #fallback>
+      <SpinnerLoader />
+    </template>
+  </Suspense>
 </template>
 
 <script setup>

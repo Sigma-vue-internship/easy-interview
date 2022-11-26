@@ -1,5 +1,10 @@
+<script>
+export default {
+  name: "SpinnerLoader",
+};
+</script>
 <template>
-  <div class="text-center pt-2">
+  <div class="text-center align-self-center pt-4">
     <div
       class="spinner-border text-primary"
       role="status"

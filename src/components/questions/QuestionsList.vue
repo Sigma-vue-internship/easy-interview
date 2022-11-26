@@ -3,7 +3,7 @@ import DeleteButton from "../common/DeleteButton.vue";
 import QuestionForm from "./QuestionForm.vue";
 import { useRoute } from "vue-router";
 import { useQuestionStore } from "../../stores/questions";
-import { ref, onBeforeMount } from "vue";
+import { ref } from "vue";
 
 const questionStore = useQuestionStore();
 const currentQuestion = ref({});
@@ -16,8 +16,6 @@ const initQuestion = ref({
   category: "HTML",
   answer: "",
 });
-
-onBeforeMount(() => getQuestionList());
 
 async function getQuestionList() {
   try {
@@ -34,6 +32,8 @@ function setModalItem(item, formId, formTitle) {
   currentQuestion.value = { ...item };
   modalInfo.value = { formId, formTitle };
 }
+
+await getQuestionList();
 </script>
 <template>
   <div class="container mt-3 text-center">
