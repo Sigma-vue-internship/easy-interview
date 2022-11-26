@@ -16,14 +16,12 @@ const formTitle = computed(() =>
 
 const questionsList = ref([]);
 const route = useRoute();
-const isShowModal = ref(false);
 onBeforeMount(() => getQuestionList());
 
 async function getQuestionList() {
   try {
     const { data } = await questionStore.getAllQuestions(route.params.title);
     questionsList.value = [...data];
-    isShowModal.value = false;
     clearForm();
   } catch (e) {
     console.log(e);
@@ -32,7 +30,6 @@ async function getQuestionList() {
 function setModalItem(item, action) {
   formType.value = action;
   currentQuestion.value = { ...item };
-  isShowModal.value = true;
 }
 function clearForm() {
   currentQuestion.value = {};
@@ -93,9 +90,7 @@ function clearForm() {
     </ul>
   </div>
   <EasyModal
-    v-show="isShowModal"
     :title="formTitle"
-    :visible="isShowModal"
     @close-modal="clearForm"
   >
     <QuestionForm

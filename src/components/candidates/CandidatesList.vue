@@ -288,10 +288,7 @@ const formType = ref("post");
 const formTitle = computed(() =>
   formType.value === "put" ? "Edit candidate" : "Add new candidate",
 );
-async function getCandidateList() {
-  isShowModal.value = false;
-}
-const isShowModal = ref(false);
+async function getCandidateList() {}
 
 function clearForm() {
   currentCandidate.value = {};
@@ -314,9 +311,7 @@ function clearForm() {
         Add candidate
       </button>
       <EasyModal
-        v-show="isShowModal"
         :title="formTitle"
-        :visible="isShowModal"
         @close-modal="clearForm"
       >
         <CandidateForm

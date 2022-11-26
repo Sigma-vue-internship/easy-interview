@@ -7,13 +7,6 @@ defineProps({
       return { formTitle: "Title" };
     },
   },
-  visible: {
-    type: Boolean,
-    required: true,
-    default() {
-      return { visible: false };
-    },
-  },
 });
 const emit = defineEmits(["closeModal"]);
 </script>
@@ -24,7 +17,6 @@ export default {
 </script>
 <template>
   <div
-    v-show="visible"
     id="exampleModal"
     class="modal fade"
     tabindex="-1"
