@@ -2,7 +2,6 @@
 import { QuizQuestion } from "../../../dto/quiz";
 import EditButton from "../common/EditButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
-import { ref } from "vue";
 
 const props = defineProps({
   question: {
@@ -15,21 +14,18 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["addPoint"]);
-const disabledQuestion = ref([]);
+const emit = defineEmits(["addPoint", "deleteQuestion"]);
 
 function postQuiz() {
   console.log(props.questionArray);
 }
 
 function deleteQuestion(index: number) {
-  console.log(index);
+  emit("deleteQuestion", index);
 }
 
 function addPoint(point: number, id: string) {
   emit("addPoint", point, id);
-  disabledQuestion.value = [...disabledQuestion.value, { questionId: id, answerPoint: point}];
-  console.log(disabledQuestion)
 }
 
 function pointsArray(point: number) {
@@ -72,9 +68,9 @@ function pointsArray(point: number) {
               <input
                 :id="question.id"
                 class="form-check-input"
-                type="checkbox"
+                type="radio"
                 :value="idNumber"
-                :disabled="disabledQuestion.includes(question.id)"
+                :name="'radio' + index"
                 @click="addPoint(idNumber, question.id)"
               />
               <label

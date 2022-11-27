@@ -90,6 +90,11 @@ function answerPoints(point: number, id: string) {
   }
   return;
 }
+
+function deleteQuestion(index) {
+  quizList.value.splice(index, 1);
+  return quizList;
+}
 </script>
 
 <template>
@@ -141,6 +146,7 @@ function answerPoints(point: number, id: string) {
     <QuizList
       :question-array="quizList"
       @add-point="answerPoints"
+      @delete-question="deleteQuestion"
     />
   </div>
 </template>
