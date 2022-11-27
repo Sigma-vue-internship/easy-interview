@@ -77,11 +77,11 @@ const resultPercentage = computed(() =>
     (result.questionAnswer.reduce((summ, item) => summ + item.answerPoints, 0) *
       100) /
     result.questionAnswer.reduce((summ, item) => summ + item.questionScore, 0)
-  ).toFixed(1)
+  ).toFixed(1),
 );
 
 const categories = computed(() =>
-  _uniq(result.questionAnswer.map((obj) => obj.category))
+  _uniq(result.questionAnswer.map(obj => obj.category)),
 );
 </script>
 
@@ -101,9 +101,9 @@ const categories = computed(() =>
       <CategoryListItem
         v-for="(category, index) in categories"
         :key="category"
-        :itemId="index"
+        :item-id="index"
         :category="category"
-        :questionsArray="result.questionAnswer"
+        :questions-array="result.questionAnswer"
       />
 
       <div class="col-12 text-center text-md-end mt-3">

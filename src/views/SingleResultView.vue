@@ -5,5 +5,5 @@
 </template>
 
 <script setup>
-import SingleResult from '../components/results/SingleResult.vue';
+import SingleResult from "../components/results/SingleResult.vue";
 </script>

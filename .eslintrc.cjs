@@ -9,7 +9,7 @@ module.exports = {
   ],
   parserOptions: {
     ecmaVersion: "latest",
-    parser: "@typescript-eslint/parser"
+    parser: "@typescript-eslint/parser",
   },
   rules: {
     "vue/multi-word-component-names": "off",

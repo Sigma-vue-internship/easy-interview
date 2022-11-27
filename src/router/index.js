@@ -76,7 +76,7 @@ const router = createRouter({
       name: "singleResult",
       component: SingleResultView,
       beforeEnter: authGuard,
-    }
+    },
   ],
 });
 // router.beforeEach((to, from, next) =>

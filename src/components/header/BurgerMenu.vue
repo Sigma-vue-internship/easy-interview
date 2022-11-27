@@ -14,9 +14,9 @@ console.log();
       icon="fa-solid fa-bars"
     />
     <div
+      id="offcanvasRight"
       class="offcanvas offcanvas-end"
       tabindex="-1"
-      id="offcanvasRight"
       aria-labelledby="offcanvasRightLabel"
     >
       <div class="offcanvas-header text-primary">
@@ -29,7 +29,7 @@ console.log();
         ></button>
       </div>
       <div class="offcanvas-body p-0">
-        <ul class="list-group">
+        <ul class="text-start list-group">
           <li class="list-group-item text-dark">
             <router-link
               class="text-decoration-none"
