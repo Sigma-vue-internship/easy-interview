@@ -1,20 +1,9 @@
 <script setup>
 import { useRouter } from "vue-router";
-import QuestionForm from "./QuestionForm.vue";
 
-let categoriesList = [
-  "HTML",
-  "CSS",
-  "JavaScript",
-  "Frameworks",
-  "OOP",
-  "Security",
-  "Network",
-  "Database",
-  "Browser",
-];
+import Categories from "../../utils/useCategories";
 
-let questionsList = [
+const questionsList = [
   {
     category: "HTML",
     id: "1",
@@ -129,15 +118,13 @@ function pushRoute(item) {
       </div>
       <div
         class="col-lg-2 my-xs-4 my-lg-0 ms-lg-5 ms-xl-4 ms-xxl-0 text-center text-md-start"
-      >
-        <QuestionForm />
-      </div>
+      ></div>
     </div>
     <ul class="list-unstyled mt-5">
       <li
-        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow-sm"
-        v-for="item in categoriesList"
+        v-for="item in Categories()"
         :key="item"
+        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow-sm"
         @click="pushRoute(item)"
       >
         <div class="row">
@@ -150,7 +137,7 @@ function pushRoute(item) {
             class="col-1 d-flex text-primary align-items-center justify-content-center rounded-5 badge bg-light"
           >
             <h4 class="m-0 pb-1 fs-5">
-              {{ questionsList.filter((obj) => obj.category === item).length }}
+              {{ questionsList.filter(obj => obj.category === item).length }}
             </h4>
           </div>
         </div>

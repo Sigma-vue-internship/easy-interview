@@ -23,29 +23,34 @@ function logoutUser() {
             class="my-1 col-8 col-sm-4 col-md-3 align-self-start mt-2 mt-md-0"
             to="/"
           >
-            <img src="../icons/easylogo.svg" alt="logo" height="30" class="" />
+            <img
+              src="../icons/easylogo.svg"
+              alt="logo"
+              height="30"
+              class=""
+            />
           </router-link>
           <div
             class="d-none d-md-flex col-md-8 row gx-5 gx-lg-0 justify-content-end justify-content-md-around"
           >
             <SearchComponent class="d-none d-md-block col-12 col-md-9" />
             <button
-              class="btn btn-outline-primary rounded-3 log-in col-md-2 d-none d-md-block"
               v-if="!isUserAuthenticated"
+              class="btn btn-outline-primary rounded-3 log-in col-md-2 d-none d-md-block"
               @click="login"
             >
               Log in
             </button>
             <button
-              class="btn btn-outline-secondary rounded-3 log-out col-md-2 d-none d-md-block"
               v-else
+              class="btn btn-outline-secondary rounded-3 log-out col-md-3 col-lg-2 d-none d-md-block"
               @click="logoutUser"
             >
               Logout
             </button>
           </div>
           <BurgerMenu
-            class="d-block col-3 col-sm-1 justify-content-end col-md-1 my-auto"
+            class="d-block col-3 col-sm-1 justify-content-end text-end col-md-1 my-auto"
           />
         </div>
       </div>

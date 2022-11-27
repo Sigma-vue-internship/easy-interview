@@ -10,7 +10,10 @@
         </router-link>
       </div>
       <div class="col-md-4 col-lg-3">
-        <router-link class="text-decoration-none" to="/categories">
+        <router-link
+          class="text-decoration-none"
+          to="/categories"
+        >
           <div class="border rounded-4 p-3">
             <span class="icon-book-open" />
 
@@ -19,7 +22,10 @@
         </router-link>
       </div>
       <div class="col-md-4 col-lg-3">
-        <router-link class="text-decoration-none" to="/results">
+        <router-link
+          class="text-decoration-none"
+          to="/results"
+        >
           <div class="border rounded-4 p-3">
             <span class="icon-paste" />
 
@@ -28,7 +34,10 @@
         </router-link>
       </div>
       <div class="col-md-4 col-lg-3">
-        <router-link class="text-decoration-none" to="/candidates">
+        <router-link
+          class="text-decoration-none"
+          to="/candidates"
+        >
           <div class="border rounded-4 p-3">
             <span class="icon-users" />
 
@@ -37,7 +46,10 @@
         </router-link>
       </div>
       <div class="col-md-4 col-lg-3">
-        <router-link class="text-decoration-none" to="/">
+        <router-link
+          class="text-decoration-none"
+          to="/"
+        >
           <div class="border rounded-4 p-3">
             <span class="icon-loop-alt" />
 
@@ -46,7 +58,10 @@
         </router-link>
       </div>
       <div class="col-md-4 col-lg-3">
-        <router-link class="text-decoration-none" to="/statistics">
+        <router-link
+          class="text-decoration-none"
+          to="/statistics"
+        >
           <div class="border rounded-4 p-3">
             <span class="icon-stats" />
 

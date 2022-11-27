@@ -9,7 +9,7 @@ describe("Candidate.vue", () => {
     vi.clearAllMocks();
   });
 
-  it("v-model should set values to candidateData", async () => {
+  it("v-model should set values to candidate", async () => {
     const wrapper = mount(CandidateForm, {
       global: {
         components: {
@@ -23,7 +23,7 @@ describe("Candidate.vue", () => {
     wrapper.find("#avatar").setValue("avatar");
     wrapper.find("#feedback").setValue("feedback");
 
-    expect(wrapper.vm.candidateData).toMatchObject({
+    expect(wrapper.vm.candidate).toMatchObject({
       avatarUrl: "avatar",
       feedback: "feedback",
       id: 0,
@@ -32,7 +32,7 @@ describe("Candidate.vue", () => {
       username: "username",
     });
   });
-  it("after click onSubmit, candidateData should be empty", async () => {
+  it("after click onSubmit, candidate should be empty", async () => {
     const wrapper = mount(CandidateForm, {
       global: {
         components: {
@@ -54,8 +54,7 @@ describe("Candidate.vue", () => {
     await nextTick();
     await nextTick();
 
-    // console.log(submitBtn);
-    expect(wrapper.vm.candidateData).toMatchObject({
+    expect(wrapper.vm.candidate).toMatchObject({
       avatarUrl: "",
       feedback: "",
       id: 0,
