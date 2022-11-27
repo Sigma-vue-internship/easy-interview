@@ -67,6 +67,7 @@ function deleteProfile() {
           <img
             id="avatarUrl"
             :src="currentCandidate.avatarUrl"
+            alt="singleCandidate image"
             width="298"
             height="298"
             class="img-fluid rounded-4 border bg-light p-1"
