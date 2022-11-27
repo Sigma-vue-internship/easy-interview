@@ -2,7 +2,6 @@
 import { QuizQuestion } from "../../../dto/quiz";
 import EditButton from "../common/EditButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
-import CheckboxItem from "./CheckboxItem.vue";
 import { ref } from "vue";
 
 const props = defineProps({
@@ -16,19 +15,21 @@ const props = defineProps({
   },
 });
 
-const checkedAnswer = ref(0);
+const emit = defineEmits(["addPoint"]);
+const disabledQuestion = ref([]);
 
 function postQuiz() {
   console.log(props.questionArray);
 }
 
-function answerPoints(point: number) {
-  checkedAnswer.value = point;
-  console.log(checkedAnswer.value);
-}
-
 function deleteQuestion(index: number) {
   console.log(index);
+}
+
+function addPoint(point: number, id: string) {
+  emit("addPoint", point, id);
+  disabledQuestion.value = [...disabledQuestion.value, { questionId: id, answerPoint: point}];
+  console.log(disabledQuestion)
 }
 
 function pointsArray(point: number) {
@@ -68,10 +69,20 @@ function pointsArray(point: number) {
               :key="idNumber"
               class="form-check form-check-inline"
             >
-              <CheckboxItem
-                :id-number="idNumber"
-                @add-point="answerPoints"
+              <input
+                :id="question.id"
+                class="form-check-input"
+                type="checkbox"
+                :value="idNumber"
+                :disabled="disabledQuestion.includes(question.id)"
+                @click="addPoint(idNumber, question.id)"
               />
+              <label
+                class="form-check-label"
+                for="answerCheckbox"
+                :value="idNumber"
+                >{{ idNumber }}</label
+              >
             </div>
             <div class="mt-4 me-2 text-end">
               <DeleteButton @click="deleteQuestion(index)" />

@@ -14,6 +14,7 @@ defineProps({
 
 const selectedCategory = ref();
 const checkedQuestion = ref([]);
+const checkedAnswer = ref(0);
 
 onMounted(() => {
   selectedCategory.value = "Select category for displaying questions";
@@ -79,6 +80,16 @@ function addQuestions() {
   quizList.value = _uniq([...quizList.value, ...checkedArray]);
   checkedQuestion.value = [];
 }
+
+function answerPoints(point: number, id: string) {
+  checkedAnswer.value = point;
+  const filtredElement = quizList.value.find(answer => answer.id === id);
+  if (filtredElement) {
+    filtredElement.answerPoints = checkedAnswer.value;
+    return filtredElement;
+  }
+  return;
+}
 </script>
 
 <template>
@@ -127,6 +138,9 @@ function addQuestions() {
     <div class="text-center text-md-end pe-md-4 mt-md-4 mb-md-5 ps-5 ps-md-2">
       <EditButton @click="addQuestions" />
     </div>
-    <QuizList :question-array="quizList" />
+    <QuizList
+      :question-array="quizList"
+      @add-point="answerPoints"
+    />
   </div>
 </template>
