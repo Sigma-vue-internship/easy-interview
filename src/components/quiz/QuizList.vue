@@ -48,16 +48,20 @@ function pointsArray(point: number) {
         class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-center text-md-start ps-sm-3"
       >
         <div class="row py-3 px-2">
-          <div class="col-8">
-            <h5 class="text-start">
+          <div class="col-12 col-xl-7 col-xxl-8">
+            <h5 class="text-center text-xl-start">
               {{ question.text }}
             </h5>
-            <p class="text-secondary mb-1">{{ question.answer }}</p>
-            <p class="text-secondary mb-1">Category: {{ question.category }}</p>
+            <p class="text-secondary mb-1 text-center text-xl-start">
+              {{ question.answer }}
+            </p>
+            <p class="text-secondary mb-1 text-center text-xl-start">
+              Category: {{ question.category }}
+            </p>
           </div>
           <div
             v-show="question.point >= 1"
-            class="col-4 text-start"
+            class="col-12 col-xl-5 col-xxl-4 text-center text-xl-start"
           >
             <h5 class="d-inline pe-3 text-primary">Answer:</h5>
             <div
@@ -80,7 +84,7 @@ function pointsArray(point: number) {
                 >{{ idNumber }}</label
               >
             </div>
-            <div class="mt-4 me-2 text-end">
+            <div class="mt-4 me-2 text-md-end">
               <DeleteButton @click="deleteQuestion(index)" />
             </div>
           </div>

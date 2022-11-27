@@ -88,7 +88,6 @@ function answerPoints(point: number, id: string) {
     filtredElement.answerPoints = checkedAnswer.value;
     return filtredElement;
   }
-  return;
 }
 
 function deleteQuestion(index) {
