@@ -1,16 +1,32 @@
 <script setup lang="ts">
 import { QuizQuestion } from "../../../dto/quiz";
-import EditButton from "../common/EditButton.vue";
+import SubmitButton from "../common/SubmitButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
 
 const props = defineProps({
   question: {
     type: Object as () => QuizQuestion,
-    default: () => {},
+    default: () => ({
+      text: "",
+      point: "",
+      answerPoints: "",
+      answer: "",
+      category: "",
+      id: "",
+    }),
   },
   questionArray: {
     type: Array as () => QuizQuestion[],
-    default: () => [],
+    default: () => [
+      {
+        text: "",
+        point: "",
+        answerPoints: "",
+        answer: "",
+        category: "",
+        id: "",
+      },
+    ],
   },
 });
 
@@ -29,12 +45,7 @@ function addPoint(point: number, id: string) {
 }
 
 function pointsArray(point: number) {
-  let start: number = 0;
-  const numbersArray: number[] = [];
-  while (start <= point) {
-    numbersArray.push(start++);
-  }
-  return numbersArray;
+  return Array.apply(null, Array(point + 1)).map((_, i: number) => i);
 }
 </script>
 
@@ -43,39 +54,39 @@ function pointsArray(point: number) {
   <div v-if="props.questionArray.length">
     <ul class="list-unstyled">
       <li
-        v-for="(question, index) in questionArray"
+        v-for="(oneQuestion, index) in questionArray"
         :key="index"
         class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-center text-md-start ps-sm-3"
       >
         <div class="row py-3 px-2">
           <div class="col-12 col-xl-7 col-xxl-8">
             <h5 class="text-center text-xl-start">
-              {{ question.text }}
+              {{ oneQuestion.text }}
             </h5>
             <p class="text-secondary mb-1 text-center text-xl-start">
-              {{ question.answer }}
+              {{ oneQuestion.answer }}
             </p>
             <p class="text-secondary mb-1 text-center text-xl-start">
-              Category: {{ question.category }}
+              Category: {{ oneQuestion.category }}
             </p>
           </div>
           <div
-            v-show="question.point >= 1"
+            v-show="oneQuestion.point >= 1"
             class="col-12 col-xl-5 col-xxl-4 text-center text-xl-start"
           >
             <h5 class="d-inline pe-3 text-primary">Answer:</h5>
             <div
-              v-for="idNumber in pointsArray(question.point)"
+              v-for="idNumber in pointsArray(oneQuestion.point)"
               :key="idNumber"
               class="form-check form-check-inline"
             >
               <input
-                :id="question.id"
+                :id="oneQuestion.id"
                 class="form-check-input"
                 type="radio"
                 :value="idNumber"
                 :name="'radio' + index"
-                @click="addPoint(idNumber, question.id)"
+                @click="addPoint(idNumber, oneQuestion.id)"
               />
               <label
                 class="form-check-label"
@@ -92,7 +103,7 @@ function pointsArray(point: number) {
       </li>
     </ul>
     <div class="text-center text-md-end mt-md-4 ps-5 ps-md-2 pe-4">
-      <EditButton @click="postQuiz" />
+      <SubmitButton @click="postQuiz">Save Quiz</SubmitButton>
     </div>
   </div>
   <div v-else>

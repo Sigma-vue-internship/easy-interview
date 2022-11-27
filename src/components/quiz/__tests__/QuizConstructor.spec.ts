@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
 import { nextTick } from "vue";
-import EditButton from "../../common/EditButton.vue";
+import SubmitButton from "../../common/SubmitButton.vue";
 import QuizConstructor from "../QuizConstructor.vue";
 const getWrapper = () => mount(QuizConstructor);
 
@@ -18,7 +18,7 @@ describe("QuizConstructor.vue", () => {
     await wrapper.find("select").setValue("HTML");
     await wrapper.find("input").setValue(true);
     expect(wrapper.findAll(".list-unstyled")).toHaveLength(1);
-    wrapper.findComponent(EditButton).vm.$emit("click");
+    wrapper.findComponent(SubmitButton).vm.$emit("click");
     await nextTick();
     expect(wrapper.findAll(".list-unstyled")).toHaveLength(2);
   });

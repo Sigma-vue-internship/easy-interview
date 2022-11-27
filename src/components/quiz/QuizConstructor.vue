@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import EditButton from "../common/EditButton.vue";
+import SubmitButton from "../common/SubmitButton.vue";
 import _uniq from "lodash/uniq";
 import { computed, onMounted, ref } from "vue";
 import { QuizQuestion } from "../../../dto/quiz";
@@ -8,12 +8,19 @@ import QuizList from "./QuizList.vue";
 defineProps({
   question: {
     type: Object as () => QuizQuestion,
-    default: () => ({}),
+    default: () => ({
+      text: "",
+      point: "",
+      answerPoints: "",
+      answer: "",
+      category: "",
+      id: "",
+    }),
   },
 });
 
 const selectedCategory = ref();
-const checkedQuestion = ref([]);
+const checkedQuestions = ref([]);
 const checkedAnswer = ref(0);
 
 onMounted(() => {
@@ -76,23 +83,23 @@ const questionList = [
 ];
 
 function addQuestions() {
-  const checkedArray = checkedQuestion.value;
-  quizList.value = _uniq([...quizList.value, ...checkedArray]);
-  checkedQuestion.value = [];
+  quizList.value = _uniq([...quizList.value, ...checkedQuestions.value]);
+  checkedQuestions.value = [];
 }
 
 function answerPoints(point: number, id: string) {
   checkedAnswer.value = point;
-  const filtredElement = quizList.value.find(answer => answer.id === id);
+  const filtredElement = quizList.value.find(
+    quizAnswer => quizAnswer.id === id,
+  );
   if (filtredElement) {
     filtredElement.answerPoints = checkedAnswer.value;
     return filtredElement;
   }
 }
 
-function deleteQuestion(index) {
+function deleteQuestion(index: number) {
   quizList.value.splice(index, 1);
-  return quizList;
 }
 </script>
 
@@ -122,7 +129,7 @@ function deleteQuestion(index) {
         <div class="form-check">
           <input
             :id="item.id"
-            v-model="checkedQuestion"
+            v-model="checkedQuestions"
             class="form-check-input"
             type="checkbox"
             :value="item"
@@ -140,7 +147,7 @@ function deleteQuestion(index) {
     </ul>
 
     <div class="text-center text-md-end pe-md-4 mt-md-4 mb-md-5 ps-5 ps-md-2">
-      <EditButton @click="addQuestions" />
+      <SubmitButton @click="addQuestions">Add Questions</SubmitButton>
     </div>
     <QuizList
       :question-array="quizList"
