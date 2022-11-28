@@ -12,13 +12,13 @@ export interface ResultParent {
   linkedinUrl: string;
   feedback: string;
   avatarUrl: string;
-  id: number;
+  id: string;
 }
 
 export interface Result {
   questionAnswer: QuestionAnswer[];
   startedAt: number;
   endedAt: number;
-  id: number;
+  id: string;
   parent: ResultParent;
 }

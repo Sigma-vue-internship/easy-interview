@@ -1,5 +1,5 @@
 <script setup>
-import EditButton from "../common/EditButton.vue";
+import SubmitButton from "../common/SubmitButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
 
 import { useRoute } from "vue-router";
@@ -90,7 +90,7 @@ function deleteProfile() {
           />
           {{ currentCandidate.linkedinUrl }}
         </div>
-        <EditButton @click="editProfile" />
+        <SubmitButton @click="editProfile" />
         <DeleteButton @click="deleteProfile" />
         <p
           id="feedback"
