@@ -31,8 +31,8 @@ const props = defineProps({
   },
 });
 
-watch(props, newProps => {
-  question.value = { ...newProps.singleQuestion };
+watch(props, currentQuestion => {
+  question.value = { ...currentQuestion.singleQuestion };
 });
 
 const emit = defineEmits(["updateQuestionsList"]);
@@ -49,19 +49,20 @@ async function sendData() {
   try {
     if (props.formType === "put") {
       await questionStore.sendQuestion({ ...question.value });
-      emit("updateQuestionsList");
-      resetForm();
-      question.value = { ...questionInit };
+      emitUpdateQuestions();
       return;
     }
     await questionStore.postQuestion({ ...question.value });
-    emit("updateQuestionsList");
-    resetForm();
-    question.value = { ...questionInit };
+    emitUpdateQuestions();
   } catch (e) {
     resetForm();
     console.log(e);
   }
+}
+function emitUpdateQuestions() {
+  emit("updateQuestionsList");
+  resetForm();
+  question.value = { ...questionInit };
 }
 </script>
 <template>

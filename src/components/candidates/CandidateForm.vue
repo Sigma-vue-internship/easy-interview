@@ -24,13 +24,13 @@ const props = defineProps({
     required: false,
     default() {
       return {
-        formType: "edit",
+        formType: "put",
       };
     },
   },
 });
-watch(props, newProps => {
-  candidate.value = { ...newProps.singleCandidate };
+watch(props, currentCandidate => {
+  candidate.value = { ...currentCandidate.singleCandidate };
 });
 
 const { v$, resetForm, showModal } = useFormValidator(candidate, "candidate");

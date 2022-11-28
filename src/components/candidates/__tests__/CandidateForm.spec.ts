@@ -32,35 +32,35 @@ describe("Candidate.vue", () => {
       username: "username",
     });
   });
-  // it("if form correct, ", async () => {
-  //   const wrapper = mount(CandidateForm, {
-  //     global: {
-  //       components: {
-  //         EasyModal,
-  //       },
-  //     },
-  //   });
+  it("if form correct, candidate should be empty", async () => {
+    const wrapper = mount(CandidateForm, {
+      global: {
+        components: {
+          EasyModal,
+        },
+      },
+    });
 
-  //   wrapper.find("#position").setValue("position");
-  //   wrapper.find("#username").setValue("username");
-  //   wrapper.find("#linkedin").setValue("linkedin");
-  //   wrapper.find("#avatar").setValue("avatar");
-  //   wrapper.find("#feedback").setValue("feedback");
+    wrapper.find("#position").setValue("position");
+    wrapper.find("#username").setValue("username");
+    wrapper.find("#linkedin").setValue("linkedin");
+    wrapper.find("#avatar").setValue("avatar");
+    wrapper.find("#feedback").setValue("feedback");
 
-  //   const submitBtn = wrapper.find(".candidate__submit-btn");
-  //   expect(submitBtn.exists()).toBe(true);
+    const submitBtn = wrapper.find(".candidate__submit-btn");
+    expect(submitBtn.exists()).toBe(true);
 
-  //   await submitBtn.trigger("submit");
-  //   await nextTick();
-  //   await nextTick();
+    await submitBtn.trigger("submit");
+    await nextTick();
+    await nextTick();
 
-  //   expect(wrapper.vm.candidate).toMatchObject({
-  //     avatarUrl: "",
-  //     feedback: "",
-  //     id: 0,
-  //     linkedinUrl: "",
-  //     position: "",
-  //     username: "",
-  //   });
-  // });
+    expect(wrapper.vm.candidate).toMatchObject({
+      avatarUrl: "",
+      feedback: "",
+      id: 0,
+      linkedinUrl: "",
+      position: "",
+      username: "",
+    });
+  });
 });
