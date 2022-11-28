@@ -1,3 +1,3 @@
 import EasyModal from "@/components/common/EasyModal.vue";
-
-export default [EasyModal];
+import SpinnerLoader from "@/components/common/SpinnerLoader.vue";
+export default [EasyModal, SpinnerLoader];

@@ -3,7 +3,7 @@ import DeleteButton from "../common/DeleteButton.vue";
 import QuestionForm from "./QuestionForm.vue";
 import { useRoute } from "vue-router";
 import { useQuestionStore } from "../../stores/questions";
-import { ref, onBeforeMount, computed } from "vue";
+import { ref, computed } from "vue";
 
 const questionStore = useQuestionStore();
 
@@ -15,15 +15,20 @@ const formTitle = computed(() =>
 );
 
 const questionsList = ref([]);
+
+const isLoaderVisible = ref(true);
 const route = useRoute();
-onBeforeMount(() => getQuestionList());
 
 async function getQuestionList() {
   try {
+    isLoaderVisible.value = true;
     const { data } = await questionStore.getAllQuestions(route.params.title);
     questionsList.value = [...data];
+
     clearForm();
+    isLoaderVisible.value = false;
   } catch (e) {
+    isLoaderVisible.value = false;
     console.log(e);
   }
 }
@@ -34,6 +39,8 @@ function setModalItem(item, action) {
 function clearForm() {
   currentQuestion.value = {};
 }
+
+getQuestionList();
 </script>
 <template>
   <div class="container mt-3 text-center">
@@ -57,7 +64,11 @@ function clearForm() {
         </button>
       </div>
     </div>
-    <ul class="list-unstyled">
+    <SpinnerLoader v-if="isLoaderVisible" />
+    <ul
+      v-else
+      class="list-unstyled"
+    >
       <li
         v-for="item in questionsList"
         :key="item.id"
