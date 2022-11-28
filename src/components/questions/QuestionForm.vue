@@ -10,6 +10,9 @@ const questionInit = {
   category: "HTML",
   answer: "",
 };
+interface Emit {
+  (e: "updateQuestionsList"): void;
+}
 const question = ref({ ...questionInit });
 
 const props = defineProps({
@@ -17,7 +20,12 @@ const props = defineProps({
     type: Object as () => Question,
     required: false,
     default() {
-      return {};
+      return {
+        text: "",
+        point: 0,
+        category: "HTML",
+        answer: "",
+      };
     },
   },
   formType: {
@@ -31,11 +39,10 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits<Emit>();
 watch(props, currentQuestion => {
   question.value = { ...currentQuestion.singleQuestion };
 });
-
-const emit = defineEmits(["updateQuestionsList"]);
 
 const questionStore = useQuestionStore();
 const { v$, resetForm, showModal } = useFormValidator(question, "question");

@@ -58,6 +58,42 @@ describe("QuestionForm.vue", () => {
     await flushPromises();
     expect(sendQuestion).toBeCalledWith(expect.objectContaining(testObj));
   });
+  it("should emit updateQuestionsList (put)", async () => {
+    const wrapper = getWrapper({
+      singleQuestion: {
+        text: "test_question",
+        point: 5,
+        category: "HTML",
+        answer: "test_answer",
+      },
+      formType: "put",
+    });
+    const testObj = setProperFormValues(wrapper);
+    const submitButton = wrapper.find(".question__submit-btn");
+    const { sendQuestion } = useQuestionStore();
+    await submitButton.trigger("submit");
+    await flushPromises();
+    expect(sendQuestion).toBeCalledWith(expect.objectContaining(testObj));
+    expect(wrapper.emitted().updateQuestionsList).toBeTruthy();
+  });
+  it("should emit updateQuestionsList (post)", async () => {
+    const wrapper = getWrapper({
+      singleQuestion: {
+        text: "",
+        point: 0,
+        category: "HTML",
+        answer: "",
+      },
+      formType: "post",
+    });
+    const testObj = setProperFormValues(wrapper);
+    const submitButton = wrapper.find(".question__submit-btn");
+    const { postQuestion } = useQuestionStore();
+    await submitButton.trigger("submit");
+    await flushPromises();
+    expect(postQuestion).toBeCalledWith(expect.objectContaining(testObj));
+    expect(wrapper.emitted().updateQuestionsList).toBeTruthy();
+  });
 });
 
 function setProperFormValues(wrapper) {

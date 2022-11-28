@@ -1,4 +1,7 @@
 <script setup lang="ts">
+interface Emit {
+  (e: "closeModal"): void;
+}
 defineProps({
   title: {
     type: String,
@@ -8,7 +11,7 @@ defineProps({
     },
   },
 });
-const emit = defineEmits(["closeModal"]);
+const emit = defineEmits<Emit>();
 </script>
 <script lang="ts">
 export default {
