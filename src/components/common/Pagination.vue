@@ -14,14 +14,9 @@ defineProps({
 });
 const currentPage = ref(1);
 const emit = defineEmits(["changePage"]);
-const sectionStart = ref(0);
-const sectionEnd = ref(0);
 function emitChangePage(page) {
   currentPage.value = page;
-  sectionStart.value = page * 8;
-  sectionEnd.value = sectionStart.value + 8;
-  emit("changePage", sectionStart.value, sectionEnd.value);
-  currentPage.value++;
+  emit("changePage", currentPage.value);
 }
 </script>
 <template>
@@ -35,14 +30,14 @@ function emitChangePage(page) {
         >
       </li>
       <li
-        v-for="page in pageCount"
+        v-for="(page, index) in pageCount"
         :key="page"
         class="page-item"
         :class="currentPage === page ? 'active' : ''"
       >
         <button
           class="page-link"
-          @click="emitChangePage(page - 1)"
+          @click="emitChangePage(index + 1)"
         >
           {{ page }}
         </button>

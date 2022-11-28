@@ -25,9 +25,9 @@ describe("CandidateList.vue", () => {
 
   it("should make axios getAllCandidates call on created hook", async () => {
     getWrapper();
-    const { getAllCandidates } = useCandidateStore();
+    const { getCandidatesByPage } = useCandidateStore();
     await flushPromises();
-    expect(getAllCandidates).toBeCalled();
+    expect(getCandidatesByPage).toBeCalledWith(1);
   });
   it("should render all candidates", async () => {
     const wrapper = getWrapper(

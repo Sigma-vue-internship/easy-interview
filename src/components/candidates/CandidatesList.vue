@@ -1,25 +1,24 @@
-<script setup>
+<script setup lang="ts">
 import CandidateForm from "./CandidateForm.vue";
 import { useCandidateStore } from "../../stores/candidates";
 import { ref } from "vue";
 
-const { getAllCandidates } = useCandidateStore();
+const { getCandidatesByPage } = useCandidateStore();
 const candidatesList = ref([]);
-const currentCandidateList = ref([]);
 const candidatePagesNum = ref(0);
-async function getCandidates() {
+async function getCandidates(page: number = 1) {
   try {
-    const { data } = await getAllCandidates();
-    candidatesList.value = data;
-
-    candidatePagesNum.value = Math.ceil(data.length / 8);
-    currentCandidateList.value = [...data].slice(0, 8);
+    console.log(page);
+    const {
+      data: { candidates, count },
+    } = await getCandidatesByPage(page);
+    candidatePagesNum.value = Math.ceil(count / 8);
+    console.log(candidates);
+    console.log(count);
+    candidatesList.value = candidates;
   } catch (e) {
     console.log(e);
   }
-}
-function changePage(start, end) {
-  currentCandidateList.value = [...candidatesList.value].slice(start, end);
 }
 getCandidates();
 </script>
@@ -45,7 +44,7 @@ getCandidates();
     </div>
     <ul class="list-unstyled row g-md-4 g-lg-4 g-2">
       <li
-        v-for="candidate in currentCandidateList"
+        v-for="candidate in candidatesList"
         :key="candidate.id"
         class="col-8 col-md-4 col-lg-3 mx-auto mx-md-0 mb-3 mb-md-0 text-center text-primary candidate__item"
       >
@@ -75,7 +74,7 @@ getCandidates();
     <Pagination
       class="pb-5 pt-2"
       :page-count="candidatePagesNum"
-      @change-page="changePage"
+      @change-page="getCandidates"
     />
   </div>
 </template>
