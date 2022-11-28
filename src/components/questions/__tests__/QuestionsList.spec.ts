@@ -36,6 +36,7 @@ const getWrapper = (props = {}) =>
                     },
                   ],
                 }),
+              deleteQuestion: () => Promise.resolve("Question deleted"),
             }),
           ],
         }),
@@ -68,6 +69,10 @@ describe("QuestionsList.vue", () => {
     await flushPromises();
     const btn = wrapper.find(".btn-outline-danger");
     await btn.trigger("click");
-    expect(deleteQuestion).toBeCalledWith("34");
+    expect(wrapper.vm.deleteQuestionId).toEqual("34");
+    const btnDelete = wrapper.find(".btn-danger");
+    await btnDelete.trigger("click");
+    await flushPromises();
+    expect(deleteQuestion).toBeCalled();
   });
 });
