@@ -1,12 +1,5 @@
 <template>
-  <Suspense>
-    <template #default>
-      <QuestionsList />
-    </template>
-    <template #fallback>
-      <SpinnerLoader />
-    </template>
-  </Suspense>
+  <QuestionsList />
 </template>
 
 <script setup>

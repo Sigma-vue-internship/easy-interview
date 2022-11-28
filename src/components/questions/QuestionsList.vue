@@ -9,6 +9,7 @@ const questionStore = useQuestionStore();
 const currentQuestion = ref({});
 const questionsList = ref([]);
 const modalInfo = ref({});
+const isLoaderVisible = ref(true);
 const route = useRoute();
 const initQuestion = ref({
   text: "",
@@ -19,9 +20,12 @@ const initQuestion = ref({
 
 async function getQuestionList() {
   try {
+    isLoaderVisible.value = true;
     const { data } = await questionStore.getAllQuestions(route.params.title);
     questionsList.value = [...data];
+    isLoaderVisible.value = false;
   } catch (e) {
+    isLoaderVisible.value = false;
     console.log(e);
   }
 }
@@ -33,7 +37,7 @@ function setModalItem(item, formId, formTitle) {
   modalInfo.value = { formId, formTitle };
 }
 
-await getQuestionList();
+getQuestionList();
 </script>
 <template>
   <div class="container mt-3 text-center">
@@ -57,7 +61,11 @@ await getQuestionList();
         </button>
       </div>
     </div>
-    <ul class="list-unstyled">
+    <SpinnerLoader v-if="isLoaderVisible" />
+    <ul
+      v-else
+      class="list-unstyled"
+    >
       <li
         v-for="item in questionsList"
         :key="item.id"
