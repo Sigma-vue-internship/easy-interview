@@ -12,7 +12,6 @@ module.exports = {
     ecmaVersion: "latest",
     parser: "@typescript-eslint/parser",
   },
-  plugins: ["@typescript-eslint/recomended"],
   rules: {
     "vue/multi-word-component-names": "off",
     "no-fallthrough": "off",
