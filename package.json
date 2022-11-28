@@ -31,8 +31,8 @@
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
     "@types/uuid": "^8.3.4",
-    "@typescript-eslint/eslint-plugin": "^5.44.0",
-    "@typescript-eslint/parser": "^5.44.0",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "5.44.0",
     "@vitejs/plugin-vue": "^3.0.3",
     "@vitest/coverage-c8": "^0.24.4",
     "@vue/eslint-config-prettier": "^7.0.0",
@@ -42,7 +42,7 @@
     "jsdom": "^20.0.0",
     "prettier": "2.8.0",
     "sass": "^1.55.0",
-    "typescript": "^4.9.3",
+    "typescript": "4.9.3",
     "vite": "^3.0.9",
     "vitest": "^0.23.4",
     "vue-eslint-parser": "8.3.0"
