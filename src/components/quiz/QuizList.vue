@@ -3,6 +3,11 @@ import { QuizQuestion } from "../../../dto/quiz";
 import SubmitButton from "../common/SubmitButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
 
+interface Emit {
+  (e:"addPoint", point: number, id: string): void;
+  (e: "deleteQuestion", index: number): void;
+}
+
 const props = defineProps({
   question: {
     type: Object as () => QuizQuestion,
@@ -21,7 +26,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["addPoint", "deleteQuestion"]);
+const emit = defineEmits<Emit>();
 
 function postQuiz() {
   console.log(props.questionArray);
