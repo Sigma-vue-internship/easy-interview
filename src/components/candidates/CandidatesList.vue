@@ -48,12 +48,13 @@ getCandidates();
         type="button"
         class="btn btn-primary mx-auto mx-md-0 col-5 my-2 my-md-0 col-md-3 ms-md-5 col-lg-2"
         data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
+        data-bs-target="#candidate"
       >
         Add candidate
       </button>
       <EasyModal
         :title="formTitle"
+        :modal-id="candidate"
         @close-modal="clearForm"
       >
         <CandidateForm

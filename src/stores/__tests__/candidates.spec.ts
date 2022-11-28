@@ -35,7 +35,6 @@ describe("Candidate Store", () => {
     const { getCandidatesByPage } = useCandidateStore();
     const { data } = await getCandidatesByPage(1);
     expect(axiosInstance.get).toBeCalled();
-
     expect(data).toBe("123");
   });
 });
