@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { useRouter } from "vue-router";
 import formattingDate from "../../utils/dateFormatting";
 
-let quizResults = [
+const quizResults = [
   {
     questionAnswer: [],
     startedAt: 1668092016,
@@ -88,6 +89,15 @@ let quizResults = [
     },
   },
 ];
+
+const router = useRouter();
+
+function pushRoute(id: string) {
+  router.push({
+    name: "singleResult",
+    params: { id },
+  });
+}
 </script>
 
 <template>
@@ -95,9 +105,10 @@ let quizResults = [
     <h2 class="text-primary text-center">Quiz Results</h2>
     <ul class="list-unstyled">
       <li
-        class="border border-light mt-4 p-2 rounded-3 text-secondary mx-auto shadow-sm ps-4"
         v-for="item in quizResults"
         :key="item.id"
+        class="border border-light mt-4 p-2 rounded-3 text-secondary mx-auto shadow-sm ps-4"
+        @click="pushRoute(item.id)"
       >
         <div class="row">
           <h4 class="text-center text-lg-start">{{ item.title }}</h4>

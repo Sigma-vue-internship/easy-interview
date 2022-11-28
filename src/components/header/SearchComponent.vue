@@ -15,9 +15,9 @@
 
         <div class="dropdown d-flex col-md-1 align-items-center">
           <button
+            id="dropdownMenuButton"
             class="btn btn-outline-primary rounded-pill border-0 dropdown-toggle drop-img"
             type="submit"
-            id="dropdownMenuButton"
             data-bs-toggle="dropdown"
           >
             <font-awesome-icon
@@ -33,11 +33,14 @@
             <li>
               <div class="form-check form-switch">
                 <input
+                  id="flexSwitchCheckDefault"
                   class="form-check-input"
                   type="checkbox"
-                  id="flexSwitchCheckDefault"
                 />
-                <label class="form-check-label" for="flexSwitchCheckDefault">
+                <label
+                  class="form-check-label"
+                  for="flexSwitchCheckDefault"
+                >
                   Candidates
                 </label>
               </div>
@@ -45,11 +48,14 @@
             <li>
               <div class="form-check form-switch">
                 <input
+                  id="flexSwitchCheckDefault"
                   class="form-check-input"
                   type="checkbox"
-                  id="flexSwitchCheckDefault"
                 />
-                <label class="form-check-label" for="flexSwitchCheckDefault">
+                <label
+                  class="form-check-label"
+                  for="flexSwitchCheckDefault"
+                >
                   Categories
                 </label>
               </div>
@@ -57,11 +63,14 @@
             <li>
               <div class="form-check form-switch">
                 <input
+                  id="flexSwitchCheckDefault"
                   class="form-check-input"
                   type="checkbox"
-                  id="flexSwitchCheckDefault"
                 />
-                <label class="form-check-label" for="flexSwitchCheckDefault">
+                <label
+                  class="form-check-label"
+                  for="flexSwitchCheckDefault"
+                >
                   Questions
                 </label>
               </div>

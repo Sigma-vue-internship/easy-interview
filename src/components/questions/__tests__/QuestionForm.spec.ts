@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
 import QuestionForm from "../QuestionForm.vue";
 import EasyModal from "../../common/EasyModal.vue";
+
 import { createTestingPinia } from "@pinia/testing";
 import { useQuestionStore } from "../../../stores/questions";
 
@@ -31,29 +32,16 @@ describe("QuestionForm.vue", () => {
         category: "HTML",
         answer: "",
       },
-      modalInfo: {
-        formId: "addModal",
-        formTitle: "Add new question",
-      },
+      formType: "post",
     });
-    wrapper.find("#point").setValue(1);
-    wrapper.find("#text").setValue("question");
-    wrapper.find("#category").setValue("React");
-    wrapper.find("#answer").setValue("answer");
+    const testObj = setProperFormValues(wrapper);
     const submitButton = wrapper.find(".question__submit-btn");
     const { postQuestion } = useQuestionStore();
-    await submitButton.trigger("click");
+    await submitButton.trigger("submit");
     await flushPromises();
-    expect(postQuestion).toBeCalledWith(
-      expect.objectContaining({
-        point: 1,
-        text: "question",
-        category: "React",
-        answer: "answer",
-      })
-    );
+    expect(postQuestion).toBeCalledWith(expect.objectContaining(testObj));
   });
-  it("should edit question", async () => {
+  it("should put question", async () => {
     const wrapper = getWrapper({
       singleQuestion: {
         text: "test_question",
@@ -61,26 +49,62 @@ describe("QuestionForm.vue", () => {
         category: "HTML",
         answer: "test_answer",
       },
-      modalInfo: {
-        formId: "editModal",
-        formTitle: "Edit question",
-      },
+      formType: "put",
     });
-    wrapper.find("#point").setValue(1);
-    wrapper.find("#text").setValue("question");
-    wrapper.find("#category").setValue("React");
-    wrapper.find("#answer").setValue("answer");
+    const testObj = setProperFormValues(wrapper);
     const submitButton = wrapper.find(".question__submit-btn");
     const { sendQuestion } = useQuestionStore();
-    await submitButton.trigger("click");
+    await submitButton.trigger("submit");
     await flushPromises();
-    expect(sendQuestion).toBeCalledWith(
-      expect.objectContaining({
-        text: "question",
-        point: 1,
-        category: "React",
-        answer: "answer",
-      })
-    );
+    expect(sendQuestion).toBeCalledWith(expect.objectContaining(testObj));
+  });
+  it("should emit updateQuestionsList (put)", async () => {
+    const wrapper = getWrapper({
+      singleQuestion: {
+        text: "test_question",
+        point: 5,
+        category: "HTML",
+        answer: "test_answer",
+      },
+      formType: "put",
+    });
+    const testObj = setProperFormValues(wrapper);
+    const submitButton = wrapper.find(".question__submit-btn");
+    const { sendQuestion } = useQuestionStore();
+    await submitButton.trigger("submit");
+    await flushPromises();
+    expect(sendQuestion).toBeCalledWith(expect.objectContaining(testObj));
+    expect(wrapper.emitted().updateQuestionsList).toBeTruthy();
+  });
+  it("should emit updateQuestionsList (post)", async () => {
+    const wrapper = getWrapper({
+      singleQuestion: {
+        text: "",
+        point: 0,
+        category: "HTML",
+        answer: "",
+      },
+      formType: "post",
+    });
+    const testObj = setProperFormValues(wrapper);
+    const submitButton = wrapper.find(".question__submit-btn");
+    const { postQuestion } = useQuestionStore();
+    await submitButton.trigger("submit");
+    await flushPromises();
+    expect(postQuestion).toBeCalledWith(expect.objectContaining(testObj));
+    expect(wrapper.emitted().updateQuestionsList).toBeTruthy();
   });
 });
+
+function setProperFormValues(wrapper) {
+  wrapper.find("#point").setValue(1);
+  wrapper.find("#text").setValue("question");
+  wrapper.find("#category").setValue("OOP");
+  wrapper.find("#answer").setValue("answer");
+  return {
+    text: "question",
+    point: 1,
+    category: "OOP",
+    answer: "answer",
+  };
+}

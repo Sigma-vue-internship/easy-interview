@@ -32,7 +32,7 @@ describe("Candidate.vue", () => {
       username: "username",
     });
   });
-  it("after click onSubmit, candidate should be empty", async () => {
+  it("if form correct, candidate should be empty", async () => {
     const wrapper = mount(CandidateForm, {
       global: {
         components: {

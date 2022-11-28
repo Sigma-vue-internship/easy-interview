@@ -1,5 +1,5 @@
 <script setup>
-import EditButton from "../common/EditButton.vue";
+import SubmitButton from "../common/SubmitButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
 
 import { useRoute } from "vue-router";
@@ -7,7 +7,7 @@ import { ref } from "vue";
 import { useCandidateStore } from "../../stores/candidates";
 const { params } = useRoute();
 const currentCandidate = ref({});
-let candidateResults = ref([
+const candidateResults = ref([
   {
     questionAnswer: [],
     startedAt: 1666948101,
@@ -69,10 +69,16 @@ function deleteProfile() {
         />
       </div>
       <div class="col-12 col-lg-7 text-center text-lg-start">
-        <h2 id="username" class="text-primary">
+        <h2
+          id="username"
+          class="text-primary"
+        >
           {{ currentCandidate.username }}
         </h2>
-        <h3 id="position" class="text-secondary">
+        <h3
+          id="position"
+          class="text-secondary"
+        >
           {{ currentCandidate.position }}
         </h3>
         <div
@@ -84,9 +90,12 @@ function deleteProfile() {
           />
           {{ currentCandidate.linkedinUrl }}
         </div>
-        <EditButton @click="editProfile" />
+        <SubmitButton @click="editProfile" />
         <DeleteButton @click="deleteProfile" />
-        <p id="feedback" class="text-secondary mt-4">
+        <p
+          id="feedback"
+          class="text-secondary mt-4"
+        >
           <span class="text-primary">Feedback:</span>
           {{ currentCandidate.feedback }}
         </p>
@@ -96,9 +105,9 @@ function deleteProfile() {
       <h3 class="text-primary mb-3">Quiz results</h3>
       <ul class="list-unstyled row">
         <li
-          class="my-2 text-secondary col-12 col-md-6 col-lg-4"
           v-for="result in candidateResults"
           :key="result.id"
+          class="my-2 text-secondary col-12 col-md-6 col-lg-4"
         >
           {{ result.title }}
           <button
