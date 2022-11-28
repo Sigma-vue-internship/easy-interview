@@ -1,106 +1,39 @@
-<script setup>
-import { useRouter } from "vue-router";
-
+<script setup lang="ts">
+import { useRoute, useRouter } from "vue-router";
+import { useQuestionStore } from "../../stores/questions";
 import Categories from "../../utils/useCategories";
+import { onBeforeMount, ref } from "vue";
+import { Question } from "../../../dto/questions";
 
-const questionsList = [
-  {
-    category: "HTML",
-    id: "1",
+defineProps({
+  questionsList: {
+    type: Array as () => Question[],
+    required: true,
   },
-  {
-    category: "JavaScript",
-    id: "3",
-  },
-  {
-    category: "Frameworks",
-    id: "4",
-  },
-  {
-    category: "CSS",
-    id: "2",
-  },
-  {
-    category: "HTML",
-    id: "1",
-  },
-  {
-    category: "JavaScript",
-    id: "3",
-  },
-  {
-    category: "JavaScript",
-    id: "3",
-  },
-  {
-    category: "JavaScript",
-    id: "3",
-  },
-  {
-    category: "Network",
-    id: "5",
-  },
-  {
-    category: "JavaScript",
-    id: "3",
-  },
-  {
-    category: "CSS",
-    id: "2",
-  },
-  {
-    category: "HTML",
-    id: "1",
-  },
-  {
-    category: "Security",
-    id: "6",
-  },
-  {
-    category: "Security",
-    id: "6",
-  },
-  {
-    category: "Browser",
-    id: "8",
-  },
-  {
-    category: "Browser",
-    id: "8",
-  },
-  {
-    category: "Browser",
-    id: "8",
-  },
-  {
-    category: "Browser",
-    id: "8",
-  },
-  {
-    category: "Security",
-    id: "6",
-  },
-  {
-    category: "OOP",
-    id: "9",
-  },
-  {
-    category: "Security",
-    id: "6",
-  },
-  {
-    category: "Browser",
-    id: "8",
-  },
-];
+});
+
+const questionStore = useQuestionStore();
+const route = useRoute();
+const questionsList = ref<Question[]>([]);
+
+onBeforeMount(() => getQuestionList());
+
+async function getQuestionList() {
+  try {
+    const { data } = await questionStore.getAllQuestions(route.params.title);
+    questionsList.value = [...data];
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 const router = useRouter();
 
-function pushRoute(item) {
+function pushRoute(category: string) {
   router.push({
     name: "category",
     params: {
-      title: item,
+      title: category,
     },
   });
 }
@@ -122,22 +55,26 @@ function pushRoute(item) {
     </div>
     <ul class="list-unstyled mt-5">
       <li
-        v-for="item in Categories()"
-        :key="item"
+        v-for="category in Categories()"
+        :key="category"
         class="border border-light mt-4 p-2 rounded-3 mx-auto shadow-sm"
-        @click="pushRoute(item)"
+        @click="pushRoute(category)"
       >
         <div class="row">
           <div class="col-9">
             <h5 class="text-secondary pt-2">
-              {{ item }}
+              {{ category }}
             </h5>
           </div>
           <div
             class="col-1 d-flex text-primary align-items-center justify-content-center rounded-5 badge bg-light"
           >
             <h4 class="m-0 pb-1 fs-5">
-              {{ questionsList.filter(obj => obj.category === item).length }}
+              {{
+                questionsList.filter(
+                  oneQuestion => oneQuestion.category === category,
+                ).length
+              }}
             </h4>
           </div>
         </div>
