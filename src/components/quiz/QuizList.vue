@@ -17,16 +17,7 @@ const props = defineProps({
   },
   questionArray: {
     type: Array as () => QuizQuestion[],
-    default: () => [
-      {
-        text: "",
-        point: "",
-        answerPoints: "",
-        answer: "",
-        category: "",
-        id: "",
-      },
-    ],
+    default: () => [],
   },
 });
 
