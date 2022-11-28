@@ -1,5 +1,10 @@
+<script lang="ts">
+export default {
+  name: "SpinnerLoader",
+};
+</script>
 <template>
-  <div class="text-center pt-2">
+  <div class="position-absolute top-50 start-50">
     <div
       class="spinner-border text-primary"
       role="status"

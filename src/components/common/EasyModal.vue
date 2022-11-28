@@ -1,4 +1,19 @@
-<script>
+<script setup lang="ts">
+interface Emit {
+  (e: "closeModal"): void;
+}
+defineProps({
+  title: {
+    type: String,
+    required: false,
+    default() {
+      return { formTitle: "Title" };
+    },
+  },
+});
+const emit = defineEmits<Emit>();
+</script>
+<script lang="ts">
 export default {
   name: "EasyModal",
 };
@@ -16,10 +31,19 @@ export default {
     <div class="modal-dialog modal-lg">
       <div class="modal-content text-primary">
         <div class="modal-header">
-          <slot name="header" />
+          <h5 class="modal-title">
+            {{ title }}
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            data-bs-dismiss="modal"
+            @click="emit('closeModal')"
+          />
         </div>
         <div class="modal-body text-start">
-          <slot name="body" />
+          <slot />
         </div>
       </div>
     </div>
