@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import CandidateForm from "./CandidateForm.vue";
 import { useCandidateStore } from "../../stores/candidates";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 const { getCandidatesByPage } = useCandidateStore();
 const candidatesList = ref([]);
@@ -20,6 +20,19 @@ async function getCandidates(page: number = 1) {
     console.log(e);
   }
 }
+
+const currentCandidate = ref({});
+const formType = ref("post");
+
+const formTitle = computed(() =>
+  formType.value === "put" ? "Edit candidate" : "Add new candidate",
+);
+async function getCandidateList() {}
+
+function clearForm() {
+  currentCandidate.value = {};
+}
+
 getCandidates();
 </script>
 <template>
@@ -38,9 +51,16 @@ getCandidates();
       >
         Add candidate
       </button>
-      <CandidateForm
-        class="col-lg-2 my-xs-4 my-lg-0 ms-lg-5 ms-xl-4 ms-xxl-0 text-center text-md-start"
-      />
+      <EasyModal
+        :title="formTitle"
+        @close-modal="clearForm"
+      >
+        <CandidateForm
+          :single-candidate="currentCandidate"
+          :form-type="formType"
+          @update-candidates-list="getCandidateList"
+        />
+      </EasyModal>
     </div>
     <ul class="list-unstyled row g-md-4 g-lg-4 g-2">
       <li

@@ -4,7 +4,7 @@
       <div class="col-md-4 col-lg-3">
         <router-link
           class="text-decoration-none"
-          to="/quiz"
+          to="/constructor"
         >
           <div class="border rounded-4 p-3">
             <span class="icon-form w-75" />

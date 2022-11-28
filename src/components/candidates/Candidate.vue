@@ -1,5 +1,5 @@
 <script setup>
-import EditButton from "../common/EditButton.vue";
+import SubmitButton from "../common/SubmitButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
 
 import { useRoute } from "vue-router";
@@ -76,6 +76,12 @@ function deleteProfile() {
         <div
           class="col-11 col-lg-7 text-center text-lg-start shadow border border-2 border-light p-3 me-lg-4 rounded-3"
         >
+          <SubmitButton @click="editProfile" />
+          <DeleteButton @click="deleteProfile" />
+          <p
+            id="feedback"
+            class="text-secondary mt-4"
+          ></p>
           <h2
             id="username"
             class="text-primary"
