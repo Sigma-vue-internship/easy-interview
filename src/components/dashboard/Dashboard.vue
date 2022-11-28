@@ -2,7 +2,10 @@
   <div class="container overflow-hidden py-4">
     <div class="row gy-4 gx-4 text-center align-items-center">
       <div class="col-md-4 col-lg-3">
-        <router-link class="text-decoration-none" to="/constructor">
+        <router-link
+          class="text-decoration-none"
+          to="/constructor"
+        >
           <div class="border rounded-4 p-3">
             <span class="icon-form w-75" />
             <h2 class="text-primary fs-3 mt-4">Create quiz</h2>

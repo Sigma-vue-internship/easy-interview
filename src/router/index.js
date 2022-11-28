@@ -82,7 +82,7 @@ const router = createRouter({
       name: "quizConstructor",
       component: QuizConstructorView,
       beforeEnter: authGuard,
-    }
+    },
   ],
 });
 // router.beforeEach((to, from, next) =>

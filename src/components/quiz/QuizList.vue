@@ -4,7 +4,7 @@ import SubmitButton from "../common/SubmitButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
 
 interface Emit {
-  (e:"addPoint", point: number, id: string): void;
+  (e: "addPoint", point: number, id: string): void;
   (e: "deleteQuestion", index: number): void;
 }
 
