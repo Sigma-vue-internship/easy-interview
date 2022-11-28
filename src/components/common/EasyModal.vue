@@ -10,6 +10,20 @@ defineProps({
       return { formTitle: "Title" };
     },
   },
+  modalId: {
+    type: String,
+    required: true,
+    default() {
+      return "exampleModal";
+    },
+  },
+  modalSize: {
+    type: String,
+    required: false,
+    default() {
+      return "modal-lg";
+    },
+  },
 });
 const emit = defineEmits<Emit>();
 </script>
@@ -20,15 +34,18 @@ export default {
 </script>
 <template>
   <div
-    id="exampleModal"
-    class="modal fade"
+    :id="modalId"
+    class="modal fade pt-5"
     tabindex="-1"
     data-bs-backdrop="static"
     data-bs-keyboard="false"
     aria-labelledby="exampleModalLabel"
     aria-hidden="true"
   >
-    <div class="modal-dialog modal-lg">
+    <div
+      class="modal-dialog"
+      :class="modalSize"
+    >
       <div class="modal-content text-primary">
         <div class="modal-header">
           <h5 class="modal-title">
