@@ -20,7 +20,7 @@ onBeforeMount(() => getQuestionList());
 
 async function getQuestionList() {
   try {
-    const { data } = await questionStore.getAllQuestions(route.params.title);
+    const { data } = await questionStore.getAllQuestions();
     questionsList.value = [...data];
   } catch (e) {
     console.log(e);
