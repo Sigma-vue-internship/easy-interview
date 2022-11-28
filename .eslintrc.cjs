@@ -7,6 +7,7 @@ module.exports = {
     "eslint:recommended",
     "@vue/eslint-config-prettier",
   ],
+  plugins: ["@typescript-eslint/recomended"],
   parserOptions: {
     ecmaVersion: "latest",
     parser: "@typescript-eslint/parser",
