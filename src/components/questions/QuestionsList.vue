@@ -138,11 +138,17 @@ getQuestionList();
     <p class="text-black">Are you sure you want to delete this question ?</p>
     <div class="d-flex justify-content-end">
       <button
+        class="btn btn-outline-secondary text-align-end me-2"
+        data-bs-dismiss="modal"
+      >
+        Cancel
+      </button>
+      <button
         class="btn btn-danger text-align-end"
         data-bs-dismiss="modal"
         @click="deleteQuestion"
       >
-        Delete
+        <font-awesome-icon icon="fa-solid fa-trash-can" />
       </button>
     </div>
   </EasyModal>
