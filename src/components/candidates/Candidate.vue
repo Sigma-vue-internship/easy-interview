@@ -76,12 +76,6 @@ function deleteProfile() {
         <div
           class="col-11 col-lg-7 text-center text-lg-start shadow border border-2 border-light p-3 me-lg-4 rounded-3"
         >
-          <SubmitButton @click="editProfile" />
-          <DeleteButton @click="deleteProfile" />
-          <p
-            id="feedback"
-            class="text-secondary mt-4"
-          ></p>
           <h2
             id="username"
             class="text-primary"
@@ -103,7 +97,7 @@ function deleteProfile() {
             />
             {{ currentCandidate.linkedinUrl }}
           </div>
-          <EditButton @click="editProfile" />
+          <SubmitButton @click="editProfile" />
           <DeleteButton @click="deleteProfile" />
           <p
             id="feedback"

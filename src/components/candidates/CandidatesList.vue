@@ -6,17 +6,18 @@ import { computed, ref } from "vue";
 const { getCandidatesByPage } = useCandidateStore();
 const candidatesList = ref([]);
 const candidatePagesNum = ref(0);
+const isLoaderVisible = ref(true);
 async function getCandidates(page: number = 1) {
   try {
-    console.log(page);
+    isLoaderVisible.value = true;
     const {
       data: { candidates, count },
     } = await getCandidatesByPage(page);
     candidatePagesNum.value = Math.ceil(count / 8);
-    console.log(candidates);
-    console.log(count);
     candidatesList.value = candidates;
+    isLoaderVisible.value = false;
   } catch (e) {
+    isLoaderVisible.value = false;
     console.log(e);
   }
 }
@@ -62,7 +63,11 @@ getCandidates();
         />
       </EasyModal>
     </div>
-    <ul class="list-unstyled row g-md-4 g-lg-4 g-2">
+    <SpinnerLoader v-if="isLoaderVisible" />
+    <ul
+      v-if="!isLoaderVisible"
+      class="list-unstyled row g-md-4 g-lg-4 g-2"
+    >
       <li
         v-for="candidate in candidatesList"
         :key="candidate.id"
@@ -92,6 +97,7 @@ getCandidates();
       </li>
     </ul>
     <Pagination
+      v-if="!isLoaderVisible"
       class="pb-5 pt-2"
       :page-count="candidatePagesNum"
       @change-page="getCandidates"
