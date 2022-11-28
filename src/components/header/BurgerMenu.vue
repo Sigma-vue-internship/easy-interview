@@ -41,9 +41,9 @@ const route = useRoute();
             <router-link
               class="text-decoration-none"
               :class="[
-                route.path === '/categories' ? 'text-primary' : 'text-black',
+                route.path === '/questions' ? 'text-primary' : 'text-black',
               ]"
-              to="/categories"
+              to="/questions"
               >Questions</router-link
             >
           </li>

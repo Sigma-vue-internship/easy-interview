@@ -14,6 +14,7 @@ import {
   faFilter,
   faBars,
   faMagnifyingGlass,
+  faCircleInfo,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import "./assets/fonts/css/fontello.css";
@@ -28,7 +29,7 @@ pinia.use(() => ({ $axios: axiosInstance }));
 
 app.use(pinia);
 
-library.add(faFilter, faLinkedin, faBars, faMagnifyingGlass);
+library.add(faFilter, faLinkedin, faBars, faMagnifyingGlass, faCircleInfo);
 
 app.use(router);
 app.use(

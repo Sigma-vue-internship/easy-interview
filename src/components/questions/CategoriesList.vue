@@ -8,7 +8,7 @@ import { Question } from "../../../dto/questions";
 defineProps({
   questionsList: {
     type: Array as () => Question[],
-    required: true,
+    default: () => [],
   },
 });
 
@@ -45,10 +45,16 @@ function pushRoute(category: string) {
       <div
         class="col-lg-2 mb-md-4 mb-lg-0 col-xl-2 col-xxl-2 text-center text-md-start text-primary"
       >
-        <h2 class="text-center mb-4 text-md-start mb-md-0 text-primary">
-          Categories
-        </h2>
+        <h2 class="text-center text-md-start mb-0 text-primary">Questions</h2>
       </div>
+      <p class="text-center mb-2 text-md-start mb-md-0 text-secondary">
+        <font-awesome-icon
+          icon="fa-solid fa-circle-info"
+          class="text-secondary fs-6"
+        />
+        Questions based on categories click below to category name for see list
+        of questions
+      </p>
       <div
         class="col-lg-2 my-xs-4 my-lg-0 ms-lg-5 ms-xl-4 ms-xxl-0 text-center text-md-start"
       ></div>

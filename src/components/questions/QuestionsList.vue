@@ -48,7 +48,7 @@ getQuestionList();
       <div
         class="col-lg-2 mb-md-4 mb-lg-0 col-xl-2 col-xxl-2 text-center text-md-start text-primary"
       >
-        <h2>Category</h2>
+        <h2>{{ route.params.title }}</h2>
       </div>
       <div
         class="col-lg-2 my-xs-4 my-lg-0 ms-lg-5 ms-xl-4 ms-xxl-0 text-center text-md-start"
