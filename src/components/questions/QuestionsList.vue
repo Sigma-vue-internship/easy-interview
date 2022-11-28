@@ -9,7 +9,6 @@ const questionStore = useQuestionStore();
 
 const currentQuestion = ref({});
 const formType = ref("");
-
 const formTitle = computed(() =>
   formType.value === "put" ? "Edit question" : "Add new question",
 );
@@ -18,7 +17,7 @@ const questionsList = ref([]);
 
 const isLoaderVisible = ref(true);
 const route = useRoute();
-
+const deleteQuestionId = ref("");
 async function getQuestionList() {
   try {
     isLoaderVisible.value = true;
@@ -32,10 +31,12 @@ async function getQuestionList() {
     console.log(e);
   }
 }
-async function deleteQuestion(id) {
+async function deleteQuestion() {
   try {
-    await questionStore.deleteQuestion(id);
-    await getQuestionList();
+    await questionStore.deleteQuestion(deleteQuestionId.value);
+    questionsList.value = questionsList.value.filter(
+      question => question.id !== deleteQuestionId.value,
+    );
   } catch (e) {
     console.log(e);
   }
@@ -47,6 +48,9 @@ function setModalItem(item, action) {
 }
 function clearForm() {
   currentQuestion.value = {};
+}
+function setDeleteQuestion(id) {
+  deleteQuestionId.value = id;
 }
 
 getQuestionList();
@@ -66,7 +70,7 @@ getQuestionList();
           type="button"
           class="btn btn-primary"
           data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
+          data-bs-target="#question"
           @click="setModalItem(currentQuestion, 'post')"
         >
           Add question
@@ -96,7 +100,7 @@ getQuestionList();
               type="button"
               class="btn btn-primary"
               data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
+              data-bs-target="#question"
               @click="setModalItem(item, 'put')"
             >
               Edit
@@ -104,8 +108,10 @@ getQuestionList();
           </div>
           <div class="col-6 col-sm-3 col-xl-1">
             <DeleteButton
+              data-bs-toggle="modal"
+              data-bs-target="#questionAlert"
               class="delete-question__btn"
-              @click="deleteQuestion(item.id)"
+              @click="setDeleteQuestion(item.id)"
             />
           </div>
         </div>
@@ -114,6 +120,7 @@ getQuestionList();
   </div>
   <EasyModal
     :title="formTitle"
+    :modal-id="'question'"
     @close-modal="clearForm"
   >
     <QuestionForm
@@ -121,5 +128,22 @@ getQuestionList();
       :form-type="formType"
       @update-questions-list="getQuestionList"
     />
+  </EasyModal>
+  <EasyModal
+    :title="'Delete question'"
+    :modal-id="'questionAlert'"
+    :modal-size="'modal-sm'"
+    @close-modal="clearForm"
+  >
+    <p class="text-black">Are you sure you want to delete this question ?</p>
+    <div class="d-flex justify-content-end">
+      <button
+        class="btn btn-danger text-align-end"
+        data-bs-dismiss="modal"
+        @click="deleteQuestion"
+      >
+        Delete
+      </button>
+    </div>
   </EasyModal>
 </template>
