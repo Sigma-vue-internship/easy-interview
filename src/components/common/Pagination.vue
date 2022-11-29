@@ -4,19 +4,18 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { ref } from "vue";
+import { useRoute } from "vue-router";
 
-defineProps({
+const props = defineProps({
   pageCount: {
     type: Number,
     required: true,
   },
 });
-const currentPage = ref(1);
+const route = useRoute();
 const emit = defineEmits(["changePage"]);
 function emitChangePage(page) {
-  currentPage.value = page;
-  emit("changePage", currentPage.value);
+  emit("changePage", page);
 }
 </script>
 <template>
@@ -33,11 +32,11 @@ function emitChangePage(page) {
         v-for="(page, index) in pageCount"
         :key="page"
         class="page-item"
-        :class="currentPage === page ? 'active' : ''"
+        :class="`${index + 1}` === route.query.page ? 'active' : ''"
       >
         <button
           class="page-link"
-          @click="emitChangePage(index + 1)"
+          @click="emitChangePage(`${index + 1}`)"
         >
           {{ page }}
         </button>

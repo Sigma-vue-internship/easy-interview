@@ -17,7 +17,13 @@ const getWrapper = (props = {}, data = {}) =>
       };
     },
   });
-
+vi.mock("vue-router/dist/vue-router.mjs", () => ({
+  useRouter: () => ({
+    params: {
+      title: "test_category",
+    },
+  }),
+}));
 describe("CandidateList.vue", () => {
   beforeEach(() => {
     vi.clearAllMocks();

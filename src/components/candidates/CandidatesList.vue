@@ -2,18 +2,23 @@
 import CandidateForm from "./CandidateForm.vue";
 import { useCandidateStore } from "../../stores/candidates";
 import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
 
 const { getCandidatesByPage } = useCandidateStore();
 const candidatesList = ref([]);
 const candidatePagesNum = ref(0);
 const isLoaderVisible = ref(true);
+const router = useRouter();
 async function getCandidates(page: number = 1) {
   try {
     isLoaderVisible.value = true;
     const {
       data: { candidates, count },
     } = await getCandidatesByPage(page);
+    router.push({ name: "candidates", query: { page } });
+
     candidatePagesNum.value = Math.ceil(count / 8);
+
     candidatesList.value = candidates;
     isLoaderVisible.value = false;
   } catch (e) {
@@ -54,7 +59,7 @@ getCandidates();
       </button>
       <EasyModal
         :title="formTitle"
-        :modal-id="candidate"
+        :modal-id="'candidate'"
         @close-modal="clearForm"
       >
         <CandidateForm
