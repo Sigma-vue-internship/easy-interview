@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { mount } from "@vue/test-utils";
+import { flushPromises, mount } from "@vue/test-utils";
 import CandidateForm from "../CandidateForm.vue";
 import EasyModal from "../../common/EasyModal.vue";
 import { nextTick } from "vue";
+import { createTestingPinia } from "@pinia/testing";
 
 describe("Candidate.vue", () => {
   beforeEach(() => {
@@ -51,8 +52,7 @@ describe("Candidate.vue", () => {
     expect(submitBtn.exists()).toBe(true);
 
     await submitBtn.trigger("submit");
-    await nextTick();
-    await nextTick();
+    await flushPromises();
 
     expect(wrapper.vm.candidate).toMatchObject({
       avatarUrl: "",
@@ -62,5 +62,34 @@ describe("Candidate.vue", () => {
       position: "",
       username: "",
     });
+  });
+  it("should emit candidate object on put", async () => {
+    const wrapper = mount(CandidateForm, {
+      propsData: {
+        singleCandidate: {
+          position: "position 3",
+          username: "username 3",
+          linkedinUrl: "linkedinUrl 3",
+          feedback: "feedback 3",
+          avatarUrl:
+            "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/541.jpg",
+          id: "3",
+        },
+        formType: "put",
+      },
+      global: {
+        components: {
+          EasyModal,
+        },
+        plugins: [createTestingPinia()],
+      },
+    });
+    await wrapper.find("form").trigger("submit.prevent");
+    wrapper.vm.$emit("edit-candidate", wrapper.props().singleCandidate);
+    await flushPromises();
+    expect(wrapper.emitted("edit-candidate")).toBeTruthy();
+    expect(wrapper.emitted("edit-candidate")[0][0]).toEqual(
+      wrapper.props().singleCandidate,
+    );
   });
 });

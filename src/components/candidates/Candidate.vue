@@ -49,7 +49,6 @@ async function getCandidateData() {
 }
 async function editSingleCandidate(candidate) {
   try {
-    console.log(candidate);
     const { data } = await editCandidate(candidate);
     currentCandidate.value = data;
   } catch (e) {
@@ -92,10 +91,16 @@ function deleteProfile() {
         />
       </div>
       <div class="col-12 col-lg-7 text-center text-lg-start">
-        <h2 id="username" class="text-primary">
+        <h2
+          id="username"
+          class="text-primary"
+        >
           {{ currentCandidate.username }}
         </h2>
-        <h3 id="position" class="text-secondary">
+        <h3
+          id="position"
+          class="text-secondary"
+        >
           {{ currentCandidate.position }}
         </h3>
         <div
@@ -107,9 +112,18 @@ function deleteProfile() {
           />
           {{ currentCandidate.linkedinUrl }}
         </div>
-        <SubmitButton data-bs-toggle="modal" data-bs-target="#editCandidate" />
-        <DeleteButton data-bs-toggle="modal" data-bs-target="#alertCandidate" />
-        <p id="feedback" class="text-secondary mt-4">
+        <SubmitButton
+          data-bs-toggle="modal"
+          data-bs-target="#editCandidate"
+        />
+        <DeleteButton
+          data-bs-toggle="modal"
+          data-bs-target="#alertCandidate"
+        />
+        <p
+          id="feedback"
+          class="text-secondary mt-4"
+        >
           <span class="text-primary">Feedback:</span>
           {{ currentCandidate.feedback }}
         </p>
@@ -134,11 +148,14 @@ function deleteProfile() {
       </ul>
     </div>
   </div>
-  <EasyModal :title="'Edit candidate'" :modal-id="'editCandidate'">
+  <EasyModal
+    :title="'Edit candidate'"
+    :modal-id="'editCandidate'"
+  >
     <CandidateForm
       :single-candidate="currentCandidate"
       :form-type="formType"
-      @edit-сandidate="editSingleCandidate"
+      @edit-candidate="editSingleCandidate"
     />
   </EasyModal>
   <EasyModal

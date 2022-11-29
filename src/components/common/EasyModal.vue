@@ -35,7 +35,7 @@ export default {
 <template>
   <div
     :id="modalId"
-    class="modal fade pt-5"
+    class="modal fade pt-2"
     tabindex="-1"
     data-bs-backdrop="static"
     data-bs-keyboard="false"
