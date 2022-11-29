@@ -2,6 +2,11 @@
 import { ref, watch } from "vue";
 import { useFormValidator } from "../../utils/useFormValidator";
 import { Candidate } from "../../../dto/candidates";
+// interface Emit {
+//   (e: "edit-candidate", candidate: Object): void;
+// }
+// const emit = defineEmits<Emit>();
+const emit = defineEmits(["edit-candidate"]);
 const candidateInit = {
   position: "",
   username: "",
@@ -29,7 +34,7 @@ const props = defineProps({
     },
   },
 });
-watch(props, currentCandidate => {
+watch(props, (currentCandidate) => {
   candidate.value = { ...currentCandidate.singleCandidate };
 });
 
@@ -40,17 +45,18 @@ async function onSubmit() {
   if (!isFormCorrect) {
     return;
   }
+  // candidate.value = { ...candidateInit };
+  if (props.formType === "put") {
+    emit("edit-candidate", candidate.value);
+    resetForm();
+    return;
+  }
   resetForm();
-  candidate.value = { ...candidateInit };
 }
 </script>
 <template>
   <form @submit.prevent="onSubmit">
-    <label
-      for="position"
-      class="form-label"
-      >Position:</label
-    >
+    <label for="position" class="form-label">Position:</label>
     <input
       id="position"
       v-model="candidate.position"
@@ -59,19 +65,12 @@ async function onSubmit() {
       placeholder="Junior front-end developer"
       class="form-control text-dark"
     />
-    <p
-      style="height: 25px"
-      class="pt-1 ps-1 text-danger mb-2"
-    >
+    <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
       <span v-if="v$.position.$error">{{
         v$.position.$errors[0].$message
       }}</span>
     </p>
-    <label
-      for="username"
-      class="form-label"
-      >Username:</label
-    >
+    <label for="username" class="form-label">Username:</label>
     <input
       id="username"
       v-model="candidate.username"
@@ -80,19 +79,12 @@ async function onSubmit() {
       placeholder="tyler111"
       class="form-control text-secondary"
     />
-    <p
-      style="height: 25px"
-      class="pt-1 ps-1 text-danger mb-2"
-    >
+    <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
       <span v-if="v$.username.$error">{{
         v$.username.$errors[0].$message
       }}</span>
     </p>
-    <label
-      for="linkedin"
-      class="form-label"
-      >Linkedin:</label
-    >
+    <label for="linkedin" class="form-label">Linkedin:</label>
     <input
       id="linkedin"
       v-model="candidate.linkedinUrl"
@@ -101,11 +93,7 @@ async function onSubmit() {
       placeholder="https://www.linkedin.com/"
       class="form-control text-secondary mb-4"
     />
-    <label
-      for="avatar"
-      class="form-label"
-      >Avatar:</label
-    >
+    <label for="avatar" class="form-label">Avatar:</label>
     <input
       id="avatar"
       v-model="candidate.avatarUrl"
@@ -124,10 +112,7 @@ async function onSubmit() {
         placeholder="Feedback:"
       />
       <label for="feedback">Feedback:</label>
-      <p
-        style="height: 25px"
-        class="pt-1 ps-1 text-danger mb-2"
-      >
+      <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
         <span v-if="v$.feedback.$error">{{
           v$.feedback.$errors[0].$message
         }}</span>

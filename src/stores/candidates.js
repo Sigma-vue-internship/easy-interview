@@ -4,5 +4,11 @@ export const useCandidateStore = defineStore("candidates", {
     async getCandidateById(id) {
       return this.$axios.get(`/candidates/${id}`);
     },
+    async editCandidate(candidate) {
+      return this.$axios.put(`/candidates/${candidate.id}`, candidate);
+    },
+    async deleteCandidateById(id) {
+      return this.$axios.delete(`/candidates/${id}`);
+    },
   },
 });
