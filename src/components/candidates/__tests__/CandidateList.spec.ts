@@ -3,13 +3,25 @@ import { flushPromises, mount } from "@vue/test-utils";
 import CandidatesList from "../CandidatesList.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { useCandidateStore } from "../../../stores/candidates";
+import { createRouter, createWebHistory } from "vue-router";
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    {
+      path: "/candidates",
+      name: "candidates",
+      component: CandidatesList,
+    },
+  ],
+});
+
 const getWrapper = (props = {}, data = {}) =>
   mount(CandidatesList, {
     propsData: {
       ...props,
     },
     global: {
-      plugins: [createTestingPinia()],
+      plugins: [createTestingPinia(), router],
     },
     data() {
       return {
@@ -17,13 +29,13 @@ const getWrapper = (props = {}, data = {}) =>
       };
     },
   });
-vi.mock("vue-router/dist/vue-router.mjs", () => ({
-  useRouter: () => ({
-    params: {
-      title: "test_category",
-    },
-  }),
-}));
+// vi.mock("vue-router/dist/vue-router.mjs", () => ({
+//   useRouter: () => ({
+//     params: {
+//       title: "test_category",
+//     },
+//   }),
+// }));
 describe("CandidateList.vue", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -31,6 +43,7 @@ describe("CandidateList.vue", () => {
 
   it("should make axios getAllCandidates call on created hook", async () => {
     getWrapper();
+
     const { getCandidatesByPage } = useCandidateStore();
     await flushPromises();
     expect(getCandidatesByPage).toBeCalledWith(1);

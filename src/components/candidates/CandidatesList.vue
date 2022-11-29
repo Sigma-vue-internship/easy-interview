@@ -12,10 +12,10 @@ const router = useRouter();
 async function getCandidates(page: number = 1) {
   try {
     isLoaderVisible.value = true;
+    router.push({ name: "candidates", query: { page } });
     const {
       data: { candidates, count },
     } = await getCandidatesByPage(page);
-    router.push({ name: "candidates", query: { page } });
 
     candidatePagesNum.value = Math.ceil(count / 8);
 
