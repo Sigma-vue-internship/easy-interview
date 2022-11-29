@@ -32,7 +32,7 @@ const route = useRoute();
           <li class="list-group-item text-dark">
             <router-link
               class="text-decoration-none"
-              :class="[route.path === '/' ? 'text-primary' : 'text-black']"
+              :class="[route.path === '/' ? 'text-primary' : 'text-secondary']"
               to="/"
               >Dashboard</router-link
             >
@@ -41,7 +41,9 @@ const route = useRoute();
             <router-link
               class="text-decoration-none"
               :class="[
-                route.path === '/categories' ? 'text-primary' : 'text-black',
+                route.path === '/categories'
+                  ? 'text-primary'
+                  : 'text-secondary',
               ]"
               to="/categories"
               >Questions</router-link
@@ -52,7 +54,9 @@ const route = useRoute();
             <router-link
               class="text-decoration-none"
               :class="[
-                route.path === '/candidates' ? 'text-primary' : 'text-black',
+                route.path === '/candidates'
+                  ? 'text-primary'
+                  : 'text-secondary',
               ]"
               to="/candidates"
               >Candidates</router-link
@@ -63,7 +67,7 @@ const route = useRoute();
             <router-link
               class="text-decoration-none"
               :class="[
-                route.path === '/results' ? 'text-primary' : 'text-black',
+                route.path === '/results' ? 'text-primary' : 'text-secondary',
               ]"
               to="/results"
               >Quiz results</router-link
