@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { ref, watch } from "vue";
 import { flushPromises, mount } from "@vue/test-utils";
 import CandidateForm from "../CandidateForm.vue";
 import EasyModal from "../../common/EasyModal.vue";
@@ -84,12 +85,19 @@ describe("Candidate.vue", () => {
         plugins: [createTestingPinia()],
       },
     });
+    const singleCandidate = {
+      position: "position 3",
+      username: "username 3",
+      linkedinUrl: "linkedinUrl 3",
+      feedback: "feedback 3",
+      avatarUrl:
+        "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/541.jpg",
+      id: "3",
+    };
+    wrapper.vm.candidate = { ...singleCandidate };
     await wrapper.find("form").trigger("submit.prevent");
-    wrapper.vm.$emit("edit-candidate", wrapper.props().singleCandidate);
     await flushPromises();
     expect(wrapper.emitted("edit-candidate")).toBeTruthy();
-    expect(wrapper.emitted("edit-candidate")[0][0]).toEqual(
-      wrapper.props().singleCandidate,
-    );
+    expect(wrapper.emitted("edit-candidate")[0][0]).toEqual(singleCandidate);
   });
 });

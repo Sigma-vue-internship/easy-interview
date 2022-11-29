@@ -43,7 +43,6 @@ async function onSubmit() {
   }
   if (props.formType === "put") {
     emit("edit-candidate", { ...candidate.value });
-    
     resetForm();
     candidate.value = { ...candidateInit };
     return;
