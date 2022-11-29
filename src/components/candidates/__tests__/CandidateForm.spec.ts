@@ -89,6 +89,6 @@ describe("Candidate.vue", () => {
     await wrapper.find("form").trigger("submit.prevent");
     await flushPromises();
     expect(wrapper.emitted("edit-candidate")).toBeTruthy();
-    expect(wrapper.emitted("edit-candidate")[0][0]).toEqual(singleCandidate);
+    expect(wrapper.emitted("edit-candidate")?.[0][0]).toEqual(singleCandidate);
   });
 });
