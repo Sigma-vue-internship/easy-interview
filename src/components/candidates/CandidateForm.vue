@@ -3,7 +3,7 @@ import { ref, watch } from "vue";
 import { useFormValidator } from "../../utils/useFormValidator";
 import { Candidate } from "../../../dto/candidates";
 interface Emit {
-  (e: "edit-candidate", candidate: Object): void;
+  (e: "edit-candidate", candidate: Candidate): void;
 }
 const emit = defineEmits<Emit>();
 const candidateInit = {
@@ -14,7 +14,6 @@ const candidateInit = {
   avatarUrl: "",
   id: 0,
 };
-const candidate = ref({ ...candidateInit });
 const props = defineProps({
   singleCandidate: {
     type: Object as () => Candidate,
@@ -31,6 +30,7 @@ const props = defineProps({
     },
   },
 });
+const candidate = ref({ ...candidateInit });
 watch(props, currentCandidate => {
   candidate.value = { ...currentCandidate.singleCandidate };
 });

@@ -67,15 +67,6 @@ describe("Candidate.vue", () => {
   it("should emit candidate object on put", async () => {
     const wrapper = mount(CandidateForm, {
       propsData: {
-        singleCandidate: {
-          position: "position 3",
-          username: "username 3",
-          linkedinUrl: "linkedinUrl 3",
-          feedback: "feedback 3",
-          avatarUrl:
-            "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/541.jpg",
-          id: "3",
-        },
         formType: "put",
       },
       global: {
@@ -94,7 +85,7 @@ describe("Candidate.vue", () => {
         "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/541.jpg",
       id: "3",
     };
-    wrapper.vm.candidate = { ...singleCandidate };
+    wrapper.setProps({ singleCandidate: { ...singleCandidate } });
     await wrapper.find("form").trigger("submit.prevent");
     await flushPromises();
     expect(wrapper.emitted("edit-candidate")).toBeTruthy();
