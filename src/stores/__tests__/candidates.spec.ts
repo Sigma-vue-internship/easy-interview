@@ -26,4 +26,15 @@ describe("Candidate Store", () => {
     expect(axiosInstance.get).toBeCalledWith("/candidates/1");
     expect(data).toBe("123");
   });
+  it("should call getCandidatesByPage action", async () => {
+    axiosInstance.get = vi.fn().mockImplementation(() =>
+      Promise.resolve({
+        data: "123",
+      }),
+    );
+    const { getCandidatesByPage } = useCandidateStore();
+    const { data } = await getCandidatesByPage(1);
+    expect(axiosInstance.get).toBeCalled();
+    expect(data).toBe("123");
+  });
 });
