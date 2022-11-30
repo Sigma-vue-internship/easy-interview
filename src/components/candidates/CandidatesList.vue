@@ -84,24 +84,22 @@ getCandidates();
         class="d-flex mx-auto mx-md-0 mb-3 mb-md-0 text-center candidate__item"
       >
         <router-link
-          class="text-decoration-none"
+          class="text-decoration-none d-flex w-100 rounded-3 p-2 bg-dark text-primary"
           :to="'/candidates/' + candidate.id"
         >
-          <div class="d-flex w-100 rounded-3 p-2 bg-dark text-primary">
-            <img
-              class="rounded-circle img-fluid p-2 border-primary border border-3"
-              :src="candidate.avatarUrl"
-              alt="candidateAvatar"
-            />
+          <img
+            class="rounded-circle img-fluid p-2 border-primary border border-3"
+            :src="candidate.avatarUrl"
+            alt="candidateAvatar"
+          />
 
-            <div class="flex ms-4 text-start">
-              <h2 class="fs-3">{{ candidate.username }}</h2>
+          <div class="flex ms-4 text-start">
+            <h2 class="fs-3">{{ candidate.username }}</h2>
 
-              <p class="border-dark fs-5 m-0">
-                Position: {{ candidate.position }}
-              </p>
-              <button class="btn btn-primary mt-4">Open candidate</button>
-            </div>
+            <p class="border-dark fs-5 m-0">
+              Position: {{ candidate.position }}
+            </p>
+            <button class="btn btn-primary mt-4">Open candidate</button>
           </div>
         </router-link>
       </li>
