@@ -14,5 +14,8 @@ export const useQuestionStore = defineStore("question", {
     async postQuestion(question) {
       return this.$axios.post("/questions", question);
     },
+    async deleteQuestion(id) {
+      return this.$axios.delete(`/questions/${id}`);
+    },
   },
 });

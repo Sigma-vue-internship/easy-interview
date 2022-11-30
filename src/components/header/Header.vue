@@ -43,7 +43,7 @@ function logoutUser() {
             </button>
             <button
               v-else
-              class="btn btn-outline-secondary rounded-3 log-out col-md-3 col-lg-2 d-none d-md-block"
+              class="btn btn-outline-primary rounded-3 log-out col-md-3 col-lg-2 d-none d-md-block"
               @click="logoutUser"
             >
               Logout

@@ -27,7 +27,7 @@
             />
           </button>
           <ul
-            class="dropdown-menu p-2 bg-secondary"
+            class="dropdown-menu p-2 bg-light"
             aria-labelledby="dropdownMenuButton"
           >
             <li>

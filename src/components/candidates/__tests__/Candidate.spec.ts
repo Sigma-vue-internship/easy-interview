@@ -5,13 +5,16 @@ import { mount } from "@vue/test-utils";
 import Candidate from "../Candidate.vue";
 import { useCandidateStore } from "../../../stores/candidates";
 
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 vi.mock("vue-router/dist/vue-router.mjs", () => ({
   useRoute: () => ({
     params: {
       id: "1",
     },
+  }),
+  useRouter: () => ({
+    data: "test",
   }),
 }));
 
