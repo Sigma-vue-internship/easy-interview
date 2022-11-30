@@ -115,7 +115,8 @@ function deleteProfile() {
         <SubmitButton
           data-bs-toggle="modal"
           data-bs-target="#editCandidate"
-        />
+          >Edit</SubmitButton
+        >
         <DeleteButton
           data-bs-toggle="modal"
           data-bs-target="#alertCandidate"

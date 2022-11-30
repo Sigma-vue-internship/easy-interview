@@ -146,7 +146,7 @@ async function onSubmit() {
         class="btn btn-primary candidate__submit-btn ms-2"
         :data-bs-dismiss="showModal ? 'modal' : ''"
       >
-        {{ formType === "put" ? "Edit candidate" : "Add candidate" }}
+        {{ formType === "put" ? "Save" : "Add" }}
       </button>
     </div>
   </form>
