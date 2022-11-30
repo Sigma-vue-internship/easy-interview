@@ -10,5 +10,8 @@ export const useCandidateStore = defineStore("candidates", {
     async deleteCandidateById(id) {
       return this.$axios.delete(`/candidates/${id}`);
     },
+    async getCandidatesByPage(page) {
+      return this.$axios.get(`/candidates?p=${page}&l=8`);
+    },
   },
 });
