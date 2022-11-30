@@ -2,10 +2,12 @@
 import SubmitButton from "../common/SubmitButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
 
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue";
 import { useCandidateStore } from "../../stores/candidates";
+import CandidateForm from "./CandidateForm.vue";
 const { params } = useRoute();
+const router = useRouter();
 const currentCandidate = ref({});
 const candidateResults = ref([
   {
@@ -33,12 +35,32 @@ const candidateResults = ref([
     candidateId: "1",
   },
 ]);
+const formType = ref("put");
+const { getCandidateById, deleteCandidateById, editCandidate } =
+  useCandidateStore();
 
 async function getCandidateData() {
   try {
-    const { getCandidateById } = useCandidateStore();
     const { data } = await getCandidateById(params.id);
     currentCandidate.value = data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+async function editSingleCandidate(candidate) {
+  try {
+    const { data } = await editCandidate(candidate);
+    currentCandidate.value = data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+async function deleteCandidate() {
+  try {
+    await deleteCandidateById(currentCandidate.value.id);
+    router.push({
+      name: "candidates",
+    });
   } catch (e) {
     console.log(e);
   }
@@ -97,8 +119,15 @@ function deleteProfile() {
             />
             {{ currentCandidate.linkedinUrl }}
           </div>
-          <SubmitButton @click="editProfile" />
-          <DeleteButton @click="deleteProfile" />
+          <SubmitButton
+          data-bs-toggle="modal"
+          data-bs-target="#editCandidate"
+          >Edit</SubmitButton
+        >
+          <DeleteButton
+          data-bs-toggle="modal"
+          data-bs-target="#alertCandidate"
+        />
           <p
             id="feedback"
             class="text-secondary mt-4"
@@ -128,4 +157,36 @@ function deleteProfile() {
       </div>
     </div>
   </div>
+  <EasyModal
+    :title="'Edit candidate'"
+    :modal-id="'editCandidate'"
+  >
+    <CandidateForm
+      :single-candidate="currentCandidate"
+      :form-type="formType"
+      @edit-candidate="editSingleCandidate"
+    />
+  </EasyModal>
+  <EasyModal
+    :title="'Delete candidate'"
+    :modal-id="'alertCandidate'"
+    :modal-size="'modal-sm'"
+  >
+    <p class="text-black">Are you sure you want to delete this candidate ?</p>
+    <div class="d-flex justify-content-end">
+      <button
+        class="btn btn-outline-secondary text-align-end me-2"
+        data-bs-dismiss="modal"
+      >
+        Cancel
+      </button>
+      <button
+        class="btn btn-danger text-align-end"
+        data-bs-dismiss="modal"
+        @click="deleteCandidate"
+      >
+        <font-awesome-icon icon="fa-solid fa-trash-can" />
+      </button>
+    </div>
+  </EasyModal>
 </template>
