@@ -135,7 +135,7 @@ getQuestionList();
     :modal-size="'modal-sm'"
     @close-modal="clearForm"
   >
-    <p class="text-black">Are you sure you want to delete this question ?</p>
+    <p>Are you sure you want to delete this question ?</p>
     <div class="d-flex justify-content-end">
       <button
         class="btn btn-outline-secondary text-align-end me-2"
