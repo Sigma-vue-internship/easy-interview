@@ -1,6 +1,9 @@
 <script setup>
 import { useRoute } from "vue-router";
 const route = useRoute();
+function setTextColor(routeName) {
+  return route.name === routeName ? "text-primary" : "text-secondary";
+}
 </script>
 <template>
   <div>
@@ -32,9 +35,7 @@ const route = useRoute();
           <li class="list-group-item text-dark">
             <router-link
               class="text-decoration-none"
-              :class="[
-                route.name === 'dashboard' ? 'text-primary' : 'text-secondary',
-              ]"
+              :class="setTextColor('dashboard')"
               to="/"
               >Dashboard</router-link
             >
@@ -42,11 +43,7 @@ const route = useRoute();
           <li class="list-group-item">
             <router-link
               class="text-decoration-none"
-              :class="[
-                route.name === 'categoriesList'
-                  ? 'text-primary'
-                  : 'text-secondary',
-              ]"
+              :class="setTextColor('categoriesList')"
               to="/categories"
               >Questions</router-link
             >
@@ -55,9 +52,7 @@ const route = useRoute();
           <li class="list-group-item text-primary">
             <router-link
               class="text-decoration-none"
-              :class="[
-                route.name === 'candidates' ? 'text-primary' : 'text-secondary',
-              ]"
+              :class="setTextColor('candidates')"
               to="/candidates"
               >Candidates</router-link
             >
@@ -66,11 +61,7 @@ const route = useRoute();
           <li class="list-group-item text-primary">
             <router-link
               class="text-decoration-none"
-              :class="[
-                route.name === 'quizResults'
-                  ? 'text-primary'
-                  : 'text-secondary',
-              ]"
+              :class="setTextColor('quizResults')"
               to="/results"
               >Quiz results</router-link
             >
