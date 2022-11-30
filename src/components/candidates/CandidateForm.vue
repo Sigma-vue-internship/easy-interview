@@ -2,6 +2,10 @@
 import { ref, watch } from "vue";
 import { useFormValidator } from "../../utils/useFormValidator";
 import { Candidate } from "../../../dto/candidates";
+interface Emit {
+  (e: "edit-candidate", candidate: Candidate): void;
+}
+const emit = defineEmits<Emit>();
 const candidateInit = {
   position: "",
   username: "",
@@ -10,7 +14,6 @@ const candidateInit = {
   avatarUrl: "",
   id: 0,
 };
-const candidate = ref({ ...candidateInit });
 const props = defineProps({
   singleCandidate: {
     type: Object as () => Candidate,
@@ -23,25 +26,29 @@ const props = defineProps({
     type: String,
     required: false,
     default() {
-      return {
-        formType: "put",
-      };
+      return "put";
     },
   },
 });
+const candidate = ref({ ...candidateInit });
 watch(props, currentCandidate => {
   candidate.value = { ...currentCandidate.singleCandidate };
 });
 
 const { v$, resetForm, showModal } = useFormValidator(candidate, "candidate");
-
 async function onSubmit() {
   const isFormCorrect = await v$.value.$validate();
   if (!isFormCorrect) {
     return;
   }
-  resetForm();
+  if (props.formType === "put") {
+    emit("edit-candidate", { ...candidate.value });
+    resetForm();
+    candidate.value = { ...candidateInit };
+    return;
+  }
   candidate.value = { ...candidateInit };
+  resetForm();
 }
 </script>
 <template>
@@ -139,7 +146,7 @@ async function onSubmit() {
         class="btn btn-primary candidate__submit-btn ms-2"
         :data-bs-dismiss="showModal ? 'modal' : ''"
       >
-        Add candidate
+        {{ formType === "put" ? "Save" : "Add" }}
       </button>
     </div>
   </form>
