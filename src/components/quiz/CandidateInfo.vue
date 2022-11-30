@@ -55,20 +55,22 @@ function choosedCandidateId(candidate: string) {
 
 <template>
   <h2 class="text-primary text-center text-md-start">Choose Candidate</h2>
-  <input
-    id="dataList"
-    v-model="selectCandidate"
-    class="form-control"
-    list="datalistOptions"
-    placeholder="Type to search..."
-    @change="choosedCandidateId(selectCandidate)"
-  />
-  <datalist id="datalistOptions">
-    <option
-      v-for="oneCandidate in candidatesList"
-      :key="oneCandidate.id"
-    >
-      {{ oneCandidate.username }}, {{ oneCandidate.position }}
-    </option>
-  </datalist>
+  <div class="col-12 col-lg-6">
+    <input
+      id="dataList"
+      v-model="selectCandidate"
+      class="form-control"
+      list="datalistOptions"
+      placeholder="Type to search..."
+      @change="choosedCandidateId(selectCandidate)"
+    />
+    <datalist id="datalistOptions">
+      <option
+        v-for="oneCandidate in candidatesList"
+        :key="oneCandidate.id"
+      >
+        {{ oneCandidate.username }}, {{ oneCandidate.position }}
+      </option>
+    </datalist>
+  </div>
 </template>
