@@ -32,7 +32,10 @@ function setTextColor(routeName) {
       </div>
       <div class="offcanvas-body p-0">
         <ul class="text-start list-group">
-          <li class="list-group-item text-dark">
+          <li
+            data-bs-dismiss="offcanvas"
+            class="list-group-item text-dark"
+          >
             <router-link
               class="text-decoration-none"
               :class="setTextColor('dashboard')"
@@ -40,7 +43,10 @@ function setTextColor(routeName) {
               >Dashboard</router-link
             >
           </li>
-          <li class="list-group-item">
+          <li
+            data-bs-dismiss="offcanvas"
+            class="list-group-item"
+          >
             <router-link
               class="text-decoration-none"
               :class="setTextColor('categoriesList')"
@@ -49,7 +55,10 @@ function setTextColor(routeName) {
             >
           </li>
 
-          <li class="list-group-item text-primary">
+          <li
+            data-bs-dismiss="offcanvas"
+            class="list-group-item text-primary"
+          >
             <router-link
               class="text-decoration-none"
               :class="setTextColor('candidates')"
@@ -58,7 +67,10 @@ function setTextColor(routeName) {
             >
           </li>
 
-          <li class="list-group-item text-primary">
+          <li
+            data-bs-dismiss="offcanvas"
+            class="list-group-item text-primary"
+          >
             <router-link
               class="text-decoration-none"
               :class="setTextColor('quizResults')"

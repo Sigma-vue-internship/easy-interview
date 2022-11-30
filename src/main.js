@@ -15,8 +15,10 @@ import {
   faBars,
   faMagnifyingGlass,
   faTrashCan,
+  faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { faFaceFrown } from "@fortawesome/free-regular-svg-icons";
 import "./assets/fonts/css/fontello.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
@@ -24,12 +26,19 @@ import "./assets/scss/custom.scss";
 import axiosInstance from "./service/axiosInstance";
 const app = createApp(App);
 const pinia = createPinia();
-
 pinia.use(() => ({ $axios: axiosInstance }));
 
 app.use(pinia);
 
-library.add(faFilter, faLinkedin, faBars, faMagnifyingGlass, faTrashCan);
+library.add(
+  faFilter,
+  faLinkedin,
+  faBars,
+  faMagnifyingGlass,
+  faTrashCan,
+  faUserPlus,
+  faFaceFrown,
+);
 
 app.use(router);
 app.use(
