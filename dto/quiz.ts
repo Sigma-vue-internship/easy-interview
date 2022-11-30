@@ -9,7 +9,7 @@ export interface QuizQuestion {
 
 export interface QuizResult {
   questionAnswer: QuizQuestion[];
-  id: number;
+  title: string;
   startedAt: number;
   endedAt: number;
 }

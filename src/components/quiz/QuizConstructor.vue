@@ -5,6 +5,7 @@ import { computed, onMounted, ref } from "vue";
 import { QuizQuestion, QuizResult } from "../../../dto/quiz";
 import QuizList from "./QuizList.vue";
 import CandidateInfo from "../quiz/CandidateInfo.vue";
+import { useResultsStore } from "../../stores/results";
 
 defineProps({
   question: {
@@ -22,7 +23,7 @@ defineProps({
     type: Object as () => QuizResult,
     default: () => ({
       questionAnswer: [],
-      id: "",
+      title: "",
       startedAt: 0,
       endedAt: 0,
     }),
@@ -34,6 +35,7 @@ const checkedQuestions = ref([]);
 const checkedAnswer = ref(0);
 const currentCandidateId = ref(0);
 const startQuizDate = ref(0);
+const resultsStore = useResultsStore();
 
 onMounted(() => {
   selectedCategory.value = "Select category for displaying questions";
@@ -121,18 +123,23 @@ function getCandidateById(id: number) {
   currentCandidateId.value = id;
 }
 
-function postResult() {
+async function postResult() {
   const oneResult = ref<QuizResult>({
     questionAnswer: [],
-    id: 0,
+    title: "",
     startedAt: 0,
     endedAt: 0,
   });
   oneResult.value.questionAnswer = quizList.value;
-  oneResult.value.id = currentCandidateId.value;
+  oneResult.value.title = `candidate id ${currentCandidateId.value}`;
   oneResult.value.startedAt = startQuizDate.value;
   oneResult.value.endedAt = Date.now();
-  console.log("result", oneResult.value);
+
+  try {
+    await resultsStore.postResult(oneResult.value, currentCandidateId.value);
+  } catch (e) {
+    console.log(e);
+  }
 }
 </script>
 
