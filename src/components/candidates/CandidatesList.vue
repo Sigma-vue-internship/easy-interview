@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import CandidateForm from "./CandidateForm.vue";
 import { useCandidateStore } from "../../stores/candidates";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
 const { getCandidatesByPage } = useCandidateStore();
 const candidatesList = ref([]);
 const candidatePagesNum = ref(0);
+const currentPage = ref(1);
 const isLoaderVisible = ref(true);
 const router = useRouter();
 async function getCandidates(page: number = 1) {
@@ -27,13 +28,16 @@ async function getCandidates(page: number = 1) {
   }
 }
 
+watch(currentPage, pageNum => {
+  getCandidates(pageNum);
+});
+
 const currentCandidate = ref({});
 const formType = ref("post");
 
 const formTitle = computed(() =>
   formType.value === "put" ? "Edit candidate" : "Add new candidate",
 );
-async function getCandidateList() {}
 
 function clearForm() {
   currentCandidate.value = {};
@@ -104,9 +108,16 @@ getCandidates();
     </ul>
     <Pagination
       v-if="!isLoaderVisible"
+      v-model:currentPage="currentPage"
+      class="pb-5 pt-2"
+      :page-count="candidatePagesNum"
+    />
+    <!-- <Pagination
+      v-if="!isLoaderVisible"
+      v-model:current-page="currentPage"
       class="pb-5 pt-2"
       :page-count="candidatePagesNum"
       @change-page="getCandidates"
-    />
+    /> -->
   </div>
 </template>
