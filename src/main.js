@@ -39,8 +39,8 @@ library.add(
   faTrashCan,
   faUserPlus,
   faFaceFrown,
+  faCircleInfo,
 );
-library.add(faFilter, faLinkedin, faBars, faMagnifyingGlass, faCircleInfo);
 
 app.use(router);
 app.use(
