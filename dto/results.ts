@@ -19,6 +19,7 @@ export interface Result {
   questionAnswer: QuestionAnswer[];
   startedAt: number;
   endedAt: number;
+  title: string;
   id: string;
   parent: ResultParent;
 }

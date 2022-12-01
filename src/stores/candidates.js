@@ -13,5 +13,8 @@ export const useCandidateStore = defineStore("candidates", {
     async getCandidatesByPage(page) {
       return this.$axios.get(`/candidates?p=${page}&l=8`);
     },
+    async getAllCandidates() {
+      return this.$axios.get("/candidates");
+    },
   },
 });
