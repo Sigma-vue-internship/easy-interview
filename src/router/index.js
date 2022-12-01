@@ -10,6 +10,7 @@ import QuizView from "../views/QuizView.vue";
 import QuizResultsView from "../views/QuizResultsView.vue";
 import QuizConstructorView from "../views/QuizConstructorView.vue";
 import SingleResultView from "../views/SingleResultView.vue";
+import MissingView from "../views/MissingView.vue";
 
 // const guardedRoutes = [
 //   "dashboard"
@@ -82,6 +83,11 @@ const router = createRouter({
       name: "quizConstructor",
       component: QuizConstructorView,
       beforeEnter: authGuard,
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "NotFound",
+      component: MissingView,
     },
   ],
 });

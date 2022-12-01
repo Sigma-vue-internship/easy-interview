@@ -48,19 +48,22 @@ getCandidates();
 <template>
   <div class="container pt-4">
     <div class="row mb-3 align-items-center">
-      <h1
-        class="col-md-3 col-lg-2 me-md-4 mb-lg-0 align-self-center text-center text-md-start text-primary"
-      >
-        Candidates
-      </h1>
-      <button
-        type="button"
-        class="btn btn-primary mx-auto mx-md-0 col-5 my-2 my-md-0 col-md-3 ms-md-5 col-lg-2"
-        data-bs-toggle="modal"
-        data-bs-target="#candidate"
-      >
-        Add candidate
-      </button>
+      <div class="d-flex justify-content-between">
+        <h1
+          class="col-md-3 col-lg-2 mb-lg-0 align-self-center text-center text-md-start text-primary"
+        >
+          Candidates
+        </h1>
+        <button
+          type="button"
+          class="d-inline btn btn-outline-primary border-0 rounded-circle"
+          style="width: 45px; height: 45px"
+          data-bs-toggle="modal"
+          data-bs-target="#candidate"
+        >
+          <font-awesome-icon icon="fa-solid fa-user-plus fa-xl" />
+        </button>
+      </div>
       <EasyModal
         :title="formTitle"
         :modal-id="'candidate'"
@@ -90,6 +93,8 @@ getCandidates();
           <img
             class="rounded-circle img-fluid p-2 border-primary border border-3"
             :src="candidate.avatarUrl"
+            width="150"
+            height="150"
             alt="candidateAvatar"
           />
 
