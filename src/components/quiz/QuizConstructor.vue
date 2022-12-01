@@ -140,6 +140,7 @@ async function postResult() {
   } catch (e) {
     console.log(e);
   }
+  quizList.value = [];
 }
 </script>
 
