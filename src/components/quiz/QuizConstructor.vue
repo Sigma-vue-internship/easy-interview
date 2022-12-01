@@ -117,28 +117,28 @@ function deleteQuestion(index: number) {
   quizList.value.splice(index, 1);
 }
 
-function getCandidateById(id: number) {
+function setCandidateId(id: number) {
   currentCandidateId.value = id;
 }
 
 function postResult() {
-  const oneResult = ref<QuizResult>({
+  const result = ref<QuizResult>({
     questionAnswer: [],
     id: 0,
     startedAt: 0,
     endedAt: 0,
   });
-  oneResult.value.questionAnswer = quizList.value;
-  oneResult.value.id = currentCandidateId.value;
-  oneResult.value.startedAt = startQuizDate.value;
-  oneResult.value.endedAt = Date.now();
-  console.log("result", oneResult.value);
+  result.value.questionAnswer = quizList.value;
+  result.value.id = currentCandidateId.value;
+  result.value.startedAt = startQuizDate.value;
+  result.value.endedAt = Date.now();
+  console.log("result", result.value);
 }
 </script>
 
 <template>
   <div class="container mt-3 text-center text-secondary">
-    <CandidateInfo @choosed-candidate-id="getCandidateById" />
+    <CandidateInfo @choosed-candidate-id="setCandidateId" />
     <h2 class="text-primary text-center text-md-start mt-5">
       Choose Questions
     </h2>

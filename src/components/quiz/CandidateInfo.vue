@@ -43,7 +43,6 @@ watch(selectCandidate, newCandidate => {
   choosedCandidates.value = candidatesList.value.filter(candidate =>
     candidate.username.includes(newCandidate),
   );
-  return newCandidate;
 });
 function setCandidate(user: Candidate) {
   isCandidatesVisible.value = false;
