@@ -37,6 +37,11 @@ function pushRoute(category: string) {
     },
   });
 }
+
+function questionsQuantity(category: string) {
+  return questionsList.value.filter(question => question.category === category)
+    .length;
+}
 </script>
 
 <template>
@@ -76,11 +81,7 @@ function pushRoute(category: string) {
             class="col-1 d-flex text-primary align-items-center justify-content-center rounded-5 badge bg-light"
           >
             <h4 class="m-0 pb-1 fs-5">
-              {{
-                questionsList.filter(
-                  oneQuestion => oneQuestion.category === category,
-                ).length
-              }}
+              {{ questionsQuantity(category) }}
             </h4>
           </div>
         </div>
