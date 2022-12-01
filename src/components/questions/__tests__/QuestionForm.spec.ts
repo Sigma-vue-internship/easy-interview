@@ -39,6 +39,7 @@ describe("QuestionForm.vue", () => {
     const { postQuestion } = useQuestionStore();
     await submitButton.trigger("submit");
     await flushPromises();
+
     expect(postQuestion).toBeCalledWith(expect.objectContaining(testObj));
   });
   it("should put question", async () => {

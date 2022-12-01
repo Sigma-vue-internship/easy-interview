@@ -1,6 +1,9 @@
 <script setup>
 import { useRoute } from "vue-router";
 const route = useRoute();
+function setTextColor(routeName) {
+  return route.name === routeName ? "text-primary" : "text-secondary";
+}
 </script>
 <template>
   <div>
@@ -29,15 +32,21 @@ const route = useRoute();
       </div>
       <div class="offcanvas-body p-0">
         <ul class="text-start list-group">
-          <li class="list-group-item text-dark">
+          <li
+            data-bs-dismiss="offcanvas"
+            class="list-group-item text-dark"
+          >
             <router-link
               class="text-decoration-none"
-              :class="[route.path === '/' ? 'text-primary' : 'text-black']"
+              :class="setTextColor('dashboard')"
               to="/"
               >Dashboard</router-link
             >
           </li>
-          <li class="list-group-item">
+          <li
+            data-bs-dismiss="offcanvas"
+            class="list-group-item"
+          >
             <router-link
               class="text-decoration-none"
               :class="[
@@ -48,23 +57,25 @@ const route = useRoute();
             >
           </li>
 
-          <li class="list-group-item text-primary">
+          <li
+            data-bs-dismiss="offcanvas"
+            class="list-group-item text-primary"
+          >
             <router-link
               class="text-decoration-none"
-              :class="[
-                route.path === '/candidates' ? 'text-primary' : 'text-black',
-              ]"
+              :class="setTextColor('candidates')"
               to="/candidates"
               >Candidates</router-link
             >
           </li>
 
-          <li class="list-group-item text-primary">
+          <li
+            data-bs-dismiss="offcanvas"
+            class="list-group-item text-primary"
+          >
             <router-link
               class="text-decoration-none"
-              :class="[
-                route.path === '/results' ? 'text-primary' : 'text-black',
-              ]"
+              :class="setTextColor('quizResults')"
               to="/results"
               >Quiz results</router-link
             >

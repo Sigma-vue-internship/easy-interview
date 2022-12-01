@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import axiosInstance from "../../service/axiosInstance";
 import { createApp } from "vue";
 
-//TODO:try to make axios mock with vi.mock, and switch for url's
+// TODO:try to make axios mock with vi.mock, and switch for url's
 // vi.mock("axios", () => ({
 //   default: {
 //     create: vi.fn().mockImplementation((config) => {
@@ -31,13 +31,13 @@ describe("Question Store", () => {
     axiosInstance.get = vi.fn().mockImplementation(() =>
       Promise.resolve({
         data: "123",
-      })
+      }),
     );
     const questionStore = useQuestionStore();
     const { data } = await questionStore.getAllQuestions("category 1");
     expect(axiosInstance.get).toBeCalled();
 
-    expect(axiosInstance.get).toBeCalledWith(`/questions`, {
+    expect(axiosInstance.get).toBeCalledWith("/questions", {
       params: {
         category: "category 1",
       },
@@ -45,15 +45,27 @@ describe("Question Store", () => {
     expect(data).toBe("123");
   });
 
-  it("should call action", async () => {
+  it("should call postQuestion action", async () => {
     axiosInstance.post = vi.fn().mockImplementation(() =>
       Promise.resolve({
         data: "123",
-      })
+      }),
     );
     const questionStore = useQuestionStore();
     const { data } = await questionStore.postQuestion("123");
-    expect(axiosInstance.post).toBeCalledWith(`/questions`, "123");
+    expect(axiosInstance.post).toBeCalledWith("/questions", "123");
+    expect(data).toBe("123");
+  });
+
+  it("should call deleteQuestion action", async () => {
+    axiosInstance.delete = vi.fn().mockImplementation(() =>
+      Promise.resolve({
+        data: "123",
+      }),
+    );
+    const questionStore = useQuestionStore();
+    const { data } = await questionStore.deleteQuestion("27");
+    expect(axiosInstance.delete).toBeCalledWith("/questions/27");
     expect(data).toBe("123");
   });
 });
