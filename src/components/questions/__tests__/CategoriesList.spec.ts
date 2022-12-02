@@ -1,6 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mount } from "@vue/test-utils";
+import { createTestingPinia } from "@pinia/testing";
 import CategoriesList from "../CategoriesList.vue";
+const getWrapper = () =>
+  mount(CategoriesList, {
+    global: {
+      plugins: [createTestingPinia()],
+    },
+  });
 
 describe("CategoriesList.vue", () => {
   beforeEach(() => {
@@ -8,7 +15,7 @@ describe("CategoriesList.vue", () => {
   });
 
   it("should render all categories", async () => {
-    const wrapper = mount(CategoriesList);
+    const wrapper = getWrapper();
     const categoriesListArrayLength = wrapper.vm.Categories().length;
     const categoriesLength = wrapper.findAll("li").length;
 

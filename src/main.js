@@ -16,6 +16,7 @@ import {
   faMagnifyingGlass,
   faTrashCan,
   faUserPlus,
+  faCircleInfo,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { faFaceFrown } from "@fortawesome/free-regular-svg-icons";
@@ -38,6 +39,7 @@ library.add(
   faTrashCan,
   faUserPlus,
   faFaceFrown,
+  faCircleInfo,
 );
 
 app.use(router);
