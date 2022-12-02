@@ -131,7 +131,9 @@ async function postResult() {
     endedAt: 0,
   });
   result.value.questionAnswer = quizList.value;
-  result.value.title = `candidate id ${currentCandidateId.value}`;
+  result.value.title = `candidate id ${
+    currentCandidateId.value
+  }, ${Date.now()}`;
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
 
