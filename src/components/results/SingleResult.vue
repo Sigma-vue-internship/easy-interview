@@ -2,115 +2,133 @@
 import formattingDate from "../../utils/dateFormatting";
 import CategoryListItem from "./CategoryListItem.vue";
 import _uniq from "lodash/uniq";
-import { computed } from "vue";
+import { useRoute } from "vue-router";
+import { computed, ref } from "vue";
+import { useResultsStore } from "../../stores/results";
+import { Result, ResultParent } from "../../../dto/results";
 
-const result = {
-  questionAnswer: [
-    {
-      question: "question1",
-      questionScore: 1,
-      answerPoints: 1,
-      category: "category 1",
-      answer: "answer 1",
-    },
-    {
-      question: "question2",
-      questionScore: 5,
-      answerPoints: 3,
-      category: "category 1",
-      answer: "answer 2",
-    },
-    {
-      question: "question3",
-      questionScore: 1,
-      answerPoints: 0,
-      category: "category 1",
-      answer: "answer 3",
-    },
-    {
-      question: "question4",
-      questionScore: 5,
-      answerPoints: 4,
-      category: "category 4",
-      answer: "answer 4",
-    },
-    {
-      question: "question5",
-      questionScore: 5,
-      answerPoints: 0,
-      category: "category 5",
-      answer: "answer 5",
-    },
-    {
-      question: "question6",
-      questionScore: 1,
-      answerPoints: 1,
-      category: "category 6",
-      answer: "answer 6",
-    },
-    {
-      question: "question7",
-      questionScore: 5,
-      answerPoints: 2,
-      category: "category 7",
-      answer: "answer 7",
-    },
-  ],
-  startedAt: 1668092016,
-  endedAt: 1668092016,
-  title: "title 1",
-  id: "1",
-  candidateId: "1",
-  parent: {
-    position: "position 1",
-    username: "username 1",
-    linkedinUrl: "linkedinUrl 1",
-    feedback: "feedback 1",
-    avatarUrl:
-      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/602.jpg",
-    id: "1",
+defineProps({
+  resultParent: {
+    type: Object as () => ResultParent,
+    default: () => ({
+      position: "",
+      username: "",
+      linkedinUrl: "",
+      feedback: "",
+      avatarUrl: "",
+      id: "",
+    }),
   },
-};
+  result: {
+    type: Object as () => Result,
+    default: () => ({
+      questionAnswer: [],
+      startedAt: 0,
+      endedAt: 0,
+      id: "",
+      title: "",
+      parent: {
+        position: "",
+        username: "",
+        linkedinUrl: "",
+        feedback: "",
+        avatarUrl: "",
+        id: "",
+      },
+    }),
+  },
+});
+
+const singleResult = ref<Result>({
+  questionAnswer: [],
+  startedAt: 0,
+  endedAt: 0,
+  id: "",
+  title: "",
+  parent: {
+    position: "",
+    username: "",
+    linkedinUrl: "",
+    feedback: "",
+    avatarUrl: "",
+    id: "",
+  },
+});
+
+const route = useRoute();
+const { getOneResultForCandidate } = useResultsStore();
+async function getOneResultForCandidateData() {
+  try {
+    const { data } = await getOneResultForCandidate(
+      route.params.candidateId,
+      route.params.resultId,
+    );
+    singleResult.value = { ...data };
+  } catch (e) {
+    console.log(e);
+  }
+}
+getOneResultForCandidateData();
 
 const resultPercentage = computed(() =>
   (
-    (result.questionAnswer.reduce((summ, item) => summ + item.answerPoints, 0) *
+    (singleResult.value.questionAnswer.reduce(
+      (summ, item) => summ + item.answerPoints,
+      0,
+    ) *
       100) /
-    result.questionAnswer.reduce((summ, item) => summ + item.questionScore, 0)
+    singleResult.value.questionAnswer.reduce(
+      (summ, item) => summ + item.point,
+      0,
+    )
   ).toFixed(1),
 );
 
 const categories = computed(() =>
-  _uniq(result.questionAnswer.map(obj => obj.category)),
+  _uniq(singleResult.value.questionAnswer.map(obj => obj.category)),
 );
 </script>
 
 <template>
   <div class="container mt-3 text-secondary">
-    <h2 class="text-primary text-center text-md-start">{{ result.title }}</h2>
     <div class="row">
-      <div class="col-12 text-center text-md-start">
-        <h3>{{ result.parent.username }}</h3>
+      <div class="col-2">
+        <img
+          class="rounded-circle img-fluid p-2 border-primary border border-3"
+          :src="singleResult.parent.avatarUrl"
+          width="180"
+          height="180"
+          alt="candidateAvatar"
+        />
       </div>
-      <div class="col-12 text-center text-md-start">
-        <h3>{{ result.parent.position }}</h3>
+      <div class="col-6">
+        <h2 class="text-primary text-center text-md-start">
+          {{ singleResult.title }}
+        </h2>
+        <div class="text-center text-md-start">
+          <h3>{{ singleResult.parent.username }}</h3>
+        </div>
+        <div class="text-center text-md-start">
+          <h3>{{ singleResult.parent.position }}</h3>
+        </div>
+        <div class="text-center text-md-start">
+          <h4>Result: {{ resultPercentage }}%</h4>
+        </div>
       </div>
-      <div class="col-12 text-center text-md-start">
-        <h4>Result: {{ resultPercentage }}%</h4>
-      </div>
+    </div>
+    <div class="col-12 mt-5">
       <CategoryListItem
         v-for="(category, index) in categories"
         :key="category"
         :item-id="index"
         :category="category"
-        :questions-array="result.questionAnswer"
+        :questions-array="singleResult.questionAnswer"
       />
-
       <div class="col-12 text-center text-md-end mt-3">
-        Start Date: {{ formattingDate(result.startedAt) }}
+        Start Date: {{ formattingDate(singleResult.startedAt) }}
       </div>
       <div class="col-12 text-center text-md-end">
-        End Date: {{ formattingDate(result.endedAt) }}
+        End Date: {{ formattingDate(singleResult.endedAt) }}
       </div>
     </div>
   </div>

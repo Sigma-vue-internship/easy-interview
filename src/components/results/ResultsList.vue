@@ -85,8 +85,19 @@ function pushRoute(candidateId: string, resultId: string) {
 
 <template>
   <div class="container mt-3">
-    <h2 class="text-primary text-center text-md-start">Quiz Results</h2>
+    <h2 class="text-primary text-center text-md-start mb-md-0">Quiz Results</h2>
+    <p class="text-center text-md-start text-secondary">
+      <font-awesome-icon
+        icon="fa-solid fa-circle-info"
+        class="text-secondary fs-6"
+      />
+      Quiz results are grouped by Candidate. For displaying results, please,
+      choose candidate from list
+    </p>
     <div class="col-12">
+      <h2 class="text-primary text-center text-md-start mt-4">
+        Candidate List
+      </h2>
       <input
         id="candadidateInput"
         v-model="selectCandidate"
@@ -96,7 +107,7 @@ function pushRoute(candidateId: string, resultId: string) {
       />
       <div
         v-if="selectCandidate.length >= 1 && isCandidatesVisible"
-        class="list-group overflow-scroll w-100 position-absolute"
+        class="list-group overflow-scroll w-50 position-absolute"
         style="max-height: 245px"
       >
         <a
@@ -122,12 +133,15 @@ function pushRoute(candidateId: string, resultId: string) {
         </a>
       </div>
       <div v-if="quizResults.length">
+        <h2 class="text-primary text-center text-md-start mt-4">
+          Results List
+        </h2>
         <ul class="list-unstyled">
           <li
             v-for="oneResult in quizResults"
             :key="oneResult.id"
             class="border border-light mt-4 p-2 rounded-3 text-secondary mx-auto shadow-sm ps-4"
-            @click="pushRoute(oneResult.id, oneResult.parent.id)"
+            @click="pushRoute(oneResult.parent.id, oneResult.id)"
           >
             <div class="row">
               <h4 class="text-center text-lg-start">{{ oneResult.title }}</h4>

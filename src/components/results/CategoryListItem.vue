@@ -27,7 +27,7 @@ const questionsSegregation = computed(() =>
   <div>
     <p class="text-center text-md-start">
       <button
-        class="btn btn-outline-primary mt-2"
+        class="btn btn-outline-primary mt-2 px-5 py-2"
         type="button"
         data-bs-toggle="collapse"
         :data-bs-target="'#collapseButton' + itemId"
@@ -41,11 +41,11 @@ const questionsSegregation = computed(() =>
       :id="'collapseButton' + itemId"
       class="collapse multi-collapse"
     >
-      <div class="card card-body bg-light">
+      <div class="card card-body">
         <ul class="list-unstyled">
           <ListItem
             v-for="oneQuestion in questionsSegregation"
-            :key="oneQuestion.question"
+            :key="oneQuestion.text"
             :one-question="oneQuestion"
           />
         </ul>
