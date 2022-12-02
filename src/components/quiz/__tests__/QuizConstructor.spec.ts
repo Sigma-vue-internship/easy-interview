@@ -14,7 +14,7 @@ const getWrapper = () =>
 describe("QuizConstructor.vue", () => {
   it("should render a checkbox after category selction", async () => {
     const wrapper = getWrapper();
-    expect(wrapper.find("form-check-input").exists()).toBe(false);
+    expect(wrapper.find(".form-check-input").exists()).toBe(false);
     await wrapper.find("select").setValue("HTML");
     expect(wrapper.findAll("input")).toHaveLength(3);
   });

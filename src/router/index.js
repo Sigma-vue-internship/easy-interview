@@ -10,6 +10,7 @@ import QuizView from "../views/QuizView.vue";
 import QuizResultsView from "../views/QuizResultsView.vue";
 import QuizConstructorView from "../views/QuizConstructorView.vue";
 import SingleResultView from "../views/SingleResultView.vue";
+import MissingView from "../views/MissingView.vue";
 
 // const guardedRoutes = [
 //   "dashboard"
@@ -54,13 +55,13 @@ const router = createRouter({
       beforeEnter: authGuard,
     },
     {
-      path: "/categories",
+      path: "/questions",
       name: "categoriesList",
       component: CategoriesListView,
       beforeEnter: authGuard,
     },
     {
-      path: "/categories/:title",
+      path: "/questions/:title",
       name: "category",
       component: CategoryView,
       beforeEnter: authGuard,
@@ -82,6 +83,11 @@ const router = createRouter({
       name: "quizConstructor",
       component: QuizConstructorView,
       beforeEnter: authGuard,
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "NotFound",
+      component: MissingView,
     },
   ],
 });

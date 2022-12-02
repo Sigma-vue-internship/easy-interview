@@ -15,7 +15,7 @@
       <div class="col-md-4 col-lg-3">
         <router-link
           class="text-decoration-none"
-          to="/categories"
+          to="/questions"
         >
           <div class="border rounded-4 p-3">
             <span class="icon-book-open" />
@@ -39,7 +39,7 @@
       <div class="col-md-4 col-lg-3">
         <router-link
           class="text-decoration-none"
-          to="/candidates"
+          to="/candidates?page=1"
         >
           <div class="border rounded-4 p-3">
             <span class="icon-users" />

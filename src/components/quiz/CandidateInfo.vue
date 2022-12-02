@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useCandidateStore } from "../../stores/candidates";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { Candidate } from "../../../dto/candidates";
 
 interface Emit {
@@ -16,7 +16,7 @@ defineProps({
       linkedinUrl: "",
       feedback: "",
       avatarUrl: "",
-      id: "",
+      id: 0,
     }),
   },
 });
@@ -24,8 +24,9 @@ defineProps({
 const emit = defineEmits<Emit>();
 const candidatesList = ref<Candidate[]>([]);
 const { getAllCandidates } = useCandidateStore();
-const selectCandidate = ref();
-
+const selectCandidate = ref("");
+const isCandidatesVisible = ref(false);
+const choosedCandidates = ref<Candidate[]>([]);
 async function getAllCandidatesData() {
   try {
     const {
@@ -38,39 +39,55 @@ async function getAllCandidatesData() {
 }
 
 getAllCandidatesData();
-
-function choosedCandidateId(candidate: string) {
-  const splitArray = candidate.split(", ");
-  const choosedCandidate = candidatesList.value.find(
-    quizCandidate =>
-      quizCandidate.username == splitArray[0] &&
-      quizCandidate.position == splitArray[1],
+watch(selectCandidate, newCandidate => {
+  choosedCandidates.value = candidatesList.value.filter(candidate =>
+    candidate.username.includes(newCandidate),
   );
-  if (choosedCandidate) {
-    const candidateId = ref(choosedCandidate.id);
-    emit("choosedCandidateId", candidateId.value);
-  }
+});
+function setCandidate(user: Candidate) {
+  isCandidatesVisible.value = false;
+  emit("choosedCandidateId", user.id);
+  selectCandidate.value = user.username;
 }
 </script>
 
 <template>
   <h2 class="text-primary text-center text-md-start">Choose Candidate</h2>
-  <div class="col-12 col-lg-6">
+
+  <div class="col-12 w-50 position-relative">
     <input
-      id="dataList"
+      id="candadidateInput"
       v-model="selectCandidate"
       class="form-control"
-      list="datalistOptions"
-      placeholder="Type to search..."
-      @change="choosedCandidateId(selectCandidate)"
+      placeholder="Enter username to search..."
+      @focusin="isCandidatesVisible = true"
     />
-    <datalist id="datalistOptions">
-      <option
-        v-for="oneCandidate in candidatesList"
-        :key="oneCandidate.id"
+    <div
+      v-if="selectCandidate.length >= 1 && isCandidatesVisible"
+      class="list-group overflow-scroll w-100 position-absolute"
+      style="max-height: 245px"
+    >
+      <a
+        v-for="singleCandidate in choosedCandidates"
+        :key="singleCandidate.id"
+        class="list-group-item list-group-item-action p-0 px-2"
       >
-        {{ oneCandidate.username }}, {{ oneCandidate.position }}
-      </option>
-    </datalist>
+        <div
+          class="d-flex w-100 align-items-center gap-3"
+          @click="setCandidate(singleCandidate)"
+        >
+          <img
+            :src="singleCandidate.avatarUrl"
+            class="rounded-circle"
+            height="50"
+            alt=""
+          />
+          <div class="flex-column text-start">
+            <p class="m-1 me-3">{{ singleCandidate.username }}</p>
+            <p class="m-1 me-3">{{ singleCandidate.position }}</p>
+          </div>
+        </div>
+      </a>
+    </div>
   </div>
 </template>
