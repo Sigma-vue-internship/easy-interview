@@ -3,6 +3,7 @@ import SubmitButton from "../common/SubmitButton.vue";
 import _uniq from "lodash/uniq";
 import { computed, onMounted, ref } from "vue";
 import { QuizQuestion, QuizResult } from "../../../dto/quiz";
+import { PercentsResult } from "../../../dto/results";
 import QuizList from "./QuizList.vue";
 import CandidateInfo from "../quiz/CandidateInfo.vue";
 import { useResultsStore } from "../../stores/results";
@@ -36,6 +37,7 @@ const checkedQuestions = ref([]);
 const questionList = ref<QuizQuestion[]>([]);
 const checkedAnswer = ref(0);
 const currentCandidateId = ref(0);
+const currentCandidateName = ref("");
 const startQuizDate = ref(0);
 const resultsStore = useResultsStore();
 const questionStore = useQuestionStore();
@@ -52,6 +54,13 @@ const categoryQuestions = computed(() =>
   questionList.value.filter(
     question => question.category === selectedCategory.value,
   ),
+);
+
+const resultPercents = computed(
+  () =>
+    (quizList.value.reduce((summ, answer) => summ + answer.answerPoints, 0) *
+      100) /
+    quizList.value.reduce((summ, answer) => summ + answer.point, 0),
 );
 
 async function getQuestionList() {
@@ -89,8 +98,24 @@ function deleteQuestion(index: number) {
   quizList.value.splice(index, 1);
 }
 
-function setCandidateById(id: number) {
+function setCandidate(id: number, name: string) {
   currentCandidateId.value = id;
+  currentCandidateName.value = name;
+}
+
+async function postPercentageResult() {
+  const percentageResult = ref<PercentsResult>({
+    candidateUsername: "",
+    resultPoints: 0,
+  });
+  percentageResult.value.candidateUsername = currentCandidateName.value;
+  percentageResult.value.resultPoints = resultPercents.value;
+
+  try {
+    await resultsStore.postPercentageResult(percentageResult.value);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 async function postResult() {
@@ -112,13 +137,14 @@ async function postResult() {
   } catch (e) {
     console.log(e);
   }
+  postPercentageResult();
   quizList.value = [];
 }
 </script>
 
 <template>
   <div class="container mt-3 text-center text-secondary">
-    <CandidateInfo @choosed-candidate-id="setCandidateById" />
+    <CandidateInfo @choosed-candidate-id="setCandidate" />
     <h2 class="text-primary text-center text-md-start mt-5">
       Choose Questions
     </h2>

@@ -4,7 +4,7 @@ import { ref, watch } from "vue";
 import { Candidate } from "../../../dto/candidates";
 
 interface Emit {
-  (e: "choosedCandidateId", id: number): void;
+  (e: "choosedCandidateId", id: number, name: string): void;
 }
 
 defineProps({
@@ -46,7 +46,7 @@ watch(selectCandidate, newCandidate => {
 });
 function setCandidate(user: Candidate) {
   isCandidatesVisible.value = false;
-  emit("choosedCandidateId", user.id);
+  emit("choosedCandidateId", user.id, user.username);
   selectCandidate.value = user.username;
 }
 </script>
