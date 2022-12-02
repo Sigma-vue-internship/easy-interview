@@ -1,4 +1,4 @@
-<script>
+<script setup>
 import { Bar } from "vue-chartjs";
 import {
   Chart as ChartJS,
@@ -9,7 +9,6 @@ import {
   CategoryScale,
   LinearScale,
 } from "chart.js";
-
 ChartJS.register(
   Title,
   Tooltip,
@@ -18,51 +17,44 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
 );
-export default {
-  name: "BarChart",
-  components: { Bar },
-  props: {
-    chartId: {
-      type: String,
-      default: "bar-chart",
-    },
-    datasetIdKey: {
-      type: String,
-      default: "label",
-    },
-    width: {
-      type: Number,
-      default: 400,
-    },
-    height: {
-      type: Number,
-      default: 400,
-    },
-    cssClasses: {
-      default: "",
-      type: String,
-    },
-    styles: {
-      type: Object,
-      default: () => {},
-    },
-    plugins: {
-      type: Array,
-      default: () => [],
-    },
+ChartJS.defaults.color = "#fff";
+
+const props = defineProps({
+  chartId: {
+    type: String,
+    default: "bar-chart",
   },
-  data() {
-    return {
-      chartData: {
-        labels: ["January", "February", "March"],
-        datasets: [{ data: [40, 20, 12] }],
-      },
-      chartOptions: {
-        responsive: true,
-      },
-    };
+  datasetIdKey: {
+    type: String,
+    default: "label",
   },
-};
+  width: {
+    type: Number,
+    default: 400,
+  },
+  cssClasses: {
+    default: "",
+    type: String,
+  },
+  styles: {
+    type: Object,
+    default: () => {},
+  },
+  plugins: {
+    type: Array,
+    default: () => [],
+  },
+  chartData: {
+    type: Object,
+    default: () => ({}),
+  },
+  chartOptions: {
+    type: Object,
+    default: () => ({
+      responsive: true,
+    }),
+  },
+});
 </script>
 <template>
   <Bar
@@ -74,6 +66,5 @@ export default {
     :css-classes="cssClasses"
     :styles="styles"
     :width="width"
-    :height="height"
   />
 </template>
