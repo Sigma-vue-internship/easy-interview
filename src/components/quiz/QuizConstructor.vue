@@ -6,6 +6,7 @@ import { QuizQuestion, QuizResult } from "../../../dto/quiz";
 import QuizList from "./QuizList.vue";
 import CandidateInfo from "../quiz/CandidateInfo.vue";
 import { useResultsStore } from "../../stores/results";
+import { useQuestionStore } from "../../stores/questions";
 
 defineProps({
   question: {
@@ -32,69 +33,38 @@ defineProps({
 
 const selectedCategory = ref();
 const checkedQuestions = ref([]);
+const questionList = ref<QuizQuestion[]>([]);
 const checkedAnswer = ref(0);
 const currentCandidateId = ref(0);
 const startQuizDate = ref(0);
 const resultsStore = useResultsStore();
+const questionStore = useQuestionStore();
 
 onMounted(() => {
   selectedCategory.value = "Select category for displaying questions";
 });
 
 const categories = computed(() =>
-  _uniq(questionList.map(item => item.category)),
+  _uniq(questionList.value.map(item => item.category)),
 );
 
 const categoryQuestions = computed(() =>
-  questionList.filter(question => question.category === selectedCategory.value),
+  questionList.value.filter(
+    question => question.category === selectedCategory.value,
+  ),
 );
 
-const quizList = ref<QuizQuestion[]>([]);
+async function getQuestionList() {
+  try {
+    const { data } = await questionStore.getAllQuestions();
+    questionList.value = [...data];
+  } catch (e) {
+    console.log(e);
+  }
+}
+getQuestionList();
 
-const questionList = [
-  {
-    point: 1,
-    text: "text 1",
-    answer: "answer 1",
-    category: "HTML",
-    id: "1",
-  },
-  {
-    point: 5,
-    text: "text 2",
-    answer: "answer 2",
-    category: "HTML",
-    id: "2",
-  },
-  {
-    point: 5,
-    text: "text 3",
-    answer: "answer 3",
-    category: "CSS",
-    id: "3",
-  },
-  {
-    point: 5,
-    text: "text 4",
-    answer: "answer 4",
-    category: "CSS",
-    id: "4",
-  },
-  {
-    point: 1,
-    text: "text 6",
-    answer: "answer 6",
-    category: "Vue",
-    id: "6",
-  },
-  {
-    point: 1,
-    text: "text 7",
-    answer: "answer 7",
-    category: "JavaScript",
-    id: "7",
-  },
-];
+const quizList = ref<QuizQuestion[]>([]);
 
 function addQuestions() {
   quizList.value = _uniq([...quizList.value, ...checkedQuestions.value]);
@@ -119,7 +89,7 @@ function deleteQuestion(index: number) {
   quizList.value.splice(index, 1);
 }
 
-function getCandidateById(id: number) {
+function setCandidateById(id: number) {
   currentCandidateId.value = id;
 }
 
@@ -148,7 +118,7 @@ async function postResult() {
 
 <template>
   <div class="container mt-3 text-center text-secondary">
-    <CandidateInfo @choosed-candidate-id="getCandidateById" />
+    <CandidateInfo @choosed-candidate-id="setCandidateById" />
     <h2 class="text-primary text-center text-md-start mt-5">
       Choose Questions
     </h2>
