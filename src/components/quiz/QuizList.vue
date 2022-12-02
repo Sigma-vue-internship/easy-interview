@@ -6,6 +6,7 @@ import DeleteButton from "../common/DeleteButton.vue";
 interface Emit {
   (e: "addPoint", point: number, id: string): void;
   (e: "deleteQuestion", index: number): void;
+  (e: "postQuiz");
 }
 
 const props = defineProps({
@@ -29,7 +30,7 @@ const props = defineProps({
 const emit = defineEmits<Emit>();
 
 function postQuiz() {
-  console.log(props.questionArray);
+  emit("postQuiz");
 }
 
 function deleteQuestion(index: number) {

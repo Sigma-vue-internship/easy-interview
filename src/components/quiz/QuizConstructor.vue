@@ -2,8 +2,9 @@
 import SubmitButton from "../common/SubmitButton.vue";
 import _uniq from "lodash/uniq";
 import { computed, onMounted, ref } from "vue";
-import { QuizQuestion } from "../../../dto/quiz";
+import { QuizQuestion, QuizResult } from "../../../dto/quiz";
 import QuizList from "./QuizList.vue";
+import CandidateInfo from "../quiz/CandidateInfo.vue";
 
 defineProps({
   question: {
@@ -17,11 +18,22 @@ defineProps({
       id: "",
     }),
   },
+  quizResult: {
+    type: Object as () => QuizResult,
+    default: () => ({
+      questionAnswer: [],
+      id: "",
+      startedAt: 0,
+      endedAt: 0,
+    }),
+  },
 });
 
 const selectedCategory = ref();
 const checkedQuestions = ref([]);
 const checkedAnswer = ref(0);
+const currentCandidateId = ref(0);
+const startQuizDate = ref(0);
 
 onMounted(() => {
   selectedCategory.value = "Select category for displaying questions";
@@ -94,6 +106,9 @@ function answerPoints(point: number, id: string) {
   );
   if (filtredElement) {
     filtredElement.answerPoints = checkedAnswer.value;
+    if (startQuizDate.value === 0) {
+      startQuizDate.value = Date.now();
+    }
     return filtredElement;
   }
 }
@@ -101,11 +116,32 @@ function answerPoints(point: number, id: string) {
 function deleteQuestion(index: number) {
   quizList.value.splice(index, 1);
 }
+
+function setCandidateId(id: number) {
+  currentCandidateId.value = id;
+}
+
+function postResult() {
+  const result = ref<QuizResult>({
+    questionAnswer: [],
+    id: 0,
+    startedAt: 0,
+    endedAt: 0,
+  });
+  result.value.questionAnswer = quizList.value;
+  result.value.id = currentCandidateId.value;
+  result.value.startedAt = startQuizDate.value;
+  result.value.endedAt = Date.now();
+  console.log("result", result.value);
+}
 </script>
 
 <template>
   <div class="container mt-3 text-center text-secondary">
-    <h2 class="text-primary text-center text-md-start">Constructor</h2>
+    <CandidateInfo @choosed-candidate-id="setCandidateId" />
+    <h2 class="text-primary text-center text-md-start mt-5">
+      Choose Questions
+    </h2>
     <select
       v-model="selectedCategory"
       class="form-select form-select-sm mb-3"
@@ -153,6 +189,7 @@ function deleteQuestion(index: number) {
       :question-array="quizList"
       @add-point="answerPoints"
       @delete-question="deleteQuestion"
+      @post-quiz="postResult"
     />
   </div>
 </template>
