@@ -124,19 +124,19 @@ function getCandidateById(id: number) {
 }
 
 async function postResult() {
-  const oneResult = ref<QuizResult>({
+  const result = ref<QuizResult>({
     questionAnswer: [],
     title: "",
     startedAt: 0,
     endedAt: 0,
   });
-  oneResult.value.questionAnswer = quizList.value;
-  oneResult.value.title = `candidate id ${currentCandidateId.value}`;
-  oneResult.value.startedAt = startQuizDate.value;
-  oneResult.value.endedAt = Date.now();
+  result.value.questionAnswer = quizList.value;
+  result.value.title = `candidate id ${currentCandidateId.value}`;
+  result.value.startedAt = startQuizDate.value;
+  result.value.endedAt = Date.now();
 
   try {
-    await resultsStore.postResult(oneResult.value, currentCandidateId.value);
+    await resultsStore.postResult(result.value, currentCandidateId.value);
   } catch (e) {
     console.log(e);
   }
