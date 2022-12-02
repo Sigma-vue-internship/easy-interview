@@ -92,7 +92,7 @@ const categories = computed(() =>
 <template>
   <div class="container mt-3 text-secondary">
     <div class="row">
-      <div class="col-2">
+      <div class="col-lg-2">
         <img
           class="rounded-circle img-fluid p-2 border-primary border border-3"
           :src="singleResult.parent.avatarUrl"
@@ -101,9 +101,9 @@ const categories = computed(() =>
           alt="candidateAvatar"
         />
       </div>
-      <div class="col-6">
+      <div class="col-lg-6">
         <h2 class="text-primary text-center text-md-start">
-          {{ singleResult.title }}
+          Quiz Result {{ singleResult.id }}
         </h2>
         <div class="text-center text-md-start">
           <h3>{{ singleResult.parent.username }}</h3>
@@ -117,6 +117,9 @@ const categories = computed(() =>
       </div>
     </div>
     <div class="col-12 mt-5">
+      <h2 class="text-primary text-center text-md-start mt-4">
+        Detailed Result
+      </h2>
       <CategoryListItem
         v-for="(category, index) in categories"
         :key="category"

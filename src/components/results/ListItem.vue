@@ -13,7 +13,7 @@ defineProps({
   <li
     class="border border-light mt-3 p-2 rounded-3 text-secondary mx-auto shadow-sm row"
   >
-    <div class="col-12 col-md-9 ps-3">
+    <div class="col-12 col-md-9 ps-3 fs-5">
       <div class="row">
         <p class="text-center text-md-start m-0">
           Question: {{ oneQuestion.text }}
@@ -25,12 +25,16 @@ defineProps({
         </p>
       </div>
     </div>
-    <div class="col-12 col-md-3 ps-1">
+    <div class="col-12 col-md-3 ps-1 fs-5">
       <div class="text-center text-md-end">
-        Question score: {{ oneQuestion.point }}
+        Question score:
+        <span class="text-primary">{{ oneQuestion.point }}</span>
       </div>
       <div class="text-center text-md-end">
-        Answer points: {{ oneQuestion.answerPoints }}
+        Answer points:
+        <span class="text-primary">
+          {{ oneQuestion.answerPoints }}
+        </span>
       </div>
     </div>
   </li>

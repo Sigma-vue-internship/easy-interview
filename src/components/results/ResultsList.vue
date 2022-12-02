@@ -64,9 +64,9 @@ watch(selectCandidate, newCandidate => {
   choosedCandidates.value = candidatesList.value.filter(candidate =>
     candidate.username.includes(newCandidate),
   );
-  return newCandidate;
 });
 function setCandidate(user: Candidate) {
+  quizResults.value = [];
   isCandidatesVisible.value = false;
   selectCandidate.value = user.username;
   getResultsForCandidateData(user.id);
@@ -91,7 +91,7 @@ function pushRoute(candidateId: string, resultId: string) {
         icon="fa-solid fa-circle-info"
         class="text-secondary fs-6"
       />
-      Quiz results are grouped by Candidate. For displaying results, please,
+      Quiz results are grouped by Candidates. For displaying results, please,
       choose candidate from list
     </p>
     <div class="col-12">
@@ -144,7 +144,9 @@ function pushRoute(candidateId: string, resultId: string) {
             @click="pushRoute(oneResult.parent.id, oneResult.id)"
           >
             <div class="row">
-              <h4 class="text-center text-lg-start">{{ oneResult.title }}</h4>
+              <h4 class="text-center text-lg-start">
+                Quiz Result {{ oneResult.id }}
+              </h4>
             </div>
             <div class="row text-center text-lg-start">
               <div class="col-12 col-lg-6">

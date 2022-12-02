@@ -41,7 +41,7 @@ const questionsSegregation = computed(() =>
       :id="'collapseButton' + itemId"
       class="collapse multi-collapse"
     >
-      <div class="card card-body">
+      <div class="card card-body shadow mb-3 py-0">
         <ul class="list-unstyled">
           <ListItem
             v-for="oneQuestion in questionsSegregation"
@@ -53,3 +53,9 @@ const questionsSegregation = computed(() =>
     </div>
   </div>
 </template>
+
+<style>
+button {
+  width: 14em;
+}
+</style>
