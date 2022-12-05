@@ -1,35 +1,33 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import BarChart from "./BarChart.vue";
 import DoughnutChart from "./DoughnutChart.vue";
+import _uniq from "lodash/uniq";
+import { Question } from "../../../dto/questions";
+import { useQuestionStore } from "../../stores/questions";
+
+interface categoryAmount {
+  category: Object;
+  count: number;
+}
+interface doughnutData {
+  labels: Array<String>;
+  datasets: Array<doughnutDataset>;
+}
+interface doughnutDataset {
+  label: String;
+  data: Array<Number>;
+  backgroundColor: Array<String>;
+  borderColor: String;
+  hoverOffset: Number;
+}
+
+const { getQuestions } = useQuestionStore();
+
 const activeTab = ref("Results");
-const chartData = ref({
-  labels: ["January", "February", "March", "January", "February", "March"],
-  datasets: [
-    {
-      label: "Result points",
-      data: [40, 20, 12, 40, 20, 12],
-      backgroundColor: "#87CF23",
-      hoverBackgroundColor: "#b5fd50",
-    },
-  ],
-});
-const currentChartHeight = ref({
-  height: "450px",
-  position: "relative",
-});
-function setActiveTab(title) {
-  activeTab.value = title;
-}
-const isTabActive = title => (activeTab.value === title ? "active" : "");
-function resizeChart(chart, sizes) {
-  if (sizes.width <= 350) {
-    currentChartHeight.value.height = "250px";
-    console.log(123);
-    return;
-  }
-  currentChartHeight.value.height = "450px";
-}
+const categories = ref<String[]>([]);
+const categoriesAmounts = ref<categoryAmount[]>([]);
+const doughnutColors = ref<String[]>([]);
 const chartOptions = ref({
   responsive: true,
   maintainAspectRatio: false,
@@ -47,14 +45,13 @@ const chartOptions = ref({
     },
   },
 });
-
-const doughnutData = ref({
-  labels: ["HTML", "CSS", "Vue.js"],
+const doughnutData = ref<doughnutData>({
+  labels: [],
   datasets: [
     {
       label: "My First Dataset",
-      data: [300, 50, 100],
-      backgroundColor: ["#b5fd50", "#55f169", "#73ffd5"],
+      data: [],
+      backgroundColor: [],
       borderColor: "#222629",
       hoverOffset: 4,
     },
@@ -67,6 +64,67 @@ const doughnutOptions = ref({
     animateRotate: false,
   },
 });
+
+async function getAllQuestions() {
+  const { data } = await getQuestions();
+  categories.value = _uniq(data.map((q: Question) => q.category));
+  categoriesAmounts.value = categories.value.map((category: any) => {
+    return {
+      category,
+      count: 0,
+    };
+  });
+  console.log(categoriesAmounts.value);
+  data.forEach((q: Question) => {
+    categoriesAmounts.value.forEach(amount => {
+      if (amount.category === q.category) {
+        amount.count++;
+      }
+    });
+  });
+  doughnutData.value.labels = [...categories.value];
+  doughnutData.value.datasets[0].data = [
+    ...categoriesAmounts.value.map(amount => amount.count),
+  ];
+  doughnutColors.value = generateColors(categories.value.length);
+  doughnutData.value.datasets[0].backgroundColor = [...doughnutColors.value];
+}
+getAllQuestions();
+const chartData = ref<Object>({
+  labels: [],
+  datasets: [
+    {
+      label: "Result points",
+      data: [],
+      backgroundColor: "#87CF23",
+      hoverBackgroundColor: "#b5fd50",
+    },
+  ],
+});
+const currentChartHeight = ref({
+  height: "450px",
+  position: "relative",
+});
+function setActiveTab(title) {
+  activeTab.value = title;
+}
+function generateColors(count) {
+  const backgroundColors = [] as Array<String>;
+  let randomColor = "";
+  for (let i = 0; i < count; i++) {
+    randomColor = Math.floor(Math.random() * 16777215).toString(16);
+    backgroundColors.push(`#${randomColor}`);
+  }
+  return backgroundColors;
+}
+const isTabActive = title => (activeTab.value === title ? "active" : "");
+function resizeChart(chart, sizes) {
+  if (sizes.width <= 350) {
+    currentChartHeight.value.height = "250px";
+    return;
+  }
+  currentChartHeight.value.height = "450px";
+}
 </script>
 <template>
   <div class="container p-4 rounded">
