@@ -74,7 +74,6 @@ async function getAllQuestions() {
       count: 0,
     };
   });
-  console.log(categoriesAmounts.value);
   data.forEach((q: Question) => {
     categoriesAmounts.value.forEach(amount => {
       if (amount.category === q.category) {

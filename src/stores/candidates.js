@@ -4,6 +4,9 @@ export const useCandidateStore = defineStore("candidates", {
     async getCandidateById(id) {
       return this.$axios.get(`/candidates/${id}`);
     },
+    async addCandidate(candidate) {
+      return this.$axios.post("/candidates", candidate);
+    },
     async editCandidate(candidate) {
       return this.$axios.put(`/candidates/${candidate.id}`, candidate);
     },
