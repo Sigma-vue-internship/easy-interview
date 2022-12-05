@@ -47,7 +47,7 @@ function pointsArray(point: number) {
 </script>
 
 <template>
-  <h2 class="text-primary text-start mt-5">Question List</h2>
+  <h2 class="text-primary text-center text-md-start mt-5">Question List</h2>
   <div v-if="props.questionArray.length">
     <ul class="list-unstyled">
       <li
@@ -104,6 +104,6 @@ function pointsArray(point: number) {
     </div>
   </div>
   <div v-else>
-    <p>Choosed questions will display here</p>
+    <p class="text-center text-md-start">Choosed questions will display here</p>
   </div>
 </template>

@@ -4,7 +4,7 @@ import { ref, watch } from "vue";
 import { Candidate } from "../../../dto/candidates";
 
 interface Emit {
-  (e: "choosedCandidateId", id: number): void;
+  (e: "choosedCandidate", id: number, name: string): void;
 }
 
 defineProps({
@@ -46,7 +46,7 @@ watch(selectCandidate, newCandidate => {
 });
 function setCandidate(user: Candidate) {
   isCandidatesVisible.value = false;
-  emit("choosedCandidateId", user.id);
+  emit("choosedCandidate", user.id, user.username);
   selectCandidate.value = user.username;
 }
 </script>
@@ -65,7 +65,6 @@ function setCandidate(user: Candidate) {
     <div
       v-if="selectCandidate.length >= 1 && isCandidatesVisible"
       class="list-group overflow-scroll w-100 position-absolute"
-      style="max-height: 245px"
     >
       <a
         v-for="singleCandidate in choosedCandidates"
@@ -80,7 +79,7 @@ function setCandidate(user: Candidate) {
             :src="singleCandidate.avatarUrl"
             class="rounded-circle"
             height="50"
-            alt=""
+            alt="avatar"
           />
           <div class="flex-column text-start">
             <p class="m-1 me-3">{{ singleCandidate.username }}</p>
@@ -91,3 +90,9 @@ function setCandidate(user: Candidate) {
     </div>
   </div>
 </template>
+
+<style scoped>
+.overflow-scroll {
+  max-height: 245px;
+}
+</style>
