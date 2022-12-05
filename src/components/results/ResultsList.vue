@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import formattingDate from "../../utils/dateFormatting";
+import { formattingDate, formattingHours } from "../../utils/dateFormatting";
 import { useCandidateStore } from "../../stores/candidates";
 import { useResultsStore } from "../../stores/results";
 import { ref, watch } from "vue";
@@ -123,7 +123,7 @@ function pushRoute(candidateId: string, resultId: string) {
               :src="singleCandidate.avatarUrl"
               class="rounded-circle"
               height="50"
-              alt=""
+              alt="avatar"
             />
             <div class="flex-column text-start">
               <p class="m-1 me-3">{{ singleCandidate.username }}</p>
@@ -140,23 +140,28 @@ function pushRoute(candidateId: string, resultId: string) {
           <li
             v-for="oneResult in quizResults"
             :key="oneResult.id"
-            class="border border-light mt-4 p-2 rounded-3 text-secondary mx-auto shadow-sm ps-4"
+            class="border border-light mt-3 mb-4 p-2 rounded-3 text-secondary mx-auto shadow ps-4"
             @click="pushRoute(oneResult.parent.id, oneResult.id)"
           >
+            <h5 class="text-primary text-center text-md-start">
+              Quiz Result {{ oneResult.id }}
+            </h5>
             <div class="row">
-              <h4 class="text-center text-lg-start">
-                Quiz Result {{ oneResult.id }}
-              </h4>
-            </div>
-            <div class="row text-center text-lg-start">
-              <div class="col-12 col-lg-6">
-                {{ oneResult.parent.username }}
+              <div class="col-12 col-md-6 text-center text-md-start">
+                <font-awesome-icon
+                  icon="fa-solid fa-hourglass-start"
+                  class="text-primary fs-6"
+                />
+                Started at: {{ formattingDate(oneResult.startedAt) }},
+                {{ formattingHours(oneResult.startedAt) }}
               </div>
-              <div class="col-12 col-lg-3">
-                {{ oneResult.parent.position }}
-              </div>
-              <div class="col-12 col-lg-3 text-lg-end pe-4">
-                {{ formattingDate(oneResult.endedAt) }}
+              <div class="col-12 col-md-6 text-center text-md-end pe-md-4">
+                <font-awesome-icon
+                  icon="fa-solid fa-hourglass-end"
+                  class="text-primary fs-6"
+                />
+                Ended at: {{ formattingDate(oneResult.endedAt) }},
+                {{ formattingHours(oneResult.endedAt) }}
               </div>
             </div>
           </li>

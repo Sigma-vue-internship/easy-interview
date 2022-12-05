@@ -1,7 +1,16 @@
-export default function formattingDate(date) {
+export function formattingDate(date) {
   return new Date(date).toLocaleString("en-GB", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
 }
+
+export function formattingHours(date) {
+  if (new Date(date).getMinutes() < 10) {
+    return `${new Date(date).getHours()}:0${new Date(date).getMinutes()}`;
+  }
+  return `${new Date(date).getHours()}:${new Date(date).getMinutes()}`;
+}
+
+export default { formattingDate, formattingHours };

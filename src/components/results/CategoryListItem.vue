@@ -27,14 +27,23 @@ const questionsSegregation = computed(() =>
   <div>
     <p class="text-center text-md-start">
       <button
-        class="btn btn-outline-primary mt-2 px-5 py-2"
+        class="btn btn-outline-primary mt-2 px-4 py-2 category-button"
         type="button"
         data-bs-toggle="collapse"
         :data-bs-target="'#collapseButton' + itemId"
         aria-expanded="false"
         :aria-controls="'collapseButton' + itemId"
       >
-        {{ props.category }}
+        <div class="row">
+          <div class="col-2 col-md-1 me-md-2">
+            <span class="badge bg-primary">{{
+              questionsSegregation.length
+            }}</span>
+          </div>
+          <div class="col-10 col-md-10 text-start">
+            {{ props.category }}
+          </div>
+        </div>
       </button>
     </p>
     <div
@@ -55,7 +64,7 @@ const questionsSegregation = computed(() =>
 </template>
 
 <style>
-button {
+.category-button {
   width: 14em;
 }
 </style>

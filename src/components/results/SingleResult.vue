@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import formattingDate from "../../utils/dateFormatting";
+import { formattingDate } from "../../utils/dateFormatting";
 import CategoryListItem from "./CategoryListItem.vue";
 import _uniq from "lodash/uniq";
 import { useRoute } from "vue-router";
@@ -92,7 +92,7 @@ const categories = computed(() =>
 <template>
   <div class="container mt-3 text-secondary">
     <div class="row">
-      <div class="col-lg-2">
+      <div class="col-md-4 col-lg-2 text-center text-md-start">
         <img
           class="rounded-circle img-fluid p-2 border-primary border border-3"
           :src="singleResult.parent.avatarUrl"
@@ -101,7 +101,7 @@ const categories = computed(() =>
           alt="candidateAvatar"
         />
       </div>
-      <div class="col-lg-6">
+      <div class="col-md-8 col-lg-6 mt-2 mt-lg-0">
         <h2 class="text-primary text-center text-md-start">
           Quiz Result {{ singleResult.id }}
         </h2>
@@ -116,7 +116,7 @@ const categories = computed(() =>
         </div>
       </div>
     </div>
-    <div class="col-12 mt-5">
+    <div class="col-12 mt-md-5">
       <h2 class="text-primary text-center text-md-start mt-4">
         Detailed Result
       </h2>
