@@ -49,8 +49,10 @@ function setTextColor(routeName) {
           >
             <router-link
               class="text-decoration-none"
-              :class="setTextColor('categoriesList')"
-              to="/categories"
+              :class="[
+                route.path === '/questions' ? 'text-primary' : 'text-black',
+              ]"
+              to="/questions"
               >Questions</router-link
             >
           </li>

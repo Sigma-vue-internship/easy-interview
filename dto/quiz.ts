@@ -7,6 +7,9 @@ export interface QuizQuestion {
   id: string;
 }
 
-export interface QuizList {
-  quizList: QuizQuestion[];
+export interface QuizResult {
+  questionAnswer: QuizQuestion[];
+  title: string;
+  startedAt: number;
+  endedAt: number;
 }
