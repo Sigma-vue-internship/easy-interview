@@ -49,14 +49,11 @@ function setTextColor(routeName) {
           >
             <router-link
               class="text-decoration-none"
-              :class="[
-                route.path === '/questions' ? 'text-primary' : 'text-black',
-              ]"
+              :class="setTextColor('categoriesList')"
               to="/questions"
               >Questions</router-link
             >
           </li>
-
           <li
             data-bs-dismiss="offcanvas"
             class="list-group-item text-primary"
@@ -68,7 +65,6 @@ function setTextColor(routeName) {
               >Candidates</router-link
             >
           </li>
-
           <li
             data-bs-dismiss="offcanvas"
             class="list-group-item text-primary"

@@ -9,6 +9,7 @@ import {
   CategoryScale,
   LinearScale,
 } from "chart.js";
+import { watch } from "vue";
 ChartJS.register(
   Title,
   Tooltip,
@@ -54,6 +55,9 @@ const props = defineProps({
       responsive: true,
     }),
   },
+});
+watch(props, current => {
+  console.log(current);
 });
 </script>
 <template>

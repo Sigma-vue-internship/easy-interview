@@ -5,10 +5,16 @@ import DoughnutChart from "./DoughnutChart.vue";
 import _uniq from "lodash/uniq";
 import { Question } from "../../../dto/questions";
 import { useQuestionStore } from "../../stores/questions";
+import { useResultsStore } from "../../stores/results";
 
 interface categoryAmount {
   category: Object;
   count: number;
+}
+interface candidateResult {
+  candidateUsername: String;
+  resultPoints: Number;
+  id: String;
 }
 interface doughnutData {
   labels: Array<String>;
@@ -21,13 +27,35 @@ interface doughnutDataset {
   borderColor: String;
   hoverOffset: Number;
 }
+interface chartData {
+  labels: Array<String>;
+  datasets: Array<Object>;
+}
 
 const { getQuestions } = useQuestionStore();
+const { getPercentageResults } = useResultsStore();
 
 const activeTab = ref("Results");
 const categories = ref<String[]>([]);
+const candidatesResults = ref<candidateResult[]>([]);
 const categoriesAmounts = ref<categoryAmount[]>([]);
 const doughnutColors = ref<String[]>([]);
+const chartData = ref<Object>({
+  labels: [],
+  // TODO:create multiple datasets, for different legend colors, and different candidates quizes
+  datasets: [
+    {
+      label: "Result Points",
+      data: [],
+      backgroundColor: "#b5fd50",
+      hoverBackgroundColor: "#fff",
+    },
+  ],
+});
+const currentChartHeight = ref({
+  height: "450px",
+  position: "relative",
+});
 const chartOptions = ref({
   responsive: true,
   maintainAspectRatio: false,
@@ -88,22 +116,15 @@ async function getAllQuestions() {
   doughnutColors.value = generateColors(categories.value.length);
   doughnutData.value.datasets[0].backgroundColor = [...doughnutColors.value];
 }
+async function getAllResults() {
+  const { data } = await getPercentageResults();
+  chartData.value.labels = [...data.map(result => result.candidateUsername)];
+  chartData.value.datasets[0].data = [
+    ...data.map(result => result.resultPoints),
+  ];
+}
 getAllQuestions();
-const chartData = ref<Object>({
-  labels: [],
-  datasets: [
-    {
-      label: "Result points",
-      data: [],
-      backgroundColor: "#87CF23",
-      hoverBackgroundColor: "#b5fd50",
-    },
-  ],
-});
-const currentChartHeight = ref({
-  height: "450px",
-  position: "relative",
-});
+getAllResults();
 function setActiveTab(title) {
   activeTab.value = title;
 }
