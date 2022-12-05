@@ -32,6 +32,9 @@ defineProps({
   },
 });
 
+const resultsStore = useResultsStore();
+const questionStore = useQuestionStore();
+
 const selectedCategory = ref();
 const checkedQuestions = ref([]);
 const questionList = ref<QuizQuestion[]>([]);
@@ -39,8 +42,6 @@ const checkedAnswer = ref(0);
 const currentCandidateId = ref(0);
 const currentCandidateName = ref("");
 const startQuizDate = ref(0);
-const resultsStore = useResultsStore();
-const questionStore = useQuestionStore();
 
 onMounted(() => {
   selectedCategory.value = "Select category for displaying questions";
@@ -104,15 +105,11 @@ function setCandidate(id: number, name: string) {
 }
 
 async function postPercentageResult() {
-  const percentageResult = ref<PercentsResult>({
-    candidateUsername: "",
-    resultPoints: 0,
-  });
-  percentageResult.value.candidateUsername = currentCandidateName.value;
-  percentageResult.value.resultPoints = resultPercents.value;
-
   try {
-    await resultsStore.postPercentageResult(percentageResult.value);
+    await resultsStore.postPercentageResult({
+      candidateUsername: currentCandidateName.value,
+      resultPoints: resultPercents.value,
+    });
   } catch (e) {
     console.log(e);
   }
@@ -126,9 +123,7 @@ async function postResult() {
     endedAt: 0,
   });
   result.value.questionAnswer = quizList.value;
-  result.value.title = `candidate id ${
-    currentCandidateId.value
-  }, ${Date.now()}`;
+  result.value.title = `Passed by ${currentCandidateName.value}`;
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
 
@@ -144,7 +139,7 @@ async function postResult() {
 
 <template>
   <div class="container mt-3 text-center text-secondary">
-    <CandidateInfo @choosed-candidate-id="setCandidate" />
+    <CandidateInfo @choosed-candidate="setCandidate" />
     <h2 class="text-primary text-center text-md-start mt-5">
       Choose Questions
     </h2>
@@ -189,7 +184,11 @@ async function postResult() {
     </ul>
 
     <div class="text-center text-md-end pe-md-4 mt-md-4 mb-md-5 ps-5 ps-md-2">
-      <SubmitButton @click="addQuestions">Add Questions</SubmitButton>
+      <SubmitButton
+        v-show="checkedQuestions.length"
+        @click="addQuestions"
+        >Add Questions</SubmitButton
+      >
     </div>
     <QuizList
       :question-array="quizList"

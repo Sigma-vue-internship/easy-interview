@@ -104,6 +104,6 @@ function pointsArray(point: number) {
     </div>
   </div>
   <div v-else>
-    <p>Choosed questions will display here</p>
+    <p class="text-center text-md-start">Choosed questions will display here</p>
   </div>
 </template>
