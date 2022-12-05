@@ -42,6 +42,12 @@ const checkedAnswer = ref(0);
 const currentCandidateId = ref(0);
 const currentCandidateName = ref("");
 const startQuizDate = ref(0);
+const result = ref<QuizResult>({
+  questionAnswer: [],
+  title: "",
+  startedAt: 0,
+  endedAt: 0,
+});
 
 onMounted(() => {
   selectedCategory.value = "Select category for displaying questions";
@@ -116,12 +122,6 @@ async function postPercentageResult() {
 }
 
 async function postResult() {
-  const result = ref<QuizResult>({
-    questionAnswer: [],
-    title: "",
-    startedAt: 0,
-    endedAt: 0,
-  });
   result.value.questionAnswer = quizList.value;
   result.value.title = `Passed by ${currentCandidateName.value}`;
   result.value.startedAt = startQuizDate.value;
