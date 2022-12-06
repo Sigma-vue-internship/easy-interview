@@ -128,9 +128,9 @@ async function postResult() {
   result.value.endedAt = Date.now();
 
   try {
-    // await resultsStore.postResult(result.value, currentCandidateId.value);
-    // selectedCategory.value = "Select category for displaying questions";
-    // quizList.value = [];
+    await resultsStore.postResult(result.value, currentCandidateId.value);
+    selectedCategory.value = "Select category for displaying questions";
+    quizList.value = [];
     Notify.success("Successful sent", {
       distance: "65px",
     });
