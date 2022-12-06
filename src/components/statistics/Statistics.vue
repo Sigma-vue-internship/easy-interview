@@ -12,18 +12,18 @@ interface categoryAmount {
   count: number;
 }
 interface doughnutData {
-  labels: Array<String>;
+  labels: Array<string>;
   datasets: Array<doughnutDataset>;
 }
 interface doughnutDataset {
-  label: String;
-  data: Array<Number>;
-  backgroundColor: Array<String>;
-  borderColor: String;
-  hoverOffset: Number;
+  label: string;
+  data: Array<number>;
+  backgroundColor: Array<string>;
+  borderColor: string;
+  hoverOffset: number;
 }
 interface chartData {
-  labels: Array<String>;
+  labels: Array<string>;
   datasets: Array<Object>;
 }
 
@@ -31,9 +31,9 @@ const { getQuestions } = useQuestionStore();
 const { getPercentageResults } = useResultsStore();
 
 const activeTab = ref("Results");
-const categories = ref<String[]>([]);
+const categories = ref<string[]>([]);
 const categoriesAmounts = ref<categoryAmount[]>([]);
-const doughnutColors = ref<String[]>([]);
+const doughnutColors = ref<string[]>([]);
 const chartData = ref<Object>({
   labels: [],
   // TODO:create multiple datasets, for different legend colors, and different candidates quizes
@@ -131,7 +131,7 @@ function setActiveTab(title) {
   activeTab.value = title;
 }
 function generateColors(count) {
-  const backgroundColors = [] as Array<String>;
+  const backgroundColors = [] as Array<string>;
   let randomColor = "";
   const crypto = window.crypto || window.msCrypto;
   const array = new Uint32Array(1);
