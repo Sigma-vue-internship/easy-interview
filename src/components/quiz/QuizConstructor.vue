@@ -190,10 +190,10 @@ async function postResult() {
           </div>
         </li>
       </ul>
-  
+
       <div class="text-center text-md-end pe-md-4 mt-md-4 mb-md-5 ps-5 ps-md-2">
         <SubmitButton
-          v-show="checkedQuestions.length"
+          v-show="checkedQuestions.length || quizList.length"
           @click="addQuestions"
           >Add Questions</SubmitButton
         >

@@ -68,7 +68,8 @@ function questionsQuantity(category: string) {
       <li
         v-for="category in Categories()"
         :key="category"
-        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow-sm"
+        role="button"
+        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow pe-auto"
         @click="pushRoute(category)"
       >
         <div class="row">

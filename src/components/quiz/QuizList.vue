@@ -99,7 +99,7 @@ function pointsArray(point: number) {
         </div>
       </li>
     </ul>
-    <div class="text-center text-md-end mt-md-4 ps-5 ps-md-2 pe-4">
+    <div class="text-center text-md-end mt-md-4 ps-5 ps-md-2 pe-4 mb-3">
       <SubmitButton @click="postQuiz">Save Quiz</SubmitButton>
     </div>
   </div>
