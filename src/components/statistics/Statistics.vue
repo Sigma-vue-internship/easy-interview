@@ -101,7 +101,7 @@ async function getAllQuestions() {
     };
   });
   data.forEach((q: Question) => {
-    categoriesAmounts.value.forEach(amount => {
+    categoriesAmounts.value.forEach((amount) => {
       if (amount.category === q.category) {
         amount.count++;
       }
@@ -109,7 +109,7 @@ async function getAllQuestions() {
   });
   doughnutData.value.labels = [...categories.value];
   doughnutData.value.datasets[0].data = [
-    ...categoriesAmounts.value.map(amount => amount.count),
+    ...categoriesAmounts.value.map((amount) => amount.count),
   ];
   doughnutColors.value = generateColors(categories.value.length);
   doughnutData.value.datasets[0].backgroundColor = [...doughnutColors.value];
@@ -118,10 +118,10 @@ async function getAllResults() {
   const { data } = await getPercentageResults();
   const topCandidates = getTopCandidates(data);
   chartData.value.labels = [
-    ...topCandidates.map(result => result.candidateUsername),
+    ...topCandidates.map((result) => result.candidateUsername),
   ];
   chartData.value.datasets[0].data = [
-    ...topCandidates.map(result => result.resultPoints),
+    ...topCandidates.map((result) => result.resultPoints),
   ];
 }
 function getTopCandidates(candidates) {
@@ -133,13 +133,16 @@ function setActiveTab(title) {
 function generateColors(count) {
   const backgroundColors = [] as Array<String>;
   let randomColor = "";
+  const crypto = window.crypto || window.msCrypto;
+  const array = new Uint32Array(1);
   for (let i = 0; i < count; i++) {
-    randomColor = Math.floor(Math.random() * 16777215).toString(16);
+    crypto.getRandomValues(array);
+    randomColor = array[0].toString(16);
     backgroundColors.push(`#${randomColor}`);
   }
   return backgroundColors;
 }
-const isTabActive = title => (activeTab.value === title ? "active" : "");
+const isTabActive = (title) => (activeTab.value === title ? "active" : "");
 function resizeChart(chart, sizes) {
   if (sizes.width <= 350) {
     currentChartHeight.value.height = "250px";
