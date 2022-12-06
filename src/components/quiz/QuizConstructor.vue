@@ -3,7 +3,7 @@ import SubmitButton from "../common/SubmitButton.vue";
 import _uniq from "lodash/uniq";
 import { computed, onMounted, ref } from "vue";
 import { QuizQuestion, QuizResult } from "../../../dto/quiz";
-import { PercentsResult } from "../../../dto/results";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
 import QuizList from "./QuizList.vue";
 import CandidateInfo from "../quiz/CandidateInfo.vue";
 import { useResultsStore } from "../../stores/results";
@@ -129,11 +129,18 @@ async function postResult() {
 
   try {
     await resultsStore.postResult(result.value, currentCandidateId.value);
+    selectedCategory.value = "Select category for displaying questions";
+    quizList.value = [];
+    Notify.success("Successful sent", {
+      position: "center-top",
+    });
   } catch (e) {
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      position: "center-top",
+    });
   }
   postPercentageResult();
-  quizList.value = [];
 }
 </script>
 
