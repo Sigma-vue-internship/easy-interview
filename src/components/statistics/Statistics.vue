@@ -11,11 +11,6 @@ interface categoryAmount {
   category: Object;
   count: number;
 }
-interface candidateResult {
-  candidateUsername: String;
-  resultPoints: Number;
-  id: String;
-}
 interface doughnutData {
   labels: Array<String>;
   datasets: Array<doughnutDataset>;
@@ -37,7 +32,6 @@ const { getPercentageResults } = useResultsStore();
 
 const activeTab = ref("Results");
 const categories = ref<String[]>([]);
-const candidatesResults = ref<candidateResult[]>([]);
 const categoriesAmounts = ref<categoryAmount[]>([]);
 const doughnutColors = ref<String[]>([]);
 const chartData = ref<Object>({
@@ -45,9 +39,13 @@ const chartData = ref<Object>({
   // TODO:create multiple datasets, for different legend colors, and different candidates quizes
   datasets: [
     {
-      label: "Result Points",
+      label: "Top 10 candidates",
       data: [],
-      backgroundColor: "#b5fd50",
+      backgroundColor: "rgba(102, 255, 0, 0.301)",
+      borderColor: "rgba(102, 255, 0, 1)",
+      borderWidth: 1,
+      borderRadius: 5,
+      hoverBorderWidth: 0,
       hoverBackgroundColor: "#fff",
     },
   ],
@@ -118,13 +116,17 @@ async function getAllQuestions() {
 }
 async function getAllResults() {
   const { data } = await getPercentageResults();
-  chartData.value.labels = [...data.map(result => result.candidateUsername)];
+  const topCandidates = getTopCandidates(data);
+  chartData.value.labels = [
+    ...topCandidates.map(result => result.candidateUsername),
+  ];
   chartData.value.datasets[0].data = [
-    ...data.map(result => result.resultPoints),
+    ...topCandidates.map(result => result.resultPoints),
   ];
 }
-getAllQuestions();
-getAllResults();
+function getTopCandidates(candidates) {
+  return candidates.sort((a, b) => a.resultPoints - b.resultPoints).slice(-10);
+}
 function setActiveTab(title) {
   activeTab.value = title;
 }
@@ -145,6 +147,8 @@ function resizeChart(chart, sizes) {
   }
   currentChartHeight.value.height = "450px";
 }
+getAllQuestions();
+getAllResults();
 </script>
 <template>
   <div class="container p-4 rounded">
