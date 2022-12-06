@@ -2,8 +2,12 @@
 import SubmitButton from "../common/SubmitButton.vue";
 import _uniq from "lodash/uniq";
 import { computed, onMounted, ref } from "vue";
-import { QuizQuestion } from "../../../dto/quiz";
+import { QuizQuestion, QuizResult } from "../../../dto/quiz";
+import { PercentsResult } from "../../../dto/results";
 import QuizList from "./QuizList.vue";
+import CandidateInfo from "../quiz/CandidateInfo.vue";
+import { useResultsStore } from "../../stores/results";
+import { useQuestionStore } from "../../stores/questions";
 
 defineProps({
   question: {
@@ -17,70 +21,66 @@ defineProps({
       id: "",
     }),
   },
+  quizResult: {
+    type: Object as () => QuizResult,
+    default: () => ({
+      questionAnswer: [],
+      title: "",
+      startedAt: 0,
+      endedAt: 0,
+    }),
+  },
 });
+
+const resultsStore = useResultsStore();
+const questionStore = useQuestionStore();
 
 const selectedCategory = ref();
 const checkedQuestions = ref([]);
+const questionList = ref<QuizQuestion[]>([]);
 const checkedAnswer = ref(0);
+const currentCandidateId = ref(0);
+const currentCandidateName = ref("");
+const startQuizDate = ref(0);
+const result = ref<QuizResult>({
+  questionAnswer: [],
+  title: "",
+  startedAt: 0,
+  endedAt: 0,
+});
 
 onMounted(() => {
   selectedCategory.value = "Select category for displaying questions";
 });
 
 const categories = computed(() =>
-  _uniq(questionList.map(item => item.category)),
+  _uniq(questionList.value.map(item => item.category)),
 );
 
 const categoryQuestions = computed(() =>
-  questionList.filter(question => question.category === selectedCategory.value),
+  questionList.value.filter(
+    question => question.category === selectedCategory.value,
+  ),
 );
 
-const quizList = ref<QuizQuestion[]>([]);
+const resultPercents = computed(
+  () =>
+    (quizList.value.reduce((summ, answer) => summ + answer.answerPoints, 0) *
+      100) /
+    quizList.value.reduce((summ, answer) => summ + answer.point, 0),
+);
 
-const questionList = [
-  {
-    point: 1,
-    text: "text 1",
-    answer: "answer 1",
-    category: "HTML",
-    id: "1",
-  },
-  {
-    point: 5,
-    text: "text 2",
-    answer: "answer 2",
-    category: "HTML",
-    id: "2",
-  },
-  {
-    point: 5,
-    text: "text 3",
-    answer: "answer 3",
-    category: "CSS",
-    id: "3",
-  },
-  {
-    point: 5,
-    text: "text 4",
-    answer: "answer 4",
-    category: "CSS",
-    id: "4",
-  },
-  {
-    point: 1,
-    text: "text 6",
-    answer: "answer 6",
-    category: "Vue",
-    id: "6",
-  },
-  {
-    point: 1,
-    text: "text 7",
-    answer: "answer 7",
-    category: "JavaScript",
-    id: "7",
-  },
-];
+async function getQuestionList() {
+  try {
+    const { data } = await questionStore.getAllQuestions();
+    questionList.value = [...data];
+  } catch (e) {
+    console.log(e);
+  }
+}
+getQuestionList();
+
+const quizList = ref<QuizQuestion[]>([]);
 
 function addQuestions() {
   quizList.value = _uniq([...quizList.value, ...checkedQuestions.value]);
@@ -94,6 +94,9 @@ function answerPoints(point: number, id: string) {
   );
   if (filtredElement) {
     filtredElement.answerPoints = checkedAnswer.value;
+    if (startQuizDate.value === 0) {
+      startQuizDate.value = Date.now();
+    }
     return filtredElement;
   }
 }
@@ -101,11 +104,45 @@ function answerPoints(point: number, id: string) {
 function deleteQuestion(index: number) {
   quizList.value.splice(index, 1);
 }
+
+function setCandidate(id: number, name: string) {
+  currentCandidateId.value = id;
+  currentCandidateName.value = name;
+}
+
+async function postPercentageResult() {
+  try {
+    await resultsStore.postPercentageResult({
+      candidateUsername: currentCandidateName.value,
+      resultPoints: resultPercents.value,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function postResult() {
+  result.value.questionAnswer = quizList.value;
+  result.value.title = `Passed by ${currentCandidateName.value}`;
+  result.value.startedAt = startQuizDate.value;
+  result.value.endedAt = Date.now();
+
+  try {
+    await resultsStore.postResult(result.value, currentCandidateId.value);
+  } catch (e) {
+    console.log(e);
+  }
+  postPercentageResult();
+  quizList.value = [];
+}
 </script>
 
 <template>
   <div class="container mt-3 text-center text-secondary">
-    <h2 class="text-primary text-center text-md-start">Constructor</h2>
+    <CandidateInfo @choosed-candidate="setCandidate" />
+    <h2 class="text-primary text-center text-md-start mt-5">
+      Choose Questions
+    </h2>
     <select
       v-model="selectedCategory"
       class="form-select form-select-sm mb-3"
@@ -147,12 +184,17 @@ function deleteQuestion(index: number) {
     </ul>
 
     <div class="text-center text-md-end pe-md-4 mt-md-4 mb-md-5 ps-5 ps-md-2">
-      <SubmitButton @click="addQuestions">Add Questions</SubmitButton>
+      <SubmitButton
+        v-show="checkedQuestions.length"
+        @click="addQuestions"
+        >Add Questions</SubmitButton
+      >
     </div>
     <QuizList
       :question-array="quizList"
       @add-point="answerPoints"
       @delete-question="deleteQuestion"
+      @post-quiz="postResult"
     />
   </div>
 </template>

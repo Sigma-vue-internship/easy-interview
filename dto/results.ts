@@ -23,3 +23,8 @@ export interface Result {
   id: string;
   parent: ResultParent;
 }
+
+export interface PercentsResult {
+  candidateUsername: string;
+  resultPoints: number;
+}

@@ -55,13 +55,13 @@ const router = createRouter({
       beforeEnter: authGuard,
     },
     {
-      path: "/categories",
+      path: "/questions",
       name: "categoriesList",
       component: CategoriesListView,
       beforeEnter: authGuard,
     },
     {
-      path: "/categories/:title",
+      path: "/questions/:title",
       name: "category",
       component: CategoryView,
       beforeEnter: authGuard,
