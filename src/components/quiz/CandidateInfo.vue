@@ -52,7 +52,16 @@ function setCandidate(user: Candidate) {
 </script>
 
 <template>
-  <h2 class="text-primary text-center text-md-start">Choose Candidate</h2>
+  <h2 class="text-primary text-center text-md-start mb-md-0">
+    Choose Candidate
+  </h2>
+  <p class="text-center mb-2 text-md-start mb-md-3 text-secondary">
+    <font-awesome-icon
+      icon="fa-solid fa-circle-info"
+      class="text-secondary fs-6"
+    />
+    For creating a quiz, please, first of all select a candidate
+  </p>
 
   <div class="col-12 w-50 position-relative">
     <input

@@ -123,21 +123,21 @@ async function postPercentageResult() {
 
 async function postResult() {
   result.value.questionAnswer = quizList.value;
-  result.value.title = `Passed by ${currentCandidateName.value}`;
+  result.value.title = `${currentCandidateName.value},`;
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
 
   try {
-    await resultsStore.postResult(result.value, currentCandidateId.value);
-    selectedCategory.value = "Select category for displaying questions";
-    quizList.value = [];
+    // await resultsStore.postResult(result.value, currentCandidateId.value);
+    // selectedCategory.value = "Select category for displaying questions";
+    // quizList.value = [];
     Notify.success("Successful sent", {
-      position: "center-top",
+      distance: "65px",
     });
   } catch (e) {
     console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
-      position: "center-top",
+      distance: "65px",
     });
   }
   postPercentageResult();
@@ -147,61 +147,63 @@ async function postResult() {
 <template>
   <div class="container mt-3 text-center text-secondary">
     <CandidateInfo @choosed-candidate="setCandidate" />
-    <h2 class="text-primary text-center text-md-start mt-5">
-      Choose Questions
-    </h2>
-    <select
-      v-model="selectedCategory"
-      class="form-select form-select-sm mb-3"
-      aria-label=".form-select-sm"
-    >
-      <option selected>Select category for displaying questions</option>
-      <option
-        v-for="category in categories"
-        :key="category"
-        :value="category"
+    <div v-if="currentCandidateId">
+      <h2 class="text-primary text-center text-md-start mt-5">
+        Choose Questions
+      </h2>
+      <select
+        v-model="selectedCategory"
+        class="form-select form-select-sm mb-3"
+        aria-label=".form-select-sm"
       >
-        {{ category }}
-      </option>
-    </select>
-    <ul class="list-unstyled">
-      <li
-        v-for="item in categoryQuestions"
-        :key="item.id"
-        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-start ps-sm-3"
-      >
-        <div class="form-check">
-          <input
-            :id="item.id"
-            v-model="checkedQuestions"
-            class="form-check-input"
-            type="checkbox"
-            :value="item"
-          />
-          <label
-            class="form-check-label ps-2"
-            :for="item.id"
-          >
-            <div class="col">{{ item.text }}</div>
-            <div class="col">{{ item.answer }}</div>
-            <div class="col">Question Score: {{ item.point }}</div>
-          </label>
-        </div>
-      </li>
-    </ul>
-
-    <div class="text-center text-md-end pe-md-4 mt-md-4 mb-md-5 ps-5 ps-md-2">
-      <SubmitButton
-        v-show="checkedQuestions.length"
-        @click="addQuestions"
-        >Add Questions</SubmitButton
-      >
+        <option selected>Select category for displaying questions</option>
+        <option
+          v-for="category in categories"
+          :key="category"
+          :value="category"
+        >
+          {{ category }}
+        </option>
+      </select>
+      <ul class="list-unstyled">
+        <li
+          v-for="item in categoryQuestions"
+          :key="item.id"
+          class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-start ps-sm-3"
+        >
+          <div class="form-check">
+            <input
+              :id="item.id"
+              v-model="checkedQuestions"
+              class="form-check-input"
+              type="checkbox"
+              :value="item"
+            />
+            <label
+              class="form-check-label ps-2"
+              :for="item.id"
+            >
+              <div class="col">{{ item.text }}</div>
+              <div class="col">{{ item.answer }}</div>
+              <div class="col">Question Score: {{ item.point }}</div>
+            </label>
+          </div>
+        </li>
+      </ul>
+  
+      <div class="text-center text-md-end pe-md-4 mt-md-4 mb-md-5 ps-5 ps-md-2">
+        <SubmitButton
+          v-show="checkedQuestions.length"
+          @click="addQuestions"
+          >Add Questions</SubmitButton
+        >
+      </div>
+      <QuizList
+        :question-array="quizList"
+        @add-point="answerPoints"
+        @delete-question="deleteQuestion"
+        @post-quiz="postResult"
+      />
     </div>
-    <QuizList
-      :question-array="quizList"
-      @add-point="answerPoints"
-      @delete-question="deleteQuestion"
-      @post-quiz="postResult"
-    />
   </div>
 </template>
