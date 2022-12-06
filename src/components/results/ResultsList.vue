@@ -32,20 +32,26 @@ defineProps({
 });
 
 const router = useRouter();
-const candidatesList = ref<Candidate[]>([]);
 const { getAllCandidates } = useCandidateStore();
 const { getResultsForCandidate } = useResultsStore();
+
+const candidatesList = ref<Candidate[]>([]);
 const selectCandidate = ref("");
 const isCandidatesVisible = ref(false);
 const choosedCandidates = ref<Candidate[]>([]);
 const quizResults = ref<Result[]>([]);
+const isLoaderVisible = ref(true);
+
 async function getAllCandidatesData() {
   try {
+    isLoaderVisible.value = true;
     const {
       data: { candidates },
     } = await getAllCandidates();
     candidatesList.value = candidates;
+    isLoaderVisible.value = false;
   } catch (e) {
+    isLoaderVisible.value = false;
     console.log(e);
   }
 }
@@ -53,9 +59,12 @@ getAllCandidatesData();
 
 async function getResultsForCandidateData(candidateId: number) {
   try {
+    isLoaderVisible.value = true;
     const { data } = await getResultsForCandidate(candidateId);
     quizResults.value = data;
+    isLoaderVisible.value = false;
   } catch (e) {
+    isLoaderVisible.value = false;
     console.log(e);
   }
 }
@@ -94,7 +103,7 @@ function pushRoute(candidateId: string, resultId: string) {
       Quiz results are grouped by Candidates. For displaying results, please,
       choose candidate from list
     </p>
-    <div class="col-12">
+    <div class="col-12 w-100 position-relative">
       <h2 class="text-primary text-center text-md-start mt-4">
         Candidate List
       </h2>
@@ -107,8 +116,7 @@ function pushRoute(candidateId: string, resultId: string) {
       />
       <div
         v-if="selectCandidate.length >= 1 && isCandidatesVisible"
-        class="list-group overflow-scroll w-50 position-absolute"
-        style="max-height: 245px"
+        class="list-group overflow-scroll w-100 position-absolute"
       >
         <a
           v-for="singleCandidate in choosedCandidates"
@@ -132,7 +140,11 @@ function pushRoute(candidateId: string, resultId: string) {
           </div>
         </a>
       </div>
-      <div v-if="quizResults.length">
+      <SpinnerLoader
+        v-if="isLoaderVisible"
+        class="mt-5"
+      />
+      <div v-if="quizResults.length && !isLoaderVisible">
         <h2 class="text-primary text-center text-md-start mt-4">
           Results List
         </h2>
@@ -167,7 +179,13 @@ function pushRoute(candidateId: string, resultId: string) {
           </li>
         </ul>
       </div>
-      <div v-else-if="selectCandidate.length >= 1 && quizResults.length === 0">
+      <div
+        v-else-if="
+          selectCandidate.length >= 1 &&
+          quizResults.length === 0 &&
+          !isLoaderVisible
+        "
+      >
         <h5 class="text-primary text-center mt-5">
           Sorry, this candidate has not passed any quiz yet
           <font-awesome-icon
@@ -179,3 +197,9 @@ function pushRoute(candidateId: string, resultId: string) {
     </div>
   </div>
 </template>
+
+<style scoped>
+.overflow-scroll {
+  max-height: 245px;
+}
+</style>

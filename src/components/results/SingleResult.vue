@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { formattingDate } from "../../utils/dateFormatting";
+import { formattingDate, formattingHours } from "../../utils/dateFormatting";
 import CategoryListItem from "./CategoryListItem.vue";
 import _uniq from "lodash/uniq";
 import { useRoute } from "vue-router";
@@ -128,10 +128,12 @@ const categories = computed(() =>
         :questions-array="singleResult.questionAnswer"
       />
       <div class="col-12 text-center text-md-end mt-3">
-        Start Date: {{ formattingDate(singleResult.startedAt) }}
+        Start Date: {{ formattingDate(singleResult.startedAt) }},
+        {{ formattingHours(singleResult.startedAt) }}
       </div>
       <div class="col-12 text-center text-md-end">
-        End Date: {{ formattingDate(singleResult.endedAt) }}
+        End Date: {{ formattingDate(singleResult.endedAt) }},
+        {{ formattingHours(singleResult.endedAt) }}
       </div>
     </div>
   </div>
