@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useCandidateStore } from "../../stores/candidates";
+import debounce from "lodash/debounce";
+
 import { ref, watch } from "vue";
 import { Candidate } from "../../../dto/candidates";
 
@@ -39,6 +41,11 @@ async function getAllCandidatesData() {
 }
 
 getAllCandidatesData();
+
+const getCandidateByUsername = debounce(() => {
+  console.log("Smth");
+}, 1000);
+
 watch(selectCandidate, newCandidate => {
   choosedCandidates.value = candidatesList.value.filter(candidate =>
     candidate.username.includes(newCandidate),
@@ -53,13 +60,13 @@ function setCandidate(user: Candidate) {
 
 <template>
   <h2 class="text-primary text-center text-md-start">Choose Candidate</h2>
-
   <div class="col-12 w-50 position-relative">
     <input
       id="candadidateInput"
       v-model="selectCandidate"
       class="form-control"
       placeholder="Enter username to search..."
+      @keydown="getCandidateByUsername()"
       @focusin="isCandidatesVisible = true"
     />
     <div

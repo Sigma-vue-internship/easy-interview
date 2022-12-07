@@ -1,40 +1,34 @@
 <script setup lang="ts">
 import { QuizQuestion } from "../../../dto/quiz";
 import SubmitButton from "../common/SubmitButton.vue";
-import DeleteButton from "../common/DeleteButton.vue";
 
 interface Emit {
   (e: "addPoint", point: number, id: string): void;
-  (e: "deleteQuestion", index: number): void;
+  (e: "deleteQuestion", index: number, item: object): void;
   (e: "postQuiz");
+  (e: "setMode"): void;
 }
 
 const props = defineProps({
-  question: {
-    type: Object as () => QuizQuestion,
-    default: () => ({
-      text: "",
-      point: "",
-      answerPoints: "",
-      answer: "",
-      category: "",
-      id: "",
-    }),
+  isModeReview: {
+    type: Boolean,
+    default: true,
   },
   questionArray: {
     type: Array as () => QuizQuestion[],
     default: () => [],
   },
 });
-
 const emit = defineEmits<Emit>();
-
+function startQuiz() {
+  emit("setMode");
+}
 function postQuiz() {
   emit("postQuiz");
 }
 
-function deleteQuestion(index: number) {
-  emit("deleteQuestion", index);
+function deleteQuestion(index: number, item: object) {
+  emit("deleteQuestion", index, item);
 }
 
 function addPoint(point: number, id: string) {
@@ -55,21 +49,35 @@ function pointsArray(point: number) {
         :key="index"
         class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-center text-md-start ps-sm-3"
       >
-        <div class="row py-3 px-2">
-          <div class="col-12 col-xl-7 col-xxl-8">
-            <h5 class="text-center text-xl-start">
+        <div
+          class="row py-3 justify-content-center justify-content-md-between align-items-center"
+        >
+          <div class="col-12 col-md-6 col-xl-7 col-xxl-8">
+            <h5 class="text-center text-md-start">
               {{ oneQuestion.text }}
             </h5>
-            <p class="text-secondary mb-1 text-center text-xl-start">
+            <p class="text-secondary mb-1 text-center text-md-start">
               {{ oneQuestion.answer }}
             </p>
-            <p class="text-secondary mb-1 text-center text-xl-start">
+            <p class="text-secondary mb-1 text-center text-md-start">
               Category: {{ oneQuestion.category }}
             </p>
           </div>
           <div
+            v-if="isModeReview"
+            class="col-12 col-md-2 text-md-end"
+          >
+            <font-awesome-icon
+              class="btn btn-outline-danger border-0 me-md-2"
+              style="height: 50px"
+              icon="fa-regular fa-square-minus"
+              @click="deleteQuestion(index, oneQuestion)"
+            />
+          </div>
+          <div
+            v-if="!isModeReview"
             v-show="oneQuestion.point >= 1"
-            class="col-12 col-xl-5 col-xxl-4 text-center text-xl-start"
+            class="col-12 col-md-6 col-xl-5 col-xxl-4 text-center text-xl-start"
           >
             <h5 class="d-inline pe-3 text-primary">Answer:</h5>
             <div
@@ -92,15 +100,21 @@ function pointsArray(point: number) {
                 >{{ idNumber }}</label
               >
             </div>
-            <div class="mt-4 me-2 text-md-end">
-              <DeleteButton @click="deleteQuestion(index)" />
-            </div>
           </div>
         </div>
       </li>
     </ul>
-    <div class="text-center text-md-end mt-md-4 ps-5 ps-md-2 pe-4">
-      <SubmitButton @click="postQuiz">Save Quiz</SubmitButton>
+    <div class="text-center text-md-end mt-md-4 ps-5 ps-md-2 pe-4 pb-4">
+      <SubmitButton
+        v-if="!isModeReview"
+        @click="postQuiz"
+        >Save Quiz</SubmitButton
+      >
+      <SubmitButton
+        v-else
+        @click="startQuiz"
+        >Start Quiz</SubmitButton
+      >
     </div>
   </div>
   <div v-else>

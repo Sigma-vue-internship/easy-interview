@@ -1,6 +1,6 @@
 $primary: #87CF23;
 $secondary: #C9C9C9;
-$danger: #E82C2C;
+$danger: #f34c4c;
 $dark: #474B4F;
 $light: #555555;
 $body-bg: #222629;
@@ -16,4 +16,5 @@ $card-bg: $secondary;
 $card-color:$body-bg;
 $card-border-color:$light;
 $card-cap-color:$body-bg;
+$btn-link-hover-color:$secondary;
 @import "../node_modules/bootstrap/scss/bootstrap";

@@ -17,9 +17,14 @@ import {
   faTrashCan,
   faUserPlus,
   faCircleInfo,
+  faArrowDownShortWide,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
-import { faFaceFrown } from "@fortawesome/free-regular-svg-icons";
+import {
+  faFaceFrown,
+  faSquareMinus,
+  faSquarePlus,
+} from "@fortawesome/free-regular-svg-icons";
 import "./assets/fonts/css/fontello.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
@@ -40,6 +45,9 @@ library.add(
   faUserPlus,
   faFaceFrown,
   faCircleInfo,
+  faSquarePlus,
+  faSquareMinus,
+  faArrowDownShortWide,
 );
 
 app.use(router);

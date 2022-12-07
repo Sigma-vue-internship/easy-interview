@@ -8,7 +8,6 @@ import QuizList from "./QuizList.vue";
 import CandidateInfo from "../quiz/CandidateInfo.vue";
 import { useResultsStore } from "../../stores/results";
 import { useQuestionStore } from "../../stores/questions";
-
 defineProps({
   question: {
     type: Object as () => QuizQuestion,
@@ -36,7 +35,9 @@ const resultsStore = useResultsStore();
 const questionStore = useQuestionStore();
 
 const selectedCategory = ref();
-const checkedQuestions = ref([]);
+const quizMode = ref(true);
+// const checkedQuestions = ref([]);
+const checkedQuestions = ref({});
 const questionList = ref<QuizQuestion[]>([]);
 const checkedAnswer = ref(0);
 const currentCandidateId = ref(0);
@@ -82,11 +83,32 @@ getQuestionList();
 
 const quizList = ref<QuizQuestion[]>([]);
 
-function addQuestions() {
-  quizList.value = _uniq([...quizList.value, ...checkedQuestions.value]);
-  checkedQuestions.value = [];
+function addQuestions(question) {
+  questionList.value = [
+    ...questionList.value.filter(
+      singleQuestion => singleQuestion.id !== question.id,
+    ),
+  ];
+  quizList.value.push(question);
 }
+function addAllQuestions() {
+  console.log(questionList.value);
 
+  quizList.value = [...quizList.value, ...categoryQuestions.value];
+  const collapsedQuestions = [
+    ...questionList.value,
+    ...categoryQuestions.value,
+  ];
+  const tempQuestion = {};
+  collapsedQuestions.forEach(question =>
+    tempQuestion[question.text]
+      ? (tempQuestion[question.text] = null)
+      : (tempQuestion[question.text] = question),
+  );
+  questionList.value = Object.values(tempQuestion).filter(question => question);
+
+  console.log(questionList.value);
+}
 function answerPoints(point: number, id: string) {
   checkedAnswer.value = point;
   const filtredElement = quizList.value.find(
@@ -101,8 +123,9 @@ function answerPoints(point: number, id: string) {
   }
 }
 
-function deleteQuestion(index: number) {
+function deleteQuestion(index: number, item: object) {
   quizList.value.splice(index, 1);
+  questionList.value.push(item);
 }
 
 function setCandidate(id: number, name: string) {
@@ -120,13 +143,13 @@ async function postPercentageResult() {
     console.log(e);
   }
 }
+const setModeQuiz = () => (quizMode.value = false);
 
 async function postResult() {
   result.value.questionAnswer = quizList.value;
   result.value.title = `Passed by ${currentCandidateName.value}`;
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
-
   try {
     await resultsStore.postResult(result.value, currentCandidateId.value);
   } catch (e) {
@@ -139,11 +162,18 @@ async function postResult() {
 
 <template>
   <div class="container mt-3 text-center text-secondary">
-    <CandidateInfo @choosed-candidate="setCandidate" />
-    <h2 class="text-primary text-center text-md-start mt-5">
+    <CandidateInfo
+      v-if="quizMode"
+      @choosed-candidate="setCandidate"
+    />
+    <h2
+      v-if="quizMode"
+      class="text-primary text-center text-md-start mt-5"
+    >
       Choose Questions
     </h2>
     <select
+      v-if="quizMode"
       v-model="selectedCategory"
       class="form-select form-select-sm mb-3"
       aria-label=".form-select-sm"
@@ -163,38 +193,55 @@ async function postResult() {
         :key="item.id"
         class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-start ps-sm-3"
       >
-        <div class="form-check">
-          <input
-            :id="item.id"
-            v-model="checkedQuestions"
-            class="form-check-input"
-            type="checkbox"
-            :value="item"
-          />
+        <div>
           <label
-            class="form-check-label ps-2"
+            class="w-100 form-check-label ps-2"
             :for="item.id"
           >
-            <div class="col">{{ item.text }}</div>
-            <div class="col">{{ item.answer }}</div>
-            <div class="col">Question Score: {{ item.point }}</div>
+            <div
+              class="row justify-content-md-between justify-content-center text-center text-md-start align-items-center"
+            >
+              <div class="col-md-9 col-12">
+                <div>{{ item.text }}</div>
+                <div>{{ item.answer }}</div>
+                <div>Question Score: {{ item.point }}</div>
+              </div>
+              <div class="col-md-2 col-12 text-md-end me-md-2 text-center">
+                <font-awesome-icon
+                  class="btn btn-outline-primary border-0"
+                  style="height: 50px"
+                  icon="fa-regular fa-square-plus"
+                  @click="addQuestions(item)"
+                />
+              </div>
+            </div>
           </label>
         </div>
       </li>
     </ul>
-
-    <div class="text-center text-md-end pe-md-4 mt-md-4 mb-md-5 ps-5 ps-md-2">
-      <SubmitButton
-        v-show="checkedQuestions.length"
-        @click="addQuestions"
-        >Add Questions</SubmitButton
+    <div
+      v-if="quizMode"
+      class="text-end pe-2"
+    >
+      <button
+        class="btn btn-outline-primary border-0"
+        @click="addAllQuestions"
       >
+        <font-awesome-icon
+          class="pe-2"
+          style="height: 20px; width: 30px"
+          icon="fa-solid fa-arrow-down-short-wide"
+        />
+        <span class="fs-5">Add all</span>
+      </button>
     </div>
     <QuizList
       :question-array="quizList"
+      :is-mode-review="quizMode"
       @add-point="answerPoints"
       @delete-question="deleteQuestion"
       @post-quiz="postResult"
+      @set-mode="setModeQuiz"
     />
   </div>
 </template>
