@@ -72,16 +72,15 @@ getOneResultForCandidateData();
 
 const resultPercentage = computed(() =>
   (
-    (singleResult.value.questionAnswer.reduce(
+    singleResult.value.questionAnswer.reduce(
       (summ, item) => summ + item.answerPoints,
       0,
-    ) *
-      100) /
+    ) /
     singleResult.value.questionAnswer.reduce(
       (summ, item) => summ + item.point,
       0,
     )
-  ).toFixed(1),
+  ).toLocaleString("en-GB", { style: "percent" }),
 );
 
 const categories = computed(() =>
@@ -101,32 +100,35 @@ const categories = computed(() =>
           alt="candidateAvatar"
         />
       </div>
-      <div class="col-md-8 col-lg-6 mt-2 mt-lg-0">
+      <div class="col-md-8 col-lg-4 mt-3 mt-lg-2">
         <h2 class="text-primary text-center text-md-start">
-          Quiz Result {{ singleResult.id }}
+          {{ singleResult.parent.username }}
         </h2>
-        <div class="text-center text-md-start">
-          <h3>{{ singleResult.parent.username }}</h3>
-        </div>
         <div class="text-center text-md-start">
           <h3>{{ singleResult.parent.position }}</h3>
         </div>
-        <div class="text-center text-md-start">
-          <h4>Result: {{ resultPercentage }}%</h4>
+        <div class="text-center text-md-start mb-3">
+          <h4>Result: {{ resultPercentage }}</h4>
+        </div>
+        <div class="progress">
+          <div
+            class="progress-bar progress-bar-striped progress-bar-animated"
+            role="progressbar"
+            aria-label="candidate score"
+            :style="`width: ${resultPercentage}`"
+            aria-valuenow="75"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          ></div>
         </div>
       </div>
     </div>
     <div class="col-12 mt-md-5">
-      <h2 class="text-primary text-center text-md-start mt-4">
-        Detailed Result
-      </h2>
-      <CategoryListItem
-        v-for="(category, index) in categories"
-        :key="category"
-        :item-id="index"
-        :category="category"
-        :questions-array="singleResult.questionAnswer"
-      />
+      <div
+        class="text-center text-md-start shadow border border-secondary p-3 rounded border-1 mt-3"
+      >
+        <h4>Short summary: {{ singleResult.parent.feedback }}</h4>
+      </div>
       <div class="col-12 text-center text-md-end mt-3">
         Start Date: {{ formattingDate(singleResult.startedAt) }},
         {{ formattingHours(singleResult.startedAt) }}
@@ -134,6 +136,31 @@ const categories = computed(() =>
       <div class="col-12 text-center text-md-end">
         End Date: {{ formattingDate(singleResult.endedAt) }},
         {{ formattingHours(singleResult.endedAt) }}
+      </div>
+
+      <p class="mt-5 text-center text-md-start">
+        <button
+          class="btn btn-outline-primary px-5 py-3 fs-5"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#datailedResult"
+          aria-expanded="false"
+          aria-controls="datailedResult"
+        >
+          Detailed Result
+        </button>
+      </p>
+      <div
+        id="datailedResult"
+        class="collapse"
+      >
+        <CategoryListItem
+          v-for="(category, index) in categories"
+          :key="category"
+          :item-id="index"
+          :category="category"
+          :questions-array="singleResult.questionAnswer"
+        />
       </div>
     </div>
   </div>

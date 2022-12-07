@@ -27,7 +27,7 @@ const questionsSegregation = computed(() =>
   <div>
     <p class="text-center text-md-start">
       <button
-        class="btn btn-outline-primary mt-2 px-4 py-2 category-button"
+        class="btn btn-outline-primary mt-2 px-3 py-2 category-button"
         type="button"
         data-bs-toggle="collapse"
         :data-bs-target="'#collapseButton' + itemId"

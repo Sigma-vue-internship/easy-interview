@@ -6,30 +6,7 @@ import { useResultsStore } from "../../stores/results";
 import { ref, watch } from "vue";
 import { Candidate } from "../../../dto/candidates";
 import { Result } from "../../../dto/results";
-
-defineProps({
-  candidate: {
-    type: Object as () => Candidate,
-    default: () => ({
-      position: "",
-      username: "",
-      linkedinUrl: "",
-      feedback: "",
-      avatarUrl: "",
-      id: 0,
-    }),
-  },
-  result: {
-    type: Object as () => Result,
-    default: () => ({
-      questionAnswer: [],
-      startedAt: 0,
-      endedAt: 0,
-      id: 0,
-      title: "",
-    }),
-  },
-});
+import _debounce from "lodash/debounce";
 
 const router = useRouter();
 const { getAllCandidates } = useCandidateStore();
@@ -94,18 +71,21 @@ function pushRoute(candidateId: string, resultId: string) {
 
 <template>
   <div class="container mt-3">
-    <h2 class="text-primary text-center text-md-start mb-md-0">Quiz Results</h2>
-    <p class="text-center text-md-start text-secondary">
+    <h2 class="text-primary text-center text-md-start mb-md-2">Quiz Results</h2>
+    <div
+      class="alert alert-warning"
+      role="alert"
+    >
       <font-awesome-icon
         icon="fa-solid fa-circle-info"
-        class="text-secondary fs-6"
+        class="fs-6"
       />
       Quiz results are grouped by Candidates. For displaying results, please,
       choose candidate from list
-    </p>
+    </div>
     <div class="col-12 w-100 position-relative">
-      <h2 class="text-primary text-center text-md-start mt-4">
-        Candidate List
+      <h2 class="text-primary text-center text-md-start mt-2">
+        Choose candidate
       </h2>
       <input
         id="candadidateInput"
@@ -152,7 +132,8 @@ function pushRoute(candidateId: string, resultId: string) {
           <li
             v-for="oneResult in quizResults"
             :key="oneResult.id"
-            class="border border-light mt-3 mb-4 p-2 rounded-3 text-secondary mx-auto shadow ps-4"
+            class="border border-light mt-3 mb-4 p-2 rounded-3 text-secondary mx-auto shadow ps-4 pe-auto"
+            role="button"
             @click="pushRoute(oneResult.parent.id, oneResult.id)"
           >
             <h5 class="text-primary text-center text-md-start">
@@ -161,7 +142,7 @@ function pushRoute(candidateId: string, resultId: string) {
             <div class="row">
               <div class="col-12 col-md-6 text-center text-md-start">
                 <font-awesome-icon
-                  icon="fa-solid fa-hourglass-start"
+                  icon="fa-solid fa-calendar-days"
                   class="text-primary fs-6"
                 />
                 Started at: {{ formattingDate(oneResult.startedAt) }},
@@ -169,7 +150,7 @@ function pushRoute(candidateId: string, resultId: string) {
               </div>
               <div class="col-12 col-md-6 text-center text-md-end pe-md-4">
                 <font-awesome-icon
-                  icon="fa-solid fa-hourglass-end"
+                  icon="fa-solid fa-calendar-days"
                   class="text-primary fs-6"
                 />
                 Ended at: {{ formattingDate(oneResult.endedAt) }},

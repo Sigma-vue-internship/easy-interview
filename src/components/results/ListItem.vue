@@ -25,17 +25,10 @@ defineProps({
         </p>
       </div>
     </div>
-    <div class="col-12 col-md-3 ps-1 fs-5">
-      <div class="text-center text-md-end">
-        Question score:
-        <span class="text-primary">{{ oneQuestion.point }}</span>
-      </div>
-      <div class="text-center text-md-end">
-        Answer points:
-        <span class="text-primary">
-          {{ oneQuestion.answerPoints }}
-        </span>
-      </div>
+    <div class="col-12 col-md-3 ps-1 fs-5 text-end mb-2">
+      <span class="text-primary bg-secondary p-2 rounded-circle">
+        {{ oneQuestion.answerPoints }}/{{ oneQuestion.point }}
+      </span>
     </div>
   </li>
 </template>
