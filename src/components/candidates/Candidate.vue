@@ -120,14 +120,14 @@ function deleteProfile() {
             {{ currentCandidate.linkedinUrl }}
           </div>
           <SubmitButton
-          data-bs-toggle="modal"
-          data-bs-target="#editCandidate"
-          >Edit</SubmitButton
-        >
+            data-bs-toggle="modal"
+            data-bs-target="#editCandidate"
+            >Edit</SubmitButton
+          >
           <DeleteButton
-          data-bs-toggle="modal"
-          data-bs-target="#alertCandidate"
-        />
+            data-bs-toggle="modal"
+            data-bs-target="#alertCandidate"
+          />
           <p
             id="feedback"
             class="text-secondary mt-4"

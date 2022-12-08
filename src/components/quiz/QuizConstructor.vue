@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import SubmitButton from "../common/SubmitButton.vue";
 import _uniq from "lodash/uniq";
 import { computed, onMounted, ref } from "vue";
 import { QuizQuestion, QuizResult } from "../../../dto/quiz";
+import { Question } from "../../../dto/questions";
 import { PercentsResult } from "../../../dto/results";
 import QuizList from "./QuizList.vue";
 import CandidateInfo from "../quiz/CandidateInfo.vue";
 import { useResultsStore } from "../../stores/results";
 import { useQuestionStore } from "../../stores/questions";
+import { useRouter } from "vue-router";
 defineProps({
   question: {
     type: Object as () => QuizQuestion,
@@ -30,7 +31,7 @@ defineProps({
     }),
   },
 });
-
+const router = useRouter();
 const resultsStore = useResultsStore();
 const questionStore = useQuestionStore();
 
@@ -49,6 +50,8 @@ const result = ref<QuizResult>({
   startedAt: 0,
   endedAt: 0,
 });
+const questionsByCategories = ref({});
+const questionCategories = ref<Array<String>>([]);
 
 onMounted(() => {
   selectedCategory.value = "Select category for displaying questions";
@@ -83,17 +86,19 @@ getQuestionList();
 
 const quizList = ref<QuizQuestion[]>([]);
 
-function addQuestions(question) {
+function addQuestions(question: Question) {
   questionList.value = [
     ...questionList.value.filter(
       singleQuestion => singleQuestion.id !== question.id,
     ),
   ];
+  if (!questionCategories.value.includes(question.category)) {
+    questionCategories.value.push(question.category);
+  }
   quizList.value.push(question);
+  questionsByCategories.value = { ...spreadQuestionsByCategories() };
 }
 function addAllQuestions() {
-  console.log(questionList.value);
-
   quizList.value = [...quizList.value, ...categoryQuestions.value];
   const collapsedQuestions = [
     ...questionList.value,
@@ -106,14 +111,19 @@ function addAllQuestions() {
       : (tempQuestion[question.text] = question),
   );
   questionList.value = Object.values(tempQuestion).filter(question => question);
+  questionsByCategories.value = { ...spreadQuestionsByCategories() };
+  console.log(questionsByCategories.value);
 
-  console.log(questionList.value);
+  if (!questionCategories.value.includes(selectedCategory.value)) {
+    questionCategories.value.push(selectedCategory.value);
+  }
 }
 function answerPoints(point: number, id: string) {
   checkedAnswer.value = point;
   const filtredElement = quizList.value.find(
     quizAnswer => quizAnswer.id === id,
   );
+  console.log(filtredElement);
   if (filtredElement) {
     filtredElement.answerPoints = checkedAnswer.value;
     if (startQuizDate.value === 0) {
@@ -126,6 +136,12 @@ function answerPoints(point: number, id: string) {
 function deleteQuestion(index: number, item: object) {
   quizList.value.splice(index, 1);
   questionList.value.push(item);
+  questionsByCategories.value = { ...spreadQuestionsByCategories() };
+  if (!questionsByCategories.value[item.category]) {
+    questionCategories.value = questionCategories.value.filter(
+      questionCategory => questionCategory !== item.category,
+    );
+  }
 }
 
 function setCandidate(id: number, name: string) {
@@ -143,15 +159,43 @@ async function postPercentageResult() {
     console.log(e);
   }
 }
-const setModeQuiz = () => (quizMode.value = false);
 
+const setModeQuiz = () => {
+  quizMode.value = false;
+  questionCategories.value = _uniq(quizList.value.map(obj => obj.category));
+  // questionsByCategories.value = { ...spreadQuestionsByCategories() };
+  // here ok
+};
+function spreadQuestionsByCategories() {
+  const tempCategoryQuestions = {};
+
+  quizList.value.forEach(q => {
+    if (tempCategoryQuestions[q.category]) {
+      tempCategoryQuestions[q.category].push(q);
+      return;
+    }
+
+    tempCategoryQuestions[q.category] = [];
+    tempCategoryQuestions[q.category].push(q);
+  });
+  return tempCategoryQuestions;
+}
 async function postResult() {
   result.value.questionAnswer = quizList.value;
   result.value.title = `Passed by ${currentCandidateName.value}`;
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
   try {
-    await resultsStore.postResult(result.value, currentCandidateId.value);
+    const {
+      data: { candidateId, id },
+    } = await resultsStore.postResult(result.value, currentCandidateId.value);
+    router.push({
+      name: "singleResult",
+      params: {
+        candidateId,
+        id,
+      },
+    });
   } catch (e) {
     console.log(e);
   }
@@ -187,7 +231,10 @@ async function postResult() {
         {{ category }}
       </option>
     </select>
-    <ul class="list-unstyled">
+    <ul
+      v-if="quizMode"
+      class="list-unstyled"
+    >
       <li
         v-for="item in categoryQuestions"
         :key="item.id"
@@ -236,8 +283,9 @@ async function postResult() {
       </button>
     </div>
     <QuizList
-      :question-array="quizList"
+      :question-arrays-by-category="questionsByCategories"
       :is-mode-review="quizMode"
+      :categories="questionCategories"
       @add-point="answerPoints"
       @delete-question="deleteQuestion"
       @post-quiz="postResult"

@@ -4,6 +4,7 @@ import debounce from "lodash/debounce";
 
 import { ref, watch } from "vue";
 import { Candidate } from "../../../dto/candidates";
+import EasyDropdown from "../common/EasyDropdown.vue";
 
 interface Emit {
   (e: "choosedCandidate", id: number, name: string): void;
@@ -25,81 +26,39 @@ defineProps({
 
 const emit = defineEmits<Emit>();
 const candidatesList = ref<Candidate[]>([]);
-const { getAllCandidates } = useCandidateStore();
-const selectCandidate = ref("");
+const { getCandidatesByUsername } = useCandidateStore();
+const selectCandidate = ref(""); // v-model input
+const choosedCandidate = ref(""); // emitted candidate
 const isCandidatesVisible = ref(false);
 const choosedCandidates = ref<Candidate[]>([]);
-async function getAllCandidatesData() {
-  try {
-    const {
-      data: { candidates },
-    } = await getAllCandidates();
-    candidatesList.value = candidates;
-  } catch (e) {
-    console.log(e);
-  }
-}
 
-getAllCandidatesData();
+watch(selectCandidate, async newCandidate => {
+  const {
+    data: { candidates },
+  } = await getCandidatesByUsername(newCandidate);
 
-const getCandidateByUsername = debounce(() => {
-  console.log("Smth");
-}, 1000);
-
-watch(selectCandidate, newCandidate => {
-  choosedCandidates.value = candidatesList.value.filter(candidate =>
-    candidate.username.includes(newCandidate),
-  );
+  choosedCandidates.value = candidates;
 });
 function setCandidate(user: Candidate) {
   isCandidatesVisible.value = false;
   emit("choosedCandidate", user.id, user.username);
-  selectCandidate.value = user.username;
+  choosedCandidate.value = user.username;
 }
 </script>
 
 <template>
   <h2 class="text-primary text-center text-md-start">Choose Candidate</h2>
-  <div class="col-12 w-50 position-relative">
-    <input
-      id="candadidateInput"
-      v-model="selectCandidate"
-      class="form-control"
-      placeholder="Enter username to search..."
-      @keydown="getCandidateByUsername()"
-      @focusin="isCandidatesVisible = true"
+  <div class="col-12 position-relative">
+    <EasyDropdown
+      v-model:dropdown-input="selectCandidate"
+      :dropdown-data="choosedCandidates"
+      @set-dropdown-obj="setCandidate"
     />
-    <div
-      v-if="selectCandidate.length >= 1 && isCandidatesVisible"
-      class="list-group overflow-scroll w-100 position-absolute"
-    >
-      <a
-        v-for="singleCandidate in choosedCandidates"
-        :key="singleCandidate.id"
-        class="list-group-item list-group-item-action p-0 px-2"
-      >
-        <div
-          class="d-flex w-100 align-items-center gap-3"
-          @click="setCandidate(singleCandidate)"
-        >
-          <img
-            :src="singleCandidate.avatarUrl"
-            class="rounded-circle"
-            height="50"
-            alt="avatar"
-          />
-          <div class="flex-column text-start">
-            <p class="m-1 me-3">{{ singleCandidate.username }}</p>
-            <p class="m-1 me-3">{{ singleCandidate.position }}</p>
-          </div>
-        </div>
-      </a>
-    </div>
+    <h3 class="fs-5 text-start pt-2">
+      Choosed candidate:
+      <span class="fw-normal">{{
+        choosedCandidate.length ? choosedCandidate : "none"
+      }}</span>
+    </h3>
   </div>
 </template>
-
-<style scoped>
-.overflow-scroll {
-  max-height: 245px;
-}
-</style>
