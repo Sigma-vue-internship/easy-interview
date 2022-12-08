@@ -48,7 +48,7 @@ function questionsQuantity(category: string) {
   <div class="container mt-3 text-center">
     <div class="row mb-3 align-items-center">
       <div
-        class="col-lg-2 mb-md-4 mb-lg-0 col-xl-2 col-xxl-2 text-center text-md-start text-primary"
+        class="col-lg-2 mb-md-4 mb-lg-0 col-xl-2 col-xxl-2 text-center text-md-start text-primary pb-1"
       >
         <h2 class="text-center text-md-start mb-0 text-primary">Questions</h2>
       </div>

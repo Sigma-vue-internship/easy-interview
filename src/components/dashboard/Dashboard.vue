@@ -8,7 +8,7 @@
         >
           <div class="border rounded-4 p-3">
             <span class="icon-form w-75" />
-            <h2 class="text-primary fs-3 mt-4">Create quiz</h2>
+            <h2 class="text-secondary fs-3 mt-4">Create quiz</h2>
           </div>
         </router-link>
       </div>
@@ -20,7 +20,7 @@
           <div class="border rounded-4 p-3">
             <span class="icon-book-open" />
 
-            <h2 class="text-primary fs-3 mt-4">Questions</h2>
+            <h2 class="text-secondary fs-3 mt-4">Questions</h2>
           </div>
         </router-link>
       </div>
@@ -32,7 +32,7 @@
           <div class="border rounded-4 p-3">
             <span class="icon-paste" />
 
-            <h2 class="text-primary fs-3 mt-4">Results</h2>
+            <h2 class="text-secondary fs-3 mt-4">Results</h2>
           </div>
         </router-link>
       </div>
@@ -44,7 +44,7 @@
           <div class="border rounded-4 p-3">
             <span class="icon-users" />
 
-            <h2 class="text-primary fs-3 mt-4 text-unstyled">Candidates</h2>
+            <h2 class="text-secondary fs-3 mt-4 text-unstyled">Candidates</h2>
           </div>
         </router-link>
       </div>
@@ -56,7 +56,7 @@
           <div class="border rounded-4 p-3">
             <span class="icon-loop-alt" />
 
-            <h2 class="text-primary fs-3 mt-4 text-unstyled">Last result</h2>
+            <h2 class="text-secondary fs-3 mt-4 text-unstyled">Last result</h2>
           </div>
         </router-link>
       </div>
@@ -68,7 +68,7 @@
           <div class="border rounded-4 p-3">
             <span class="icon-stats" />
 
-            <h2 class="text-primary fs-3 mt-4">Statistics</h2>
+            <h2 class="text-secondary fs-3 mt-4">Statistics</h2>
           </div>
         </router-link>
       </div>

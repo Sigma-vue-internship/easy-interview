@@ -3,13 +3,24 @@ import CandidateForm from "./CandidateForm.vue";
 import { useCandidateStore } from "../../stores/candidates";
 import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-
-const { getCandidatesByPage } = useCandidateStore();
-const candidatesList = ref([]);
+import { Candidate } from "../../../dto/candidates";
+const { getCandidatesByPage, addCandidate } = useCandidateStore();
+const candidatesList = ref<Array<Candidate>>([]);
 const candidatePagesNum = ref(0);
 const currentPage = ref(1);
 const isLoaderVisible = ref(true);
 const router = useRouter();
+const candidateInit = {
+  position: "",
+  username: "",
+  linkedinUrl: "",
+  feedback: "",
+  avatarUrl: "",
+  id: 0,
+};
+const currentCandidate = ref({ ...candidateInit });
+const formType = ref("post");
+
 async function getCandidates(page: number = 1) {
   try {
     isLoaderVisible.value = true;
@@ -27,20 +38,25 @@ async function getCandidates(page: number = 1) {
     console.log(e);
   }
 }
-
+async function postCandidate() {
+  try {
+    await addCandidate(currentCandidate.value);
+    clearForm();
+    await getCandidates();
+  } catch (e) {
+    console.log(e);
+  }
+}
 watch(currentPage, pageNum => {
   getCandidates(pageNum);
 });
-
-const currentCandidate = ref({});
-const formType = ref("post");
 
 const formTitle = computed(() =>
   formType.value === "put" ? "Edit candidate" : "Add new candidate",
 );
 
 function clearForm() {
-  currentCandidate.value = {};
+  currentCandidate.value = { ...candidateInit };
 }
 
 getCandidates();
@@ -70,9 +86,9 @@ getCandidates();
         @close-modal="clearForm"
       >
         <CandidateForm
-          :single-candidate="currentCandidate"
+          v-model:candidate="currentCandidate"
           :form-type="formType"
-          @update-candidates-list="getCandidateList"
+          @add-candidate="postCandidate"
         />
       </EasyModal>
     </div>
@@ -115,12 +131,5 @@ getCandidates();
       class="pb-5 pt-2"
       :page-count="candidatePagesNum"
     />
-    <!-- <Pagination
-      v-if="!isLoaderVisible"
-      v-model:current-page="currentPage"
-      class="pb-5 pt-2"
-      :page-count="candidatePagesNum"
-      @change-page="getCandidates"
-    /> -->
   </div>
 </template>

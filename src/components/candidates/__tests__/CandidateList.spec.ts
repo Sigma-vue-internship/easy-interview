@@ -76,8 +76,6 @@ describe("CandidateList.vue", () => {
     );
     const candidateItemsLength = wrapper.vm.candidatesList.length;
     const allCandidatesLength = wrapper.findAll(".candidate__item").length;
-    console.log(candidateItemsLength);
-    console.log(allCandidatesLength);
     expect(candidateItemsLength).toEqual(allCandidatesLength);
   });
 });

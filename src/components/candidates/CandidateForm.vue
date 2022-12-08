@@ -1,25 +1,26 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { toRefs } from "vue";
 import { useFormValidator } from "../../utils/useFormValidator";
 import { Candidate } from "../../../dto/candidates";
 interface Emit {
-  (e: "edit-candidate", candidate: Candidate): void;
+  (e: "edit-candidate"): void;
+  (e: "add-candidate"): void;
+  (e: "update:candidate", candidate: Candidate): void;
 }
 const emit = defineEmits<Emit>();
-const candidateInit = {
-  position: "",
-  username: "",
-  linkedinUrl: "",
-  feedback: "",
-  avatarUrl: "",
-  id: 0,
-};
 const props = defineProps({
-  singleCandidate: {
+  candidate: {
     type: Object as () => Candidate,
     required: false,
     default() {
-      return {};
+      return {
+        position: "",
+        username: "",
+        linkedinUrl: "",
+        feedback: "",
+        avatarUrl: "",
+        id: 0,
+      };
     },
   },
   formType: {
@@ -30,10 +31,7 @@ const props = defineProps({
     },
   },
 });
-const candidate = ref({ ...candidateInit });
-watch(props, currentCandidate => {
-  candidate.value = { ...currentCandidate.singleCandidate };
-});
+const { candidate } = toRefs(props);
 
 const { v$, resetForm, showModal } = useFormValidator(candidate, "candidate");
 async function onSubmit() {
@@ -42,43 +40,33 @@ async function onSubmit() {
     return;
   }
   if (props.formType === "put") {
-    emit("edit-candidate", { ...candidate.value });
+    emit("update:candidate", candidate.value);
+    emit("edit-candidate");
     resetForm();
-    candidate.value = { ...candidateInit };
     return;
   }
-  candidate.value = { ...candidateInit };
+  emit("update:candidate", candidate.value);
+  emit("add-candidate");
   resetForm();
 }
 </script>
 <template>
   <form @submit.prevent="onSubmit">
-    <label
-      for="position"
-      class="form-label"
-      >Position:</label
-    >
+    <label for="position" class="form-label">Position:</label>
     <input
       id="position"
       v-model="candidate.position"
       name="position"
       type="position"
       placeholder="Junior front-end developer"
-      class="form-control text-dark"
+      class="form-control text-secondary"
     />
-    <p
-      style="height: 25px"
-      class="pt-1 ps-1 text-danger mb-2"
-    >
+    <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
       <span v-if="v$.position.$error">{{
         v$.position.$errors[0].$message
       }}</span>
     </p>
-    <label
-      for="username"
-      class="form-label"
-      >Username:</label
-    >
+    <label for="username" class="form-label">Username:</label>
     <input
       id="username"
       v-model="candidate.username"
@@ -87,19 +75,12 @@ async function onSubmit() {
       placeholder="tyler111"
       class="form-control text-secondary"
     />
-    <p
-      style="height: 25px"
-      class="pt-1 ps-1 text-danger mb-2"
-    >
+    <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
       <span v-if="v$.username.$error">{{
         v$.username.$errors[0].$message
       }}</span>
     </p>
-    <label
-      for="linkedin"
-      class="form-label"
-      >Linkedin:</label
-    >
+    <label for="linkedin" class="form-label">Linkedin:</label>
     <input
       id="linkedin"
       v-model="candidate.linkedinUrl"
@@ -108,11 +89,7 @@ async function onSubmit() {
       placeholder="https://www.linkedin.com/"
       class="form-control text-secondary mb-4"
     />
-    <label
-      for="avatar"
-      class="form-label"
-      >Avatar:</label
-    >
+    <label for="avatar" class="form-label">Avatar:</label>
     <input
       id="avatar"
       v-model="candidate.avatarUrl"
@@ -131,10 +108,7 @@ async function onSubmit() {
         placeholder="Feedback:"
       />
       <label for="feedback">Feedback:</label>
-      <p
-        style="height: 25px"
-        class="pt-1 ps-1 text-danger mb-2"
-      >
+      <p style="height: 25px" class="pt-1 ps-1 text-danger mb-2">
         <span v-if="v$.feedback.$error">{{
           v$.feedback.$errors[0].$message
         }}</span>
