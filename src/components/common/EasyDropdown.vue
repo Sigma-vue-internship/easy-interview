@@ -37,7 +37,8 @@ const emitSetDropdownObj = dropdownObj => {
     id="candadidateInput"
     class="form-control container-fluid"
     placeholder="Type something to search..."
-    @keyup="emitDropdownUpdate"
+    :value="dropdownInput"
+    @input="emitDropdownUpdate"
     @focusin="isDropdownObjVisible = true"
   />
   <div

@@ -3,7 +3,6 @@ import _uniq from "lodash/uniq";
 import { computed, onMounted, ref } from "vue";
 import { QuizQuestion, QuizResult } from "../../../dto/quiz";
 import { Question } from "../../../dto/questions";
-import { PercentsResult } from "../../../dto/results";
 import QuizList from "./QuizList.vue";
 import CandidateInfo from "../quiz/CandidateInfo.vue";
 import { useResultsStore } from "../../stores/results";
@@ -35,11 +34,9 @@ const router = useRouter();
 const resultsStore = useResultsStore();
 const questionStore = useQuestionStore();
 
-const selectedCategory = ref();
+const selectedCategory = ref("");
 const quizMode = ref(true);
-// const checkedQuestions = ref([]);
-const checkedQuestions = ref({});
-const questionList = ref<QuizQuestion[]>([]);
+const questionList = ref<Array<QuizQuestion>>([]);
 const checkedAnswer = ref(0);
 const currentCandidateId = ref(0);
 const currentCandidateName = ref("");
@@ -50,16 +47,17 @@ const result = ref<QuizResult>({
   startedAt: 0,
   endedAt: 0,
 });
-const questionsByCategories = ref({});
+const isCandidateChoosed = ref<boolean>(false);
+const questionsByCategories = ref<Object>({});
 const questionCategories = ref<Array<String>>([]);
 
 onMounted(() => {
   selectedCategory.value = "Select category for displaying questions";
 });
 
-const categories = computed(() =>
-  _uniq(questionList.value.map(item => item.category)),
-);
+const categories = computed(() => {
+  return _uniq(questionList.value.map(item => item.category));
+});
 
 const categoryQuestions = computed(() =>
   questionList.value.filter(
@@ -86,7 +84,7 @@ getQuestionList();
 
 const quizList = ref<QuizQuestion[]>([]);
 
-function addQuestions(question: Question) {
+function addQuestions(question: QuizQuestion) {
   questionList.value = [
     ...questionList.value.filter(
       singleQuestion => singleQuestion.id !== question.id,
@@ -95,35 +93,46 @@ function addQuestions(question: Question) {
   if (!questionCategories.value.includes(question.category)) {
     questionCategories.value.push(question.category);
   }
+  if (
+    !questionList.value.find(
+      questionItem => questionItem.category === question.category,
+    )
+  ) {
+    selectedCategory.value = "Select category for displaying questions";
+  }
   quizList.value.push(question);
+
   questionsByCategories.value = { ...spreadQuestionsByCategories() };
 }
 function addAllQuestions() {
   quizList.value = [...quizList.value, ...categoryQuestions.value];
+  // array with all questions + questions from current category, before delete
   const collapsedQuestions = [
     ...questionList.value,
     ...categoryQuestions.value,
   ];
   const tempQuestion = {};
-  collapsedQuestions.forEach(question =>
-    tempQuestion[question.text]
-      ? (tempQuestion[question.text] = null)
-      : (tempQuestion[question.text] = question),
-  );
+  collapsedQuestions.forEach(question => {
+    tempQuestion[question.id]
+      ? (tempQuestion[question.id] = null)
+      : (tempQuestion[question.id] = question);
+  });
+
   questionList.value = Object.values(tempQuestion).filter(question => question);
+
   questionsByCategories.value = { ...spreadQuestionsByCategories() };
-  console.log(questionsByCategories.value);
 
   if (!questionCategories.value.includes(selectedCategory.value)) {
     questionCategories.value.push(selectedCategory.value);
   }
+
+  selectedCategory.value = "Select category for displaying questions";
 }
 function answerPoints(point: number, id: string) {
   checkedAnswer.value = point;
   const filtredElement = quizList.value.find(
     quizAnswer => quizAnswer.id === id,
   );
-  console.log(filtredElement);
   if (filtredElement) {
     filtredElement.answerPoints = checkedAnswer.value;
     if (startQuizDate.value === 0) {
@@ -133,8 +142,10 @@ function answerPoints(point: number, id: string) {
   }
 }
 
-function deleteQuestion(index: number, item: object) {
-  quizList.value.splice(index, 1);
+function deleteQuestion(questionId: string, item: Question) {
+  quizList.value = quizList.value.filter(
+    question => question.id !== questionId,
+  );
   questionList.value.push(item);
   questionsByCategories.value = { ...spreadQuestionsByCategories() };
   if (!questionsByCategories.value[item.category]) {
@@ -147,7 +158,9 @@ function deleteQuestion(index: number, item: object) {
 function setCandidate(id: number, name: string) {
   currentCandidateId.value = id;
   currentCandidateName.value = name;
+  // props
 }
+const setCandidateSelected = () => (isCandidateChoosed.value = true);
 
 async function postPercentageResult() {
   try {
@@ -182,13 +195,15 @@ function spreadQuestionsByCategories() {
 }
 async function postResult() {
   result.value.questionAnswer = quizList.value;
-  result.value.title = `Passed by ${currentCandidateName.value}`;
+  result.value.title = `Passed by ${currentCandidateName.value}, ${Date.now()}`;
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
   try {
     const {
       data: { candidateId, id },
     } = await resultsStore.postResult(result.value, currentCandidateId.value);
+    postPercentageResult();
+    quizList.value = [];
     router.push({
       name: "singleResult",
       params: {
@@ -199,25 +214,24 @@ async function postResult() {
   } catch (e) {
     console.log(e);
   }
-  postPercentageResult();
-  quizList.value = [];
 }
 </script>
 
 <template>
   <div class="container mt-3 text-center text-secondary">
     <CandidateInfo
-      v-if="quizMode"
+      v-if="quizMode && !isCandidateChoosed"
+      @set-candidate-selected="setCandidateSelected"
       @choosed-candidate="setCandidate"
     />
     <h2
-      v-if="quizMode"
-      class="text-primary text-center text-md-start mt-5"
+      v-if="quizMode && isCandidateChoosed"
+      class="text-primary text-center text-md-start"
     >
       Choose Questions
     </h2>
     <select
-      v-if="quizMode"
+      v-if="quizMode && isCandidateChoosed"
       v-model="selectedCategory"
       class="form-select form-select-sm mb-3"
       aria-label=".form-select-sm"
@@ -232,7 +246,7 @@ async function postResult() {
       </option>
     </select>
     <ul
-      v-if="quizMode"
+      v-if="quizMode && isCandidateChoosed"
       class="list-unstyled"
     >
       <li
@@ -267,10 +281,11 @@ async function postResult() {
       </li>
     </ul>
     <div
-      v-if="quizMode"
+      v-if="quizMode && isCandidateChoosed"
       class="text-end pe-2"
     >
       <button
+        v-if="selectedCategory !== 'Select category for displaying questions'"
         class="btn btn-outline-primary border-0"
         @click="addAllQuestions"
       >
@@ -282,7 +297,9 @@ async function postResult() {
         <span class="fs-5">Add all</span>
       </button>
     </div>
+    <!-- //TODO:test setMode, add, delete-->
     <QuizList
+      v-if="isCandidateChoosed"
       :question-arrays-by-category="questionsByCategories"
       :is-mode-review="quizMode"
       :categories="questionCategories"

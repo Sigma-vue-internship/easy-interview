@@ -13,3 +13,5 @@ export interface QuizResult {
   startedAt: number;
   endedAt: number;
 }
+
+// question -->

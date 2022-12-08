@@ -1,40 +1,42 @@
 <script setup lang="ts">
-import { computed, onUpdated, ref, toRefs, watch } from "vue";
 import { QuizQuestion } from "../../../dto/quiz";
 import _uniq from "lodash/uniq";
 import SubmitButton from "../common/SubmitButton.vue";
+import { Question } from "../../../dto/questions";
 
 interface Emit {
   (e: "addPoint", point: number, id: string): void;
-  (e: "deleteQuestion", index: number, item: object): void;
+  (e: "deleteQuestion", index: number, item: Question): void;
   (e: "postQuiz");
   (e: "setMode"): void;
 }
+
 const props = defineProps({
   isModeReview: {
     type: Boolean,
     default: true,
   },
   questionArraysByCategory: {
-    type: Object,
+    type: Object as () => Array<Question>,
     default: () => {},
   },
   categories: {
-    type: Array,
+    type: Array<String>,
     default: () => [],
   },
 });
-// const { questionArraysByCategory } = toRefs(props);
 
 const emit = defineEmits<Emit>();
+
 function startQuiz() {
   emit("setMode");
 }
+
 function postQuiz() {
   emit("postQuiz");
 }
 
-function deleteQuestion(index: number, item: object) {
+function deleteQuestion(index: number, item: Question) {
   emit("deleteQuestion", index, item);
 }
 
@@ -45,15 +47,10 @@ function addPoint(point: number, id: string) {
 function pointsArray(point: number) {
   return Array.apply(null, Array(point + 1)).map((_, i: number) => i);
 }
-
-function myTest() {
-  console.log(questionArrays.value);
-}
 </script>
 
 <template>
-  <h2 class="text-primary text-center text-md-start mt-5">Question List</h2>
-  <button @click="myTest">123</button>
+  <h2 class="text-primary text-center text-md-start">Question List</h2>
   <div v-if="categories.length">
     <!-- collapse starts  -->
     <div
@@ -76,76 +73,74 @@ function myTest() {
         :id="'collapseButton' + categoryIndex"
         class="collapse multi-collapse"
       >
-        <div class="card card-body bg-light">
-          <ul class="list-unstyled">
-            <li
-              v-for="(oneQuestion, index) in questionArraysByCategory[category]"
-              :key="oneQuestion"
-              class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-center text-md-start ps-sm-3"
+        <ul class="list-unstyled">
+          <li
+            v-for="(oneQuestion, index) in questionArraysByCategory[category]"
+            id="questionItem"
+            :key="oneQuestion"
+            class="border border-light mb-3 p-2 rounded-3 mx-auto shadow text-center text-md-start ps-sm-3"
+          >
+            <div
+              class="row py-3 justify-content-center justify-content-md-between align-items-center"
             >
+              <div class="col-12 col-md-6 col-xl-7 col-xxl-8">
+                <h5 class="text-center text-md-start">
+                  {{ oneQuestion.text }}
+                </h5>
+                <p class="text-secondary mb-1 text-center text-md-start">
+                  {{ oneQuestion.answer }}
+                </p>
+                <p class="text-secondary mb-1 text-center text-md-start">
+                  Category: {{ oneQuestion.category }}
+                </p>
+              </div>
               <div
-                class="row py-3 justify-content-center justify-content-md-between align-items-center"
+                v-if="isModeReview"
+                class="col-12 col-md-2 text-md-end"
               >
-                {{ category }}
-                <div class="col-12 col-md-6 col-xl-7 col-xxl-8">
-                  <h5 class="text-center text-md-start">
-                    {{ oneQuestion.text }}
-                  </h5>
-                  <p class="text-secondary mb-1 text-center text-md-start">
-                    {{ oneQuestion.answer }}
-                  </p>
-                  <p class="text-secondary mb-1 text-center text-md-start">
-                    Category: {{ oneQuestion.category }}
-                  </p>
-                </div>
+                <FontAwesomeIcon
+                  class="btn btn-outline-danger border-0 me-md-2"
+                  style="height: 50px"
+                  icon="fa-regular fa-square-minus"
+                  @click="deleteQuestion(oneQuestion.id, oneQuestion)"
+                />
+              </div>
+              <div
+                v-if="!isModeReview"
+                v-show="oneQuestion.point >= 1"
+                class="col-12 col-md-6 col-xl-5 col-xxl-4"
+              >
+                <h5 class="d-inline pe-3 text-primary">Answer:</h5>
                 <div
-                  v-if="isModeReview"
-                  class="col-12 col-md-2 text-md-end"
+                  v-for="idNumber in pointsArray(oneQuestion.point)"
+                  :key="idNumber"
+                  class="form-check form-check-inline"
                 >
-                  <font-awesome-icon
-                    class="btn btn-outline-danger border-0 me-md-2"
-                    style="height: 50px"
-                    icon="fa-regular fa-square-minus"
-                    @click="deleteQuestion(index, oneQuestion)"
-                  />
-                </div>
-                <div
-                  v-if="!isModeReview"
-                  v-show="oneQuestion.point >= 1"
-                  class="col-12 col-md-6 col-xl-5 col-xxl-4"
-                >
-                  <h5 class="d-inline pe-3 text-primary">Answer:</h5>
-                  <div
-                    v-for="idNumber in pointsArray(oneQuestion.point)"
-                    :key="idNumber"
-                    class="form-check form-check-inline"
-                  >
-                    <div>
-                      <input
-                        :id="oneQuestion.id"
-                        class="form-check-input"
-                        type="radio"
-                        :value="idNumber"
-                        :name="'radio' + index"
-                        @click="addPoint(idNumber, oneQuestion.id)"
-                      />
-                      <label
-                        class="form-check-label"
-                        for="answerCheckbox"
-                        :value="idNumber"
-                        >{{ idNumber }}</label
-                      >
-                    </div>
+                  <div>
+                    <input
+                      :id="oneQuestion.id"
+                      class="form-check-input"
+                      type="radio"
+                      :value="idNumber"
+                      :name="'radio' + index"
+                      @click="addPoint(idNumber, oneQuestion.id)"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="answerCheckbox"
+                      :value="idNumber"
+                      >{{ idNumber }}</label
+                    >
                   </div>
                 </div>
               </div>
-            </li>
-          </ul>
-        </div>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
     <!-- collapse ends -->
-    <div class="text-center text-md-end mt-md-4 ps-5 ps-md-2 pe-4 pb-4">
+    <div class="text-center text-md-end pb-4">
       <SubmitButton
         v-if="!isModeReview"
         @click="postQuiz"

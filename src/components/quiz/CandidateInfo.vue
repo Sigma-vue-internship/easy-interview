@@ -1,34 +1,21 @@
 <script setup lang="ts">
 import { useCandidateStore } from "../../stores/candidates";
-import debounce from "lodash/debounce";
 
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
+import _isEmpty from "lodash/isEmpty";
 import { Candidate } from "../../../dto/candidates";
 import EasyDropdown from "../common/EasyDropdown.vue";
+import SubmitButton from "../common/SubmitButton.vue";
 
 interface Emit {
   (e: "choosedCandidate", id: number, name: string): void;
+  (e: "setCandidateSelected"): void;
 }
 
-defineProps({
-  candidate: {
-    type: Object as () => Candidate,
-    default: () => ({
-      position: "",
-      username: "",
-      linkedinUrl: "",
-      feedback: "",
-      avatarUrl: "",
-      id: 0,
-    }),
-  },
-});
-
 const emit = defineEmits<Emit>();
-const candidatesList = ref<Candidate[]>([]);
 const { getCandidatesByUsername } = useCandidateStore();
 const selectCandidate = ref(""); // v-model input
-const choosedCandidate = ref(""); // emitted candidate
+const choosedCandidateObj = ref<Candidate>({}); // emitted candidate
 const isCandidatesVisible = ref(false);
 const choosedCandidates = ref<Candidate[]>([]);
 
@@ -36,29 +23,68 @@ watch(selectCandidate, async newCandidate => {
   const {
     data: { candidates },
   } = await getCandidatesByUsername(newCandidate);
-
   choosedCandidates.value = candidates;
 });
 function setCandidate(user: Candidate) {
   isCandidatesVisible.value = false;
   emit("choosedCandidate", user.id, user.username);
-  choosedCandidate.value = user.username;
+
+  selectCandidate.value = user.username;
+  choosedCandidateObj.value = choosedCandidates.value.find(
+    candidate => candidate.id === user.id,
+  );
 }
+const emitCandidateSelect = () => emit("setCandidateSelected");
 </script>
 
 <template>
   <h2 class="text-primary text-center text-md-start">Choose Candidate</h2>
+  <div
+    class="alert alert-primary d-flex align-items-center text-start"
+    role="alert"
+  >
+    <font-awesome-icon icon="fa-solid fa-circle-info" />
+    <div class="ps-3 pb-1">Please, choose candidate you want to interview</div>
+  </div>
   <div class="col-12 position-relative">
     <EasyDropdown
       v-model:dropdown-input="selectCandidate"
       :dropdown-data="choosedCandidates"
       @set-dropdown-obj="setCandidate"
     />
-    <h3 class="fs-5 text-start pt-2">
-      Choosed candidate:
-      <span class="fw-normal">{{
-        choosedCandidate.length ? choosedCandidate : "none"
-      }}</span>
-    </h3>
+  </div>
+  <div
+    v-if="!_isEmpty(choosedCandidateObj)"
+    class="border rounded-2 border-light my-3 p-2 bg-body w-50"
+  >
+    <div class="row g-0">
+      <div class="col-md-4 d-flex align-items-center justify-content-center">
+        <img
+          :src="choosedCandidateObj.avatarUrl"
+          class="img-fluid d-block rounded-circle p-2 border border-2 border-primary"
+          alt="..."
+        />
+      </div>
+      <div class="col-md-8">
+        <div class="text-start text-primary">
+          <h5 class="">{{ choosedCandidateObj.username }}</h5>
+          <p class="">
+            {{ choosedCandidateObj.position }}
+          </p>
+          <p>
+            <small class="text-muted">{{
+              choosedCandidateObj.linkedinUrl
+            }}</small>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center text-md-end">
+    <SubmitButton
+      v-if="!_isEmpty(choosedCandidateObj)"
+      @click="emitCandidateSelect"
+      >Next step</SubmitButton
+    >
   </div>
 </template>
