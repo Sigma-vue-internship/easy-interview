@@ -8,6 +8,9 @@ export const useQuestionStore = defineStore("question", {
         },
       });
     },
+    async getQuestions() {
+      return this.$axios.get("/questions");
+    },
     async sendQuestion(questionData) {
       return this.$axios.put(`/questions/${questionData.id}`, questionData);
     },

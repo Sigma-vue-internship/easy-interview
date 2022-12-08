@@ -37,4 +37,17 @@ describe("Candidate Store", () => {
     expect(axiosInstance.get).toBeCalled();
     expect(data).toBe("123");
   });
+  it("should call addCandidate action, with candidate body", async () => {
+    axiosInstance.post = vi.fn().mockImplementation(() =>
+      Promise.resolve({
+        data: "123",
+      }),
+    );
+    const { addCandidate } = useCandidateStore();
+    const { data } = await addCandidate({
+      test: "123",
+    });
+    expect(axiosInstance.post).toBeCalled();
+    expect(data).toBe("123");
+  });
 });

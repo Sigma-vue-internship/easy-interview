@@ -7,6 +7,9 @@ export const useResultsStore = defineStore("results", {
     async postPercentageResult(result) {
       return this.$axios.post("/candidateResults", result);
     },
+    async getPercentageResults() {
+      return this.$axios.get("/candidateResults");
+    },
     async getResultsForCandidate(candidateId) {
       return this.$axios.get(`/candidates/${candidateId}/results`);
     },
