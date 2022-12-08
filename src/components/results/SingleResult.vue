@@ -185,7 +185,7 @@ const categories = computed(() =>
         </h4>
       </div>
       <h4 class="text-center text-md-start ps-md-1 mt-4">Skills</h4>
-      <div class="row d-flex justify-content-center">
+      <div class="row">
         <radial-progress-bar
           v-for="category in categories"
           :key="category"
