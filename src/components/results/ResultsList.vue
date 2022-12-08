@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { formattingDate, formattingHours } from "../../utils/dateFormatting";
+import {
+  formattingDate,
+  formattingHours,
+  calculateTime,
+} from "../../utils/dateFormatting";
 import { useCandidateStore } from "../../stores/candidates";
 import { useResultsStore } from "../../stores/results";
 import { ref, watch } from "vue";
@@ -134,27 +138,38 @@ function pushRoute(candidateId: string, resultId: string) {
             :key="oneResult.id"
             class="border border-light mt-3 mb-4 p-2 rounded-3 text-secondary mx-auto shadow ps-4 pe-auto"
             role="button"
+            data-bs-toggle="tooltip"
+            data-bs-placement="left"
+            title="Click for showing full report"
             @click="pushRoute(oneResult.parent.id, oneResult.id)"
           >
-            <h5 class="text-primary text-center text-md-start">
-              Quiz Result {{ oneResult.id }}
-            </h5>
             <div class="row">
-              <div class="col-12 col-md-6 text-center text-md-start">
-                <font-awesome-icon
-                  icon="fa-solid fa-calendar-days"
-                  class="text-primary fs-6"
-                />
-                Started at: {{ formattingDate(oneResult.startedAt) }},
-                {{ formattingHours(oneResult.startedAt) }}
+              <div class="col-12 col-md-10 col-lg-11">
+                <h5 class="text-primary text-center text-md-start mb-1">
+                  Quiz Result {{ oneResult.id }}
+                </h5>
+                <span class="text-secondary text-center text-md-start d-block">
+                  <font-awesome-icon
+                    icon="fa-regular fa-clock"
+                    class="text-primary"
+                  />
+                  {{ calculateTime(oneResult.startedAt, oneResult.endedAt) }}
+                  minutes
+                </span>
+                <span class="d-block text-secondary text-center text-md-start">
+                  <font-awesome-icon
+                    icon="fa-solid fa-calendar-days"
+                    class="text-primary fs-6"
+                  />
+                  Ended at: {{ formattingDate(oneResult.endedAt) }},
+                  {{ formattingHours(oneResult.endedAt) }}
+                </span>
               </div>
-              <div class="col-12 col-md-6 text-center text-md-end pe-md-4">
+              <div class="col-md-2 col-lg-1 text-center text-md-start">
                 <font-awesome-icon
-                  icon="fa-solid fa-calendar-days"
-                  class="text-primary fs-6"
+                  icon="fa-solid fa-chevron-down"
+                  class="text-secondary fs-1 pt-3 text-opacity-25"
                 />
-                Ended at: {{ formattingDate(oneResult.endedAt) }},
-                {{ formattingHours(oneResult.endedAt) }}
               </div>
             </div>
           </li>
