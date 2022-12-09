@@ -2,12 +2,8 @@ import { VueWrapper } from "@vue/test-utils";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { createTestingPinia } from "@pinia/testing";
 import QuizList from "../QuizList.vue";
-
+import { IEmit } from "../../../../dto/emit";
 import { wrapperFactory } from "../../../service/wrapperFactory";
-
-interface IEmit {
-  [key: string]: string | number | object;
-}
 
 const props = {
   categories: ["HTML"],
@@ -79,16 +75,19 @@ describe("QuizList.vue", () => {
       propsReview.questionArraysByCategory["HTML"][0],
     );
   });
+  it("should emit postQuiz with result", async () => {
+    const wrapperReview: VueWrapper = wrapperFactory(
+      QuizList,
+      propsReview,
+      plugins,
+    );
+    expect(wrapperReview.findAll("#questionItem").length).toBe(3);
 
-  // await wrapper.find("select").setValue("HTML");
-  // expect(getAllQuestions).toBeCalled();
-  // expect(wrapper.findAll("input")).toHaveLength(2);
-  // it("should emit add point", async () => {
-  // const { getAllQuestions } = useQuestionStore();
-  // await flushPromises();
-  // expect(wrapper.find(".form-check-input").exists()).toBe(false);
-  // await wrapper.find("select").setValue("HTML");
-  // expect(getAllQuestions).toBeCalled();
-  // expect(wrapper.findAll("input")).toHaveLength(2);
-  // });
+    wrapperReview.findAll(".btn-outline-danger")[0].trigger("click");
+
+    expect(wrapperReview.emitted<IEmit[]>().deleteQuestion).toBeTruthy();
+    expect(wrapperReview.emitted<IEmit[]>().deleteQuestion[0][1]).toEqual(
+      propsReview.questionArraysByCategory["HTML"][0],
+    );
+  });
 });

@@ -51,6 +51,7 @@ const emitSetDropdownObj = dropdownObj => {
       class="list-group-item list-group-item-action p-0 px-2"
     >
       <div
+        id="dropdownObjBtn"
         class="d-flex w-100 align-items-center gap-3"
         @click="emitSetDropdownObj(dropdownObj)"
       >

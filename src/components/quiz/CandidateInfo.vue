@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useCandidateStore } from "../../stores/candidates";
 
-import { ref, watch, computed } from "vue";
+import { ref, watch } from "vue";
 import _isEmpty from "lodash/isEmpty";
 import { Candidate } from "../../../dto/candidates";
 import EasyDropdown from "../common/EasyDropdown.vue";
@@ -44,7 +44,7 @@ const emitCandidateSelect = () => emit("setCandidateSelected");
     role="alert"
   >
     <font-awesome-icon icon="fa-solid fa-circle-info" />
-    <div class="ps-3 pb-1">Please, choose candidate you want to interview</div>
+    <div class="ps-3">Please, choose candidate you want to interview</div>
   </div>
   <div class="col-12 position-relative">
     <EasyDropdown

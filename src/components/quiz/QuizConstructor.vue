@@ -32,7 +32,7 @@ defineProps({
 });
 const router = useRouter();
 const resultsStore = useResultsStore();
-const questionStore = useQuestionStore();
+const { getAllQuestions } = useQuestionStore();
 
 const selectedCategory = ref("");
 const quizMode = ref(true);
@@ -58,23 +58,20 @@ onMounted(() => {
 const categories = computed(() => {
   return _uniq(questionList.value.map(item => item.category));
 });
-
 const categoryQuestions = computed(() =>
   questionList.value.filter(
     question => question.category === selectedCategory.value,
   ),
 );
-
 const resultPercents = computed(
   () =>
     (quizList.value.reduce((summ, answer) => summ + answer.answerPoints, 0) *
       100) /
     quizList.value.reduce((summ, answer) => summ + answer.point, 0),
 );
-
 async function getQuestionList() {
   try {
-    const { data } = await questionStore.getAllQuestions();
+    const { data } = await getAllQuestions();
     questionList.value = [...data];
   } catch (e) {
     console.log(e);
@@ -83,7 +80,6 @@ async function getQuestionList() {
 getQuestionList();
 
 const quizList = ref<QuizQuestion[]>([]);
-
 function addQuestions(question: QuizQuestion) {
   questionList.value = [
     ...questionList.value.filter(
@@ -101,7 +97,6 @@ function addQuestions(question: QuizQuestion) {
     selectedCategory.value = "Select category for displaying questions";
   }
   quizList.value.push(question);
-
   questionsByCategories.value = { ...spreadQuestionsByCategories() };
 }
 function addAllQuestions() {
@@ -154,11 +149,9 @@ function deleteQuestion(questionId: string, item: Question) {
     );
   }
 }
-
 function setCandidate(id: number, name: string) {
   currentCandidateId.value = id;
   currentCandidateName.value = name;
-  // props
 }
 const setCandidateSelected = () => (isCandidateChoosed.value = true);
 
@@ -218,7 +211,7 @@ async function postResult() {
 </script>
 
 <template>
-  <div class="container mt-3 text-center text-secondary">
+  <div class="container mt-3 text-secondary">
     <CandidateInfo
       v-if="quizMode && !isCandidateChoosed"
       @set-candidate-selected="setCandidateSelected"
@@ -226,10 +219,20 @@ async function postResult() {
     />
     <h2
       v-if="quizMode && isCandidateChoosed"
-      class="text-primary text-center text-md-start"
+      class="text-primary text-center text-md-start m-0"
     >
       Choose Questions
     </h2>
+    <div
+      v-if="quizMode && isCandidateChoosed"
+      class="alert p-0 d-flex align-items-center justify-content-center justify-content-md-start"
+      role="alert"
+    >
+      <font-awesome-icon icon="fa-solid fa-circle-info" />
+      <p class="ps-2 m-0">
+        Please, choose question that are going to be inside your quiz
+      </p>
+    </div>
     <select
       v-if="quizMode && isCandidateChoosed"
       v-model="selectedCategory"
@@ -239,6 +242,7 @@ async function postResult() {
       <option selected>Select category for displaying questions</option>
       <option
         v-for="category in categories"
+        id="categoryOption"
         :key="category"
         :value="category"
       >
@@ -252,7 +256,7 @@ async function postResult() {
       <li
         v-for="item in categoryQuestions"
         :key="item.id"
-        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-start ps-sm-3"
+        class="border border-light mt-4 py-4 px-2 rounded-3 mx-auto shadow text-start ps-sm-3"
       >
         <div>
           <label
@@ -260,15 +264,32 @@ async function postResult() {
             :for="item.id"
           >
             <div
-              class="row justify-content-md-between justify-content-center text-center text-md-start align-items-center"
+              class="row justify-content-md-between justify-content-center align-items-center"
             >
-              <div class="col-md-9 col-12">
-                <div>{{ item.text }}</div>
-                <div>{{ item.answer }}</div>
-                <div>Question Score: {{ item.point }}</div>
+              <div class="col-md-9 col-9">
+                <p>
+                  <span class="text-primary fs-5"
+                    ><FontAwesomeIcon
+                      class="pe-1"
+                      icon="fa-circle-question"
+                    />Question:</span
+                  >
+                  {{ item.text }}
+                </p>
+
+                <p class="text-secondary mb-1 text-md-start pb-2 pb-md-0">
+                  <span class="text-primary"
+                    ><FontAwesomeIcon
+                      class="pe-1"
+                      icon="fa-circle-check"
+                    />Answer: </span
+                  >{{ item.answer }}
+                </p>
+                <p>Max points: {{ item.point }}</p>
               </div>
-              <div class="col-md-2 col-12 text-md-end me-md-2 text-center">
+              <div class="col-md-2 col-3 text-md-end me-md-2">
                 <font-awesome-icon
+                  id="addQuestionBtn"
                   class="btn btn-outline-primary border-0"
                   style="height: 50px"
                   icon="fa-regular fa-square-plus"
@@ -286,6 +307,7 @@ async function postResult() {
     >
       <button
         v-if="selectedCategory !== 'Select category for displaying questions'"
+        id="addAllQuestionsBtn"
         class="btn btn-outline-primary border-0"
         @click="addAllQuestions"
       >
@@ -297,7 +319,6 @@ async function postResult() {
         <span class="fs-5">Add all</span>
       </button>
     </div>
-    <!-- //TODO:test setMode, add, delete-->
     <QuizList
       v-if="isCandidateChoosed"
       :question-arrays-by-category="questionsByCategories"

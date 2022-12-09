@@ -17,7 +17,10 @@ import {
   faTrashCan,
   faUserPlus,
   faCircleInfo,
+  faCircleCheck,
+  faCircleQuestion,
   faArrowDownShortWide,
+  faTags,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import {
@@ -48,6 +51,9 @@ library.add(
   faSquarePlus,
   faSquareMinus,
   faArrowDownShortWide,
+  faCircleCheck,
+  faCircleQuestion,
+  faTags,
 );
 
 app.use(router);
