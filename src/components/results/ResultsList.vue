@@ -165,10 +165,10 @@ function pushRoute(candidateId: string, resultId: string) {
                   {{ formattingHours(oneResult.endedAt) }}
                 </span>
               </div>
-              <div class="col-md-2 col-lg-1 text-center text-md-start">
+              <div class="col-md-2 col-lg-1 text-center">
                 <font-awesome-icon
                   icon="fa-solid fa-chevron-down"
-                  class="text-secondary fs-1 pt-3 text-opacity-25"
+                  class="text-secondary fs-4 pt-4 text-opacity-25"
                 />
               </div>
             </div>

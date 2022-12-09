@@ -214,7 +214,7 @@ const categories = computed(() =>
       </div>
       <div
         id="detailedByCategory"
-        class="accordion mt-5"
+        class="accordion accordion-flush mt-5"
       >
         <div class="accordion-item">
           <h2
@@ -222,7 +222,7 @@ const categories = computed(() =>
             class="accordion-header"
           >
             <button
-              class="accordion-button collapsed text-primary fs-5"
+              class="accordion-button collapsed text-primary fs-5 shadow border border-light rounded py-4 fs-5 text-md-start mb-3"
               type="button"
               data-bs-toggle="collapse"
               data-bs-target="#detaildResult"
@@ -234,19 +234,17 @@ const categories = computed(() =>
           </h2>
           <div
             id="detaildResult"
-            class="accordion-collapse collapse"
+            class="accordion-collapse collapse text-secondary"
             aria-labelledby="headingResult"
             data-bs-parent="#detailedByCategory"
           >
-            <div class="accordion-body text-secondary">
-              <CategoryListItem
-                v-for="(category, index) in categories"
-                :key="category"
-                :item-id="index"
-                :category="category"
-                :questions-array="singleResult.questionAnswer"
-              />
-            </div>
+            <CategoryListItem
+              v-for="(category, index) in categories"
+              :key="category"
+              :item-id="index"
+              :category="category"
+              :questions-array="singleResult.questionAnswer"
+            />
           </div>
         </div>
       </div>

@@ -26,7 +26,7 @@ const questionsSegregation = computed(() =>
 <template>
   <div
     id="categoryAccordionFlush"
-    class="accordion accordion-flush border border-primary rounded mb-2"
+    class="accordion accordion-flush mb-3 mx-2"
   >
     <div class="accordion-category">
       <h2
@@ -34,7 +34,7 @@ const questionsSegregation = computed(() =>
         class="accordion-header"
       >
         <button
-          class="accordion-button collapsed text-primary"
+          class="accordion-button collapsed text-primary fs-5 shadow border border-light rounded text-md-start mb-3"
           type="button"
           data-bs-toggle="collapse"
           :data-bs-target="'#flush-collapseOne' + itemId"
