@@ -287,7 +287,7 @@ async function postResult() {
                 </p>
                 <p>Max points: {{ item.point }}</p>
               </div>
-              <div class="col-md-2 col-3 text-md-end me-md-2">
+              <div class="col-md-2 col-3 text-end me-md-2">
                 <font-awesome-icon
                   id="addQuestionBtn"
                   class="btn btn-outline-primary border-0"

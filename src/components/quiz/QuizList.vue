@@ -87,7 +87,7 @@ function pointsArray(point: number) {
             v-for="(oneQuestion, index) in questionArraysByCategory[category]"
             id="questionItem"
             :key="oneQuestion"
-            class="row justify-content-center justify-content-md-between py-4 px-2 rounded-3 mx-auto ps-sm-3 border border-light my-3"
+            class="row justify-content-md-between py-4 px-2 rounded-3 mx-auto ps-sm-3 border border-light my-3"
           >
             <div class="col-9 col-md-6 col-xl-7 col-xxl-8">
               <p>
@@ -110,7 +110,7 @@ function pointsArray(point: number) {
             </div>
             <div
               v-if="isModeReview"
-              class="col-3 col-md-2 text-md-end"
+              class="col-3 col-md-2 text-end p-0"
             >
               <FontAwesomeIcon
                 id="deleteQuestionBtn"
