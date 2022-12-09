@@ -1,11 +1,12 @@
 <script setup>
-import DeleteButton from "../common/DeleteButton.vue";
 import QuestionForm from "./QuestionForm.vue";
 import { useRoute } from "vue-router";
 import { useQuestionStore } from "../../stores/questions";
 import { ref, computed } from "vue";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
 
 const questionStore = useQuestionStore();
+const route = useRoute();
 
 const currentQuestion = ref({});
 const formType = ref("");
@@ -16,8 +17,8 @@ const formTitle = computed(() =>
 const questionsList = ref([]);
 
 const isLoaderVisible = ref(true);
-const route = useRoute();
 const deleteQuestionId = ref("");
+
 async function getQuestionList() {
   try {
     isLoaderVisible.value = true;
@@ -29,6 +30,9 @@ async function getQuestionList() {
   } catch (e) {
     isLoaderVisible.value = false;
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
 }
 async function deleteQuestion() {
@@ -37,8 +41,17 @@ async function deleteQuestion() {
     questionsList.value = questionsList.value.filter(
       question => question.id !== deleteQuestionId.value,
     );
+    Notify.success("Question successfully deleted", {
+      distance: "65px",
+      success: {
+        background: "#87CF23",
+      },
+    });
   } catch (e) {
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
 }
 function setModalItem(item, action) {
@@ -58,23 +71,25 @@ getQuestionList();
 <template>
   <div class="container mt-3 text-center">
     <div class="row mb-3 align-items-center">
-      <div
-        class="col-lg-2 mb-md-4 mb-lg-0 col-xl-2 col-xxl-2 text-center text-md-start text-primary"
-      >
-        <h2>{{ route.params.title }}</h2>
-      </div>
-      <div
-        class="col-lg-2 my-xs-4 my-lg-0 ms-lg-5 ms-xl-4 ms-xxl-0 text-center text-md-start"
-      >
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#question"
-          @click="setModalItem(currentQuestion, 'post')"
+      <div class="d-flex justify-content-between">
+        <div
+          class="col-lg-2 mb-md-4 mb-lg-0 col-xl-2 col-xxl-2 text-center text-md-start text-primary"
         >
-          Add question
-        </button>
+          <h2>{{ route.params.title }}</h2>
+        </div>
+        <div
+          class="col-lg-2 my-xs-4 my-lg-0 ms-lg-5 ms-xl-4 ms-xxl-0 text-center text-md-end pt-1"
+        >
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#question"
+            @click="setModalItem(currentQuestion, 'post')"
+          >
+            Add question
+          </button>
+        </div>
       </div>
     </div>
     <SpinnerLoader v-if="isLoaderVisible" />
@@ -90,12 +105,12 @@ getQuestionList();
         <h4 class="text-secondary mt-2">{{ item.text }}</h4>
         <p class="text-secondary">{{ item.answer }}</p>
         <div
-          class="row justify-content-center text-primary text-md-end align-items-center"
+          class="row text-primary text-md-end align-items-center d-flex justify-content-end"
         >
-          <div class="col-12 col-sm-3 col-xl-8">
+          <div class="col-12 col-sm-3 col-lg-9 pt-2">
             <h5>Score: {{ item.point }}</h5>
           </div>
-          <div class="col-6 col-sm-3 col-xl-1 me-xl-2">
+          <div class="col-6 col-sm-2 col-lg-1 me-xl-2">
             <button
               type="button"
               class="btn btn-primary"
@@ -106,11 +121,13 @@ getQuestionList();
               Edit
             </button>
           </div>
-          <div class="col-6 col-sm-3 col-xl-1">
-            <DeleteButton
+          <div class="col-6 col-sm-2 col-lg-1 text-center">
+            <font-awesome-icon
+              role="button"
               data-bs-toggle="modal"
               data-bs-target="#questionAlert"
-              class="delete-question__btn"
+              icon="fa-solid fa-square-xmark"
+              class="text-danger delete-question__btn pt-1"
               @click="setDeleteQuestion(item.id)"
             />
           </div>
@@ -132,24 +149,24 @@ getQuestionList();
   <EasyModal
     :title="'Delete question'"
     :modal-id="'questionAlert'"
-    :modal-size="'modal-sm'"
+    :modal-size="'modal-m'"
     @close-modal="clearForm"
   >
     <p>Are you sure you want to delete this question ?</p>
     <div class="d-flex justify-content-end">
       <button
-        class="btn btn-outline-secondary text-align-end me-2"
-        data-bs-dismiss="modal"
-      >
-        Cancel
-      </button>
-      <button
         class="btn btn-danger text-align-end"
         data-bs-dismiss="modal"
         @click="deleteQuestion"
       >
-        <font-awesome-icon icon="fa-solid fa-trash-can" />
+        Delete
       </button>
     </div>
   </EasyModal>
 </template>
+
+<style scoped>
+.delete-question__btn {
+  height: 44px;
+}
+</style>

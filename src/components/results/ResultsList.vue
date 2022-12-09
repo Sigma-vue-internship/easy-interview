@@ -102,7 +102,7 @@ function pushRoute(id: string) {
 
 <template>
   <div class="container mt-3">
-    <h2 class="text-primary text-center">Quiz Results</h2>
+    <h2 class="text-primary text-center text-md-start">Quiz Results</h2>
     <ul class="list-unstyled">
       <li
         v-for="item in quizResults"
