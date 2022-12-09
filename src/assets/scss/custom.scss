@@ -1,6 +1,7 @@
 $primary: #87CF23;
-$secondary: #C9C9C9;
-$danger: #f34c4c;
+$primary-light: #b5fd50;
+$secondary: #fff;
+$danger: #E82C2C;
 $dark: #474B4F;
 $light: #555555;
 $body-bg: #222629;
@@ -23,4 +24,8 @@ $btn-link-hover-color:$secondary;
 $accordion-icon-color: $primary;
 $accordion-button-active-bg: $dark;
 $card-bg: $body-bg;
+$nav-tabs-link-active-color:$body-bg;
+$nav-link-color:$primary;
+$nav-tabs-link-active-bg:$primary;
+$nav-link-hover-color:$secondary;
 @import "../node_modules/bootstrap/scss/bootstrap";

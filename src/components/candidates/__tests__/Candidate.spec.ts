@@ -1,7 +1,6 @@
-import { nextTick } from "vue";
 import { createTestingPinia } from "@pinia/testing";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { mount } from "@vue/test-utils";
+import { flushPromises, mount } from "@vue/test-utils";
 import Candidate from "../Candidate.vue";
 import { useCandidateStore } from "../../../stores/candidates";
 
@@ -37,6 +36,7 @@ describe("Candidate.vue", () => {
         plugins: [createTestingPinia()],
       },
     });
+    await flushPromises();
     const candidateResultsArrayLength = wrapper.vm.candidateResults.length;
     const resultsLength = wrapper.findAll("li").length;
     expect(candidateResultsArrayLength).toEqual(resultsLength);

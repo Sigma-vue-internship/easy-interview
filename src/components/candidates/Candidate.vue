@@ -8,7 +8,16 @@ import { useCandidateStore } from "../../stores/candidates";
 import CandidateForm from "./CandidateForm.vue";
 const { params } = useRoute();
 const router = useRouter();
+const isLoaderVisible = ref(true);
 const currentCandidate = ref({});
+let candidateInit = {
+  position: "",
+  username: "",
+  linkedinUrl: "",
+  feedback: "",
+  avatarUrl: "",
+  id: 0,
+};
 const candidateResults = ref([
   {
     questionAnswer: [],
@@ -41,15 +50,20 @@ const { getCandidateById, deleteCandidateById, editCandidate } =
 
 async function getCandidateData() {
   try {
+    isLoaderVisible.value = true;
     const { data } = await getCandidateById(params.id);
     currentCandidate.value = data;
+    candidateInit = { ...data };
+    isLoaderVisible.value = false;
   } catch (e) {
+    isLoaderVisible.value = false;
     console.log(e);
   }
 }
-async function editSingleCandidate(candidate) {
+async function editSingleCandidate() {
   try {
-    const { data } = await editCandidate(candidate);
+    const { data } = await editCandidate(currentCandidate.value);
+    candidateInit = { ...data };
     currentCandidate.value = data;
   } catch (e) {
     console.log(e);
@@ -65,23 +79,23 @@ async function deleteCandidate() {
     console.log(e);
   }
 }
-
-getCandidateData();
-
 function resultsID(id) {
   console.log(id);
 }
-function editProfile() {
-  console.log("edit button");
+function resetCandidate() {
+  currentCandidate.value = { ...candidateInit };
 }
-function deleteProfile() {
-  console.log("delete button");
-}
+
+getCandidateData();
 </script>
 
 <template>
   <div class="container mt-3">
-    <div class="shadow border border-2 border-light py-4 rounded-3">
+    <SpinnerLoader v-if="isLoaderVisible" />
+    <div
+      v-if="!isLoaderVisible"
+      class="shadow border border-2 border-light py-4 rounded-3"
+    >
       <div class="row gx-0 justify-content-center justify-content-lg-between">
         <div
           class="col-12 col-lg-4 mb-3 mb-lg-0 d-flex justify-content-center justify-content-lg-start ps-lg-4"
@@ -160,9 +174,10 @@ function deleteProfile() {
   <EasyModal
     :title="'Edit candidate'"
     :modal-id="'editCandidate'"
+    @close-modal="resetCandidate"
   >
     <CandidateForm
-      :single-candidate="currentCandidate"
+      v-model:candidate="currentCandidate"
       :form-type="formType"
       @edit-candidate="editSingleCandidate"
     />
@@ -172,7 +187,9 @@ function deleteProfile() {
     :modal-id="'alertCandidate'"
     :modal-size="'modal-sm'"
   >
-    <p class="text-black">Are you sure you want to delete this candidate ?</p>
+    <p class="text-secondary">
+      Are you sure you want to delete this candidate ?
+    </p>
     <div class="d-flex justify-content-end">
       <button
         class="btn btn-outline-secondary text-align-end me-2"
