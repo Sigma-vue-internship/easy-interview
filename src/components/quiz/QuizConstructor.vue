@@ -187,7 +187,11 @@ function spreadQuestionsByCategories() {
   return tempCategoryQuestions;
 }
 async function postResult() {
-  if (quizList.value.filter(question => !question.answerPoints).length) {
+  if (
+    quizList.value.filter(
+      question => !question.answerPoints && question.answerPoints !== 0,
+    ).length
+  ) {
     console.log(
       "Please, complete quiz",
       quizList.value.filter(question => !question.answerPoints),
