@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { QuizQuestion } from "../../../dto/quiz";
+import { QuizQuestion, CategoryQuestions } from "../../../dto/quiz";
 import _uniq from "lodash/uniq";
 import SubmitButton from "../common/SubmitButton.vue";
 import { Question } from "../../../dto/questions";
 
 interface Emit {
   (e: "addPoint", point: number, id: string): void;
-  (e: "deleteQuestion", index: number, item: Question): void;
+  (e: "deleteQuestion", index: string, item: QuizQuestion): void;
   (e: "postQuiz");
   (e: "setMode"): void;
 }
@@ -17,7 +17,7 @@ const props = defineProps({
     default: true,
   },
   questionArraysByCategory: {
-    type: Object as () => Array<Question>,
+    type: Object,
     default: () => {},
   },
   categories: {
@@ -36,7 +36,7 @@ function postQuiz() {
   emit("postQuiz");
 }
 
-function deleteQuestion(index: number, item: Question) {
+function deleteQuestion(index: number, item: QuizQuestion) {
   emit("deleteQuestion", index, item);
 }
 
@@ -45,7 +45,6 @@ function addPoint(point: number, id: string) {
 }
 
 function pointsArray(point: number) {
-  console.log(point);
   return Array.apply(null, Array(point + 1)).map((_, i: number) => i);
 }
 </script>

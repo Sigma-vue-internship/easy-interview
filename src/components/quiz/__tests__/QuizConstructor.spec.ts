@@ -66,33 +66,39 @@ describe("QuizConstructor.vue", () => {
   it("should call getAllQuestions on next step click, after candidate got selected", async () => {
     const wrapper: VueWrapper = wrapperFactory(QuizConstructor, {}, plugins);
     const { getAllQuestions } = useQuestionStore();
-    const { getCandidatesByUsername } = useCandidateStore();
-    // STAGE: candidate select view
-    const dropdownInput = wrapper.find("#candidateInput");
-    await dropdownInput.trigger("focusin");
-    await dropdownInput.setValue("s");
-    await flushPromises();
+    // const { getCandidatesByUsername } = useCandidateStore();
+    // // STAGE: candidate select view
+    // const dropdownInput = wrapper.find("#candidateInput");
+    // await dropdownInput.trigger("focusin");
+    // await dropdownInput.setValue("s");
+    // await flushPromises();
 
-    vi.runAllTimers();
-    await flushPromises();
+    // vi.runAllTimers();
+    // await flushPromises();
 
-    expect(wrapper.emitted().input[0]).toBeTruthy();
+    // expect(wrapper.emitted().input[0]).toBeTruthy();
 
-    expect(getCandidatesByUsername).toBeCalledWith("s");
-    const droppedCandidateBtn = wrapper.find("#dropdownObjBtn1");
-    await flushPromises();
-    droppedCandidateBtn.trigger("click");
+    // expect(getCandidatesByUsername).toBeCalledWith("s");
+    // const droppedCandidateBtn = wrapper.find("#dropdownObjBtn1");
+    // await flushPromises();
+    // droppedCandidateBtn.trigger("click");
 
-    vi.runAllTimers();
-    await flushPromises();
-    // STAGE: candidate got selected
-    expect(wrapper.vm.currentCandidateId).toEqual("1");
-    // STAGE: click next step to questions
-    const nextStepButton = wrapper.find("#stepToQuestions");
-    nextStepButton.trigger("click");
-    await flushPromises();
+    // vi.runAllTimers();
+    // await flushPromises();
+    // // STAGE: candidate got selected
+    // expect(wrapper.vm.currentCandidateId).toEqual("1");
+    // // STAGE: click next step to questions
+    // const nextStepButton = wrapper.find("#stepToQuestions");
+    // nextStepButton.trigger("click");
+    // await flushPromises();
 
+    // await flushPromises();
+
+    wrapper.findComponent(CandidateInfo).vm.$emit("setCandidateSelected");
+    await flushPromises();
     expect(getAllQuestions).toBeCalled();
+
+    // expect(getAllQuestions).toBeCalled();
   });
   it("should add question to quizList on click", async () => {
     const wrapper: VueWrapper = wrapperFactory(QuizConstructor, {}, plugins);

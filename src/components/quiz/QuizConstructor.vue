@@ -39,6 +39,10 @@ const quizMode = ref(true);
 const questionList = ref<Array<QuizQuestion>>([]);
 const checkedAnswer = ref(0);
 const currentCandidateId = ref(0);
+const currentCandidate = ref({
+  name: "",
+  id: "",
+});
 const currentCandidateName = ref("");
 const startQuizDate = ref(0);
 const result = ref<QuizResult>({
@@ -65,7 +69,7 @@ const categoryQuestions = computed(() =>
 );
 const resultPercents = computed(
   () =>
-    (quizList.value.reduce((summ, answer) => summ + answer.answerPoints, 0) *
+    (quizList.value.reduce((summ, answer) => summ + answer?.answerPoints, 0) *
       100) /
     quizList.value.reduce((summ, answer) => summ + answer.point, 0),
 );
@@ -113,7 +117,7 @@ function removeQuestionsFromCategory() {
 }
 function addAllQuestions() {
   quizList.value = [...quizList.value, ...categoryQuestions.value];
-  const tempQuestion = removeQuestionsFromCategory();
+  const tempQuestion: Object = removeQuestionsFromCategory();
 
   questionList.value = Object.values(tempQuestion).filter(question => question);
 
@@ -139,7 +143,7 @@ function answerPoints(point: number, id: string) {
   }
 }
 
-function deleteQuestion(questionId: string, item: Question) {
+function deleteQuestion(questionId: string, item: QuizQuestion) {
   quizList.value = quizList.value.filter(
     question => question.id !== questionId,
   );
@@ -151,9 +155,9 @@ function deleteQuestion(questionId: string, item: Question) {
     );
   }
 }
-function setCandidate(id: number, name: string) {
-  currentCandidateId.value = id;
-  currentCandidateName.value = name;
+function setCandidate(id: string, name: string) {
+  currentCandidate.value.id = id;
+  currentCandidate.value.name = name;
 }
 const setCandidateSelected = async () => {
   isCandidateChoosed.value = true;
@@ -163,7 +167,7 @@ const setCandidateSelected = async () => {
 async function postPercentageResult() {
   try {
     await resultsStore.postPercentageResult({
-      candidateUsername: currentCandidateName.value,
+      candidateUsername: currentCandidate.value.name,
       resultPoints: resultPercents.value,
     });
   } catch (e) {
@@ -205,13 +209,15 @@ async function postResult() {
     // TODO:notify that quiz is not done yet
   }
   result.value.questionAnswer = quizList.value;
-  result.value.title = `Passed by ${currentCandidateName.value}, ${Date.now()}`;
+  result.value.title = `Passed by ${
+    currentCandidate.value.name
+  }, ${Date.now()}`;
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
   try {
     const {
       data: { candidateId, id },
-    } = await resultsStore.postResult(result.value, currentCandidateId.value);
+    } = await resultsStore.postResult(result.value, currentCandidate.value.id);
     postPercentageResult();
     quizList.value = [];
     router.push({

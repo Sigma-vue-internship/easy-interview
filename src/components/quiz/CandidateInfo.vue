@@ -8,7 +8,7 @@ import EasyDropdown from "../common/EasyDropdown.vue";
 import SubmitButton from "../common/SubmitButton.vue";
 
 interface Emit {
-  (e: "choosedCandidate", id: number, name: string): void;
+  (e: "choosedCandidate", id: string, name: string): void;
   (e: "setCandidateSelected"): void;
 }
 
