@@ -107,15 +107,15 @@ getQuestionList();
         <div
           class="row text-primary text-md-end align-items-center d-flex justify-content-end"
         >
-          <div class="col-12 col-sm-3 col-lg-9 pt-2">
-            <h5>Score: {{ item.point }}</h5>
+          <div class="col-6 col-sm-3 col-lg-9 pt-2">
+            <h4>Score: {{ item.point }}</h4>
           </div>
           <div
-            class="col-6 col-sm-3 col-lg-2 me-xl-2 d-flex align-items-center justify-content-end"
+            class="col-6 col-md-2 me-xl-2 d-flex align-items-center justify-content-md-end ps-5 ps-md-0 pe-4 pe-md-0"
           >
             <font-awesome-icon
               type="button"
-              class="btn text-primary fs-2 p-0"
+              class="btn text-primary fs-3 p-0 me-4"
               data-bs-toggle="modal"
               data-bs-target="#question"
               icon="fa-solid fa-pencil"
@@ -125,8 +125,8 @@ getQuestionList();
               role="button"
               data-bs-toggle="modal"
               data-bs-target="#questionAlert"
-              icon="fa-solid fa-square-xmark"
-              class="text-danger delete-question__btn fs-1 px-3"
+              icon="fa-solid fa-trash-can"
+              class="text-danger delete-question__btn fs-3 me-4"
               @click="setDeleteQuestion(item.id)"
             />
           </div>
