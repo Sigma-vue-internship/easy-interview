@@ -45,6 +45,7 @@ function addPoint(point: number, id: string) {
 }
 
 function pointsArray(point: number) {
+  console.log(point);
   return Array.apply(null, Array(point + 1)).map((_, i: number) => i);
 }
 </script>
@@ -89,7 +90,7 @@ function pointsArray(point: number) {
       >
         <ul class="list-unstyled">
           <li
-            v-for="(oneQuestion, index) in questionArraysByCategory[category]"
+            v-for="oneQuestion in questionArraysByCategory[category]"
             id="questionItem"
             :key="oneQuestion"
             class="row justify-content-md-between py-4 px-2 rounded-3 mx-auto ps-sm-3 border border-light my-3 align-items-center"
@@ -140,7 +141,7 @@ function pointsArray(point: number) {
                   class="form-check-input"
                   type="radio"
                   :value="idNumber"
-                  :name="'radio' + index"
+                  :name="'radio' + oneQuestion.id"
                   @click="addPoint(idNumber, oneQuestion.id)"
                 />
                 <label

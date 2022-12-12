@@ -192,6 +192,18 @@ function spreadQuestionsByCategories() {
   return tempCategoryQuestions;
 }
 async function postResult() {
+  if (
+    quizList.value.filter(
+      question => !question.answerPoints && question.answerPoints !== 0,
+    ).length
+  ) {
+    console.log(
+      "Please, complete quiz",
+      quizList.value.filter(question => !question.answerPoints),
+    );
+    return;
+    // TODO:notify that quiz is not done yet
+  }
   result.value.questionAnswer = quizList.value;
   result.value.title = `Passed by ${currentCandidateName.value}, ${Date.now()}`;
   result.value.startedAt = startQuizDate.value;
