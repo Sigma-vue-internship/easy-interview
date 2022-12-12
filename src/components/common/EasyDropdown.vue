@@ -32,9 +32,7 @@ const emit = defineEmits<Emit>();
 const emitDropdownUpdate = debounce(e => {
   emit("update:dropdownInput", e.target.value);
 }, 500);
-onUpdated(() => {
-  console.log(props.dropdownInput);
-});
+
 const emitSetDropdownObj = dropdownObj => {
   isDropdownObjVisible.value = false;
   emit("setDropdownObj", dropdownObj);
@@ -42,7 +40,7 @@ const emitSetDropdownObj = dropdownObj => {
 </script>
 <template>
   <input
-    id="candadidateInput"
+    id="candidateInput"
     class="form-control container-fluid"
     placeholder="Type something to search..."
     :value="dropdownInput"
@@ -59,7 +57,7 @@ const emitSetDropdownObj = dropdownObj => {
       class="list-group-item list-group-item-action p-0 px-2"
     >
       <div
-        id="dropdownObjBtn"
+        :id="'dropdownObjBtn' + dropdownObj.id"
         class="d-flex w-100 align-items-center gap-3"
         @click="emitSetDropdownObj(dropdownObj)"
       >
@@ -67,6 +65,7 @@ const emitSetDropdownObj = dropdownObj => {
           :src="dropdownObj.avatarUrl"
           class="rounded-circle"
           height="50"
+          width="50"
           alt="avatar"
         />
         <div class="flex-column text-start">

@@ -4,9 +4,11 @@ import { createTestingPinia } from "@pinia/testing";
 import QuizConstructor from "../QuizConstructor.vue";
 import { IEmit } from "../../../../dto/emit";
 import _uniq from "lodash/uniq";
-
+import SubmitButton from "../../common/SubmitButton.vue";
+import EasyDropdown from "../../common/EasyDropdown.vue";
 import { useQuestionStore } from "../../../stores/questions";
-
+import { useCandidateStore } from "../../../stores/candidates";
+import CandidateInfo from "../../quiz/CandidateInfo.vue";
 import { wrapperFactory } from "../../../service/wrapperFactory";
 
 const plugins = [
@@ -34,6 +36,22 @@ const plugins = [
               },
             ],
           }),
+        getCandidatesByUsername: username =>
+          Promise.resolve({
+            data: {
+              candidates: [
+                {
+                  position: "Mihael Shumaher",
+                  username: "shoom911",
+                  linkedinUrl: "",
+                  feedback: "Lol racer",
+                  avatarUrl: "123",
+                  id: "1",
+                },
+              ],
+              count: 1,
+            },
+          }),
         deleteQuestion: () => Promise.resolve("Question deleted"),
       }),
     ],
@@ -42,13 +60,45 @@ const plugins = [
 
 describe("QuizConstructor.vue", () => {
   beforeEach(() => {
+    vi.useFakeTimers();
     vi.clearAllMocks();
   });
-  it("should call getAllQuestions on created", async () => {
+  it("should call getAllQuestions on next step click, after candidate got selected", async () => {
     const wrapper: VueWrapper = wrapperFactory(QuizConstructor, {}, plugins);
     const { getAllQuestions } = useQuestionStore();
+    // const { getCandidatesByUsername } = useCandidateStore();
+    // // STAGE: candidate select view
+    // const dropdownInput = wrapper.find("#candidateInput");
+    // await dropdownInput.trigger("focusin");
+    // await dropdownInput.setValue("s");
+    // await flushPromises();
+
+    // vi.runAllTimers();
+    // await flushPromises();
+
+    // expect(wrapper.emitted().input[0]).toBeTruthy();
+
+    // expect(getCandidatesByUsername).toBeCalledWith("s");
+    // const droppedCandidateBtn = wrapper.find("#dropdownObjBtn1");
+    // await flushPromises();
+    // droppedCandidateBtn.trigger("click");
+
+    // vi.runAllTimers();
+    // await flushPromises();
+    // // STAGE: candidate got selected
+    // expect(wrapper.vm.currentCandidateId).toEqual("1");
+    // // STAGE: click next step to questions
+    // const nextStepButton = wrapper.find("#stepToQuestions");
+    // nextStepButton.trigger("click");
+    // await flushPromises();
+
+    // await flushPromises();
+
+    wrapper.findComponent(CandidateInfo).vm.$emit("setCandidateSelected");
     await flushPromises();
     expect(getAllQuestions).toBeCalled();
+
+    // expect(getAllQuestions).toBeCalled();
   });
   it("should add question to quizList on click", async () => {
     const wrapper: VueWrapper = wrapperFactory(QuizConstructor, {}, plugins);
@@ -56,8 +106,9 @@ describe("QuizConstructor.vue", () => {
     const { getAllQuestions } = useQuestionStore();
     await flushPromises();
 
-    wrapper.vm.isCandidateChoosed = true;
+    wrapper.findComponent(CandidateInfo).vm.$emit("setCandidateSelected");
     await flushPromises();
+    expect(getAllQuestions).toBeCalled();
 
     await wrapper.find("select").setValue("HTML");
     await wrapper.find("#addQuestionBtn").trigger("click");
@@ -68,10 +119,14 @@ describe("QuizConstructor.vue", () => {
   it("should add all questions to quizList on click", async () => {
     const wrapper: VueWrapper = wrapperFactory(QuizConstructor, {}, plugins);
 
-    const { getAllQuestions } = useQuestionStore();
+    wrapper.findComponent(CandidateInfo).vm.$emit("setCandidateSelected");
+
     await flushPromises();
 
-    wrapper.vm.isCandidateChoosed = true;
+    wrapper.vm.isCandidateChoosed = false;
+    await flushPromises();
+
+    wrapper.findComponent(CandidateInfo).vm.$emit("setCandidateSelected");
     await flushPromises();
 
     await wrapper.find("select").setValue("HTML");
@@ -83,10 +138,11 @@ describe("QuizConstructor.vue", () => {
   it("should delete question from quizList on click inside child QuizList", async () => {
     const wrapper: VueWrapper = wrapperFactory(QuizConstructor, {}, plugins);
 
-    const { getAllQuestions } = useQuestionStore();
     await flushPromises();
 
-    wrapper.vm.isCandidateChoosed = true;
+    wrapper.vm.isCandidateChoosed = false;
+    await flushPromises();
+    wrapper.findComponent(CandidateInfo).vm.$emit("setCandidateSelected");
     await flushPromises();
 
     await wrapper.find("select").setValue("HTML");

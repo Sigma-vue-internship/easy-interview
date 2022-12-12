@@ -39,6 +39,10 @@ const quizMode = ref(true);
 const questionList = ref<Array<QuizQuestion>>([]);
 const checkedAnswer = ref(0);
 const currentCandidateId = ref(0);
+const currentCandidate = ref({
+  name: "",
+  id: "",
+});
 const currentCandidateName = ref("");
 const startQuizDate = ref(0);
 const result = ref<QuizResult>({
@@ -65,7 +69,7 @@ const categoryQuestions = computed(() =>
 );
 const resultPercents = computed(
   () =>
-    (quizList.value.reduce((summ, answer) => summ + answer.answerPoints, 0) *
+    (quizList.value.reduce((summ, answer) => summ + answer?.answerPoints, 0) *
       100) /
     quizList.value.reduce((summ, answer) => summ + answer.point, 0),
 );
@@ -77,7 +81,6 @@ async function getQuestionList() {
     console.log(e);
   }
 }
-getQuestionList();
 
 const quizList = ref<QuizQuestion[]>([]);
 function addQuestions(question: QuizQuestion) {
@@ -99,9 +102,7 @@ function addQuestions(question: QuizQuestion) {
   quizList.value.push(question);
   questionsByCategories.value = { ...spreadQuestionsByCategories() };
 }
-function addAllQuestions() {
-  quizList.value = [...quizList.value, ...categoryQuestions.value];
-  // array with all questions + questions from current category, before delete
+function removeQuestionsFromCategory() {
   const collapsedQuestions = [
     ...questionList.value,
     ...categoryQuestions.value,
@@ -112,6 +113,11 @@ function addAllQuestions() {
       ? (tempQuestion[question.id] = null)
       : (tempQuestion[question.id] = question);
   });
+  return tempQuestion;
+}
+function addAllQuestions() {
+  quizList.value = [...quizList.value, ...categoryQuestions.value];
+  const tempQuestion: Object = removeQuestionsFromCategory();
 
   questionList.value = Object.values(tempQuestion).filter(question => question);
 
@@ -137,7 +143,7 @@ function answerPoints(point: number, id: string) {
   }
 }
 
-function deleteQuestion(questionId: string, item: Question) {
+function deleteQuestion(questionId: string, item: QuizQuestion) {
   quizList.value = quizList.value.filter(
     question => question.id !== questionId,
   );
@@ -149,16 +155,19 @@ function deleteQuestion(questionId: string, item: Question) {
     );
   }
 }
-function setCandidate(id: number, name: string) {
-  currentCandidateId.value = id;
-  currentCandidateName.value = name;
+function setCandidate(id: string, name: string) {
+  currentCandidate.value.id = id;
+  currentCandidate.value.name = name;
 }
-const setCandidateSelected = () => (isCandidateChoosed.value = true);
+const setCandidateSelected = async () => {
+  isCandidateChoosed.value = true;
+  await getQuestionList();
+};
 
 async function postPercentageResult() {
   try {
     await resultsStore.postPercentageResult({
-      candidateUsername: currentCandidateName.value,
+      candidateUsername: currentCandidate.value.name,
       resultPoints: resultPercents.value,
     });
   } catch (e) {
@@ -187,14 +196,28 @@ function spreadQuestionsByCategories() {
   return tempCategoryQuestions;
 }
 async function postResult() {
+  if (
+    quizList.value.filter(
+      question => !question.answerPoints && question.answerPoints !== 0,
+    ).length
+  ) {
+    console.log(
+      "Please, complete quiz",
+      quizList.value.filter(question => !question.answerPoints),
+    );
+    return;
+    // TODO:notify that quiz is not done yet
+  }
   result.value.questionAnswer = quizList.value;
-  result.value.title = `Passed by ${currentCandidateName.value}, ${Date.now()}`;
+  result.value.title = `Passed by ${
+    currentCandidate.value.name
+  }, ${Date.now()}`;
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
   try {
     const {
       data: { candidateId, id },
-    } = await resultsStore.postResult(result.value, currentCandidateId.value);
+    } = await resultsStore.postResult(result.value, currentCandidate.value.id);
     postPercentageResult();
     quizList.value = [];
     router.push({
@@ -258,46 +281,44 @@ async function postResult() {
         :key="item.id"
         class="border border-light mt-4 py-4 px-2 rounded-3 mx-auto shadow text-start ps-sm-3"
       >
-        <div>
-          <label
-            class="w-100 form-check-label ps-2"
-            :for="item.id"
-          >
-            <div
-              class="row justify-content-md-between justify-content-center align-items-center"
+        <div
+          class="row justify-content-md-between justify-content-center align-items-center"
+        >
+          <div class="col-md-9 col-9">
+            <label
+              class="w-100 form-check-label ps-2"
+              :for="item.id"
             >
-              <div class="col-md-9 col-9">
-                <p>
-                  <span class="text-primary fs-5"
-                    ><FontAwesomeIcon
-                      class="pe-1"
-                      icon="fa-circle-question"
-                    />Question:</span
-                  >
-                  {{ item.text }}
-                </p>
+              <p>
+                <span class="text-primary fs-5"
+                  ><FontAwesomeIcon
+                    class="pe-1"
+                    icon="fa-circle-question"
+                  />Question:</span
+                >
+                {{ item.text }}
+              </p>
 
-                <p class="text-secondary mb-1 text-md-start pb-2 pb-md-0">
-                  <span class="text-primary"
-                    ><FontAwesomeIcon
-                      class="pe-1"
-                      icon="fa-circle-check"
-                    />Answer: </span
-                  >{{ item.answer }}
-                </p>
-                <p>Max points: {{ item.point }}</p>
-              </div>
-              <div class="col-md-2 col-3 text-end me-md-2">
-                <font-awesome-icon
-                  id="addQuestionBtn"
-                  class="btn btn-outline-primary border-0"
-                  style="height: 50px"
-                  icon="fa-regular fa-square-plus"
-                  @click="addQuestions(item)"
-                />
-              </div>
-            </div>
-          </label>
+              <p class="text-secondary mb-1 text-md-start pb-2 pb-md-0">
+                <span class="text-primary"
+                  ><FontAwesomeIcon
+                    class="pe-1"
+                    icon="fa-circle-check"
+                  />Answer: </span
+                >{{ item.answer }}
+              </p>
+              <p>Max points: {{ item.point }}</p>
+            </label>
+          </div>
+          <div class="col-md-2 col-3 text-end me-md-2">
+            <font-awesome-icon
+              id="addQuestionBtn"
+              class="btn btn-outline-primary border-0"
+              style="height: 50px"
+              icon="fa-regular fa-square-plus"
+              @click="addQuestions(item)"
+            />
+          </div>
         </div>
       </li>
     </ul>

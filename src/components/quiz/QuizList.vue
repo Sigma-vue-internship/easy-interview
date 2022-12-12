@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { QuizQuestion } from "../../../dto/quiz";
+import { QuizQuestion, CategoryQuestions } from "../../../dto/quiz";
 import _uniq from "lodash/uniq";
 import SubmitButton from "../common/SubmitButton.vue";
 import { Question } from "../../../dto/questions";
 
 interface Emit {
   (e: "addPoint", point: number, id: string): void;
-  (e: "deleteQuestion", index: number, item: Question): void;
+  (e: "deleteQuestion", index: string, item: QuizQuestion): void;
   (e: "postQuiz");
   (e: "setMode"): void;
 }
@@ -17,7 +17,7 @@ const props = defineProps({
     default: true,
   },
   questionArraysByCategory: {
-    type: Object as () => Array<Question>,
+    type: Object,
     default: () => {},
   },
   categories: {
@@ -36,7 +36,7 @@ function postQuiz() {
   emit("postQuiz");
 }
 
-function deleteQuestion(index: number, item: Question) {
+function deleteQuestion(index: number, item: QuizQuestion) {
   emit("deleteQuestion", index, item);
 }
 
@@ -50,7 +50,12 @@ function pointsArray(point: number) {
 </script>
 
 <template>
-  <h2 class="text-primary text-md-start mb-4">Question List</h2>
+  <h2
+    v-if="categories.length"
+    class="text-primary text-md-start mb-4"
+  >
+    Question List
+  </h2>
   <!-- accordion starts  -->
   <div
     v-if="categories.length"
@@ -84,10 +89,10 @@ function pointsArray(point: number) {
       >
         <ul class="list-unstyled">
           <li
-            v-for="(oneQuestion, index) in questionArraysByCategory[category]"
+            v-for="oneQuestion in questionArraysByCategory[category]"
             id="questionItem"
             :key="oneQuestion"
-            class="row justify-content-md-between py-4 px-2 rounded-3 mx-auto ps-sm-3 border border-light my-3"
+            class="row justify-content-md-between py-4 px-2 rounded-3 mx-auto ps-sm-3 border border-light my-3 align-items-center"
           >
             <div class="col-9 col-md-6 col-xl-7 col-xxl-8">
               <p>
@@ -121,8 +126,7 @@ function pointsArray(point: number) {
               />
             </div>
             <div
-              v-if="!isModeReview"
-              v-show="oneQuestion.point >= 1"
+              v-if="!isModeReview && oneQuestion.point >= 1"
               class="col-12 col-md-6 col-xl-5 col-xxl-4"
             >
               <h5 class="d-inline pe-3 text-primary">Answer:</h5>
@@ -131,22 +135,20 @@ function pointsArray(point: number) {
                 :key="idNumber"
                 class="form-check form-check-inline"
               >
-                <div>
-                  <input
-                    :id="oneQuestion.id"
-                    class="form-check-input"
-                    type="radio"
-                    :value="idNumber"
-                    :name="'radio' + index"
-                    @click="addPoint(idNumber, oneQuestion.id)"
-                  />
-                  <label
-                    class="form-check-label"
-                    for="answerCheckbox"
-                    :value="idNumber"
-                    >{{ idNumber }}</label
-                  >
-                </div>
+                <input
+                  :id="oneQuestion.id"
+                  class="form-check-input"
+                  type="radio"
+                  :value="idNumber"
+                  :name="'radio' + oneQuestion.id"
+                  @click="addPoint(idNumber, oneQuestion.id)"
+                />
+                <label
+                  class="form-check-label"
+                  for="answerCheckbox"
+                  :value="idNumber"
+                  >{{ idNumber }}</label
+                >
               </div>
             </div>
           </li>
@@ -170,8 +172,16 @@ function pointsArray(point: number) {
       >Start Quiz</SubmitButton
     >
   </div>
-  <div v-if="!categories.length">
-    <p class="text-center text-md-start">Choosed questions will display here</p>
+  <div
+    v-if="!categories.length"
+    class="alert alert-primary d-flex align-items-center text-start mt-2"
+    role="alert"
+  >
+    <font-awesome-icon icon="fa-solid fa-circle-info" />
+
+    <p class="text-center text-md-start ps-2 m-0">
+      Choosed questions will display here
+    </p>
   </div>
 </template>
 <style src="@vueform/toggle/themes/default.css"></style>

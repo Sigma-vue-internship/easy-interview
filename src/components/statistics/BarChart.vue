@@ -56,9 +56,6 @@ const props = defineProps({
     }),
   },
 });
-watch(props, current => {
-  console.log(current);
-});
 </script>
 <template>
   <Bar
