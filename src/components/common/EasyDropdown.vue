@@ -1,5 +1,10 @@
+<script lang="ts">
+export default {
+  name: "EasyDropdown",
+};
+</script>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onUpdated } from "vue";
 import debounce from "lodash/debounce";
 interface Emit {
   (e: "update:dropdownInput", targetValue: string): void;
@@ -27,6 +32,9 @@ const emit = defineEmits<Emit>();
 const emitDropdownUpdate = debounce(e => {
   emit("update:dropdownInput", e.target.value);
 }, 500);
+onUpdated(() => {
+  console.log(props.dropdownInput);
+});
 const emitSetDropdownObj = dropdownObj => {
   isDropdownObjVisible.value = false;
   emit("setDropdownObj", dropdownObj);
