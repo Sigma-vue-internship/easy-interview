@@ -77,7 +77,6 @@ async function getQuestionList() {
     console.log(e);
   }
 }
-getQuestionList();
 
 const quizList = ref<QuizQuestion[]>([]);
 function addQuestions(question: QuizQuestion) {
@@ -99,9 +98,7 @@ function addQuestions(question: QuizQuestion) {
   quizList.value.push(question);
   questionsByCategories.value = { ...spreadQuestionsByCategories() };
 }
-function addAllQuestions() {
-  quizList.value = [...quizList.value, ...categoryQuestions.value];
-  // array with all questions + questions from current category, before delete
+function removeQuestionsFromCategory() {
   const collapsedQuestions = [
     ...questionList.value,
     ...categoryQuestions.value,
@@ -112,6 +109,11 @@ function addAllQuestions() {
       ? (tempQuestion[question.id] = null)
       : (tempQuestion[question.id] = question);
   });
+  return tempQuestion;
+}
+function addAllQuestions() {
+  quizList.value = [...quizList.value, ...categoryQuestions.value];
+  const tempQuestion = removeQuestionsFromCategory();
 
   questionList.value = Object.values(tempQuestion).filter(question => question);
 
@@ -153,7 +155,10 @@ function setCandidate(id: number, name: string) {
   currentCandidateId.value = id;
   currentCandidateName.value = name;
 }
-const setCandidateSelected = () => (isCandidateChoosed.value = true);
+const setCandidateSelected = async () => {
+  isCandidateChoosed.value = true;
+  await getQuestionList();
+};
 
 async function postPercentageResult() {
   try {
@@ -258,46 +263,44 @@ async function postResult() {
         :key="item.id"
         class="border border-light mt-4 py-4 px-2 rounded-3 mx-auto shadow text-start ps-sm-3"
       >
-        <div>
-          <label
-            class="w-100 form-check-label ps-2"
-            :for="item.id"
-          >
-            <div
-              class="row justify-content-md-between justify-content-center align-items-center"
+        <div
+          class="row justify-content-md-between justify-content-center align-items-center"
+        >
+          <div class="col-md-9 col-9">
+            <label
+              class="w-100 form-check-label ps-2"
+              :for="item.id"
             >
-              <div class="col-md-9 col-9">
-                <p>
-                  <span class="text-primary fs-5"
-                    ><FontAwesomeIcon
-                      class="pe-1"
-                      icon="fa-circle-question"
-                    />Question:</span
-                  >
-                  {{ item.text }}
-                </p>
+              <p>
+                <span class="text-primary fs-5"
+                  ><FontAwesomeIcon
+                    class="pe-1"
+                    icon="fa-circle-question"
+                  />Question:</span
+                >
+                {{ item.text }}
+              </p>
 
-                <p class="text-secondary mb-1 text-md-start pb-2 pb-md-0">
-                  <span class="text-primary"
-                    ><FontAwesomeIcon
-                      class="pe-1"
-                      icon="fa-circle-check"
-                    />Answer: </span
-                  >{{ item.answer }}
-                </p>
-                <p>Max points: {{ item.point }}</p>
-              </div>
-              <div class="col-md-2 col-3 text-end me-md-2">
-                <font-awesome-icon
-                  id="addQuestionBtn"
-                  class="btn btn-outline-primary border-0"
-                  style="height: 50px"
-                  icon="fa-regular fa-square-plus"
-                  @click="addQuestions(item)"
-                />
-              </div>
-            </div>
-          </label>
+              <p class="text-secondary mb-1 text-md-start pb-2 pb-md-0">
+                <span class="text-primary"
+                  ><FontAwesomeIcon
+                    class="pe-1"
+                    icon="fa-circle-check"
+                  />Answer: </span
+                >{{ item.answer }}
+              </p>
+              <p>Max points: {{ item.point }}</p>
+            </label>
+          </div>
+          <div class="col-md-2 col-3 text-end me-md-2">
+            <font-awesome-icon
+              id="addQuestionBtn"
+              class="btn btn-outline-primary border-0"
+              style="height: 50px"
+              icon="fa-regular fa-square-plus"
+              @click="addQuestions(item)"
+            />
+          </div>
         </div>
       </li>
     </ul>

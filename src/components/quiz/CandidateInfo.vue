@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useCandidateStore } from "../../stores/candidates";
 
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import _isEmpty from "lodash/isEmpty";
 import { Candidate } from "../../../dto/candidates";
 import EasyDropdown from "../common/EasyDropdown.vue";
@@ -34,17 +34,20 @@ function setCandidate(user: Candidate) {
     candidate => candidate.id === user.id,
   );
 }
+const isCandidateEmpty = computed(() => _isEmpty(choosedCandidateObj.value));
+
 const emitCandidateSelect = () => emit("setCandidateSelected");
 </script>
 
 <template>
   <h2 class="text-primary text-center text-md-start">Choose Candidate</h2>
   <div
+    v-if="!choosedCandidateObj.id"
     class="alert alert-primary d-flex align-items-center text-start"
     role="alert"
   >
     <font-awesome-icon icon="fa-solid fa-circle-info" />
-    <div class="ps-3">Please, choose candidate you want to interview</div>
+    <div class="ps-3">We didn't find any candidate by current name</div>
   </div>
   <div class="col-12 position-relative">
     <EasyDropdown
@@ -54,19 +57,23 @@ const emitCandidateSelect = () => emit("setCandidateSelected");
     />
   </div>
   <div
-    v-if="!_isEmpty(choosedCandidateObj)"
-    class="border rounded-2 border-light my-3 p-2 bg-body w-50"
+    v-if="!isCandidateEmpty"
+    class="border rounded-2 border-light my-3 p-2 bg-body col-12 col-md-9"
   >
-    <div class="row g-0">
-      <div class="col-md-4 d-flex align-items-center justify-content-center">
+    <div class="row g-0 justfy-content-start">
+      <div
+        class="col-md-2 d-flex align-items-center justify-content-center justify-content-md-start ms-md-3 mb-3 mb-md-0"
+      >
         <img
           :src="choosedCandidateObj.avatarUrl"
-          class="img-fluid d-block rounded-circle p-2 border border-2 border-primary"
+          class="d-block rounded-circle p-2 border border-2 border-primary"
+          width="150"
+          height="150"
           alt="..."
         />
       </div>
-      <div class="col-md-8">
-        <div class="text-start text-primary">
+      <div class="col-md-6 offset-md-3 ms-lg-5">
+        <div class="text-center text-md-start text-primary">
           <h5 class="">{{ choosedCandidateObj.username }}</h5>
           <p class="">
             {{ choosedCandidateObj.position }}
@@ -83,6 +90,7 @@ const emitCandidateSelect = () => emit("setCandidateSelected");
   <div class="text-center text-md-end">
     <SubmitButton
       v-if="!_isEmpty(choosedCandidateObj)"
+      id="stepToQuestions"
       @click="emitCandidateSelect"
       >Next step</SubmitButton
     >
