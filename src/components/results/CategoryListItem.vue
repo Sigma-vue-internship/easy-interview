@@ -53,9 +53,9 @@ const questionsSegregation = computed(() =>
         <div class="card card-body shadow py-0">
           <ul class="list-unstyled">
             <ListItem
-              v-for="oneQuestion in questionsSegregation"
-              :key="oneQuestion.text"
-              :one-question="oneQuestion"
+              v-for="question in questionsSegregation"
+              :key="question.text"
+              :question="question"
             />
           </ul>
         </div>

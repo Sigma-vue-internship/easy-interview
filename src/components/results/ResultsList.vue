@@ -10,14 +10,13 @@ import { useResultsStore } from "../../stores/results";
 import { ref, watch } from "vue";
 import { Candidate } from "../../../dto/candidates";
 import { Result } from "../../../dto/results";
-import _debounce from "lodash/debounce";
 
 const router = useRouter();
 const { getAllCandidates } = useCandidateStore();
 const { getResultsForCandidate } = useResultsStore();
 
 const candidatesList = ref<Candidate[]>([]);
-const selectCandidate = ref("");
+const selectedCandidate = ref("");
 const isCandidatesVisible = ref(false);
 const choosedCandidates = ref<Candidate[]>([]);
 const quizResults = ref<Result[]>([]);
@@ -30,11 +29,10 @@ async function getAllCandidatesData() {
       data: { candidates },
     } = await getAllCandidates();
     candidatesList.value = candidates;
-    isLoaderVisible.value = false;
   } catch (e) {
-    isLoaderVisible.value = false;
     console.log(e);
   }
+  isLoaderVisible.value = false;
 }
 getAllCandidatesData();
 
@@ -43,14 +41,13 @@ async function getResultsForCandidateData(candidateId: number) {
     isLoaderVisible.value = true;
     const { data } = await getResultsForCandidate(candidateId);
     quizResults.value = data;
-    isLoaderVisible.value = false;
   } catch (e) {
-    isLoaderVisible.value = false;
     console.log(e);
   }
+  isLoaderVisible.value = false;
 }
 
-watch(selectCandidate, newCandidate => {
+watch(selectedCandidate, newCandidate => {
   choosedCandidates.value = candidatesList.value.filter(candidate =>
     candidate.username.includes(newCandidate),
   );
@@ -58,7 +55,7 @@ watch(selectCandidate, newCandidate => {
 function setCandidate(user: Candidate) {
   quizResults.value = [];
   isCandidatesVisible.value = false;
-  selectCandidate.value = user.username;
+  selectedCandidate.value = user.username;
   getResultsForCandidateData(user.id);
 }
 
@@ -93,13 +90,13 @@ function pushRoute(candidateId: string, resultId: string) {
       </h2>
       <input
         id="candadidateInput"
-        v-model="selectCandidate"
+        v-model="selectedCandidate"
         class="form-control"
         placeholder="Enter username to search..."
         @focusin="isCandidatesVisible = true"
       />
       <div
-        v-if="selectCandidate.length >= 1 && isCandidatesVisible"
+        v-if="selectedCandidate.length >= 1 && isCandidatesVisible"
         class="list-group overflow-scroll w-100 position-absolute"
       >
         <a
@@ -128,7 +125,7 @@ function pushRoute(candidateId: string, resultId: string) {
         v-if="isLoaderVisible"
         class="mt-5"
       />
-      <div v-if="quizResults.length && !isLoaderVisible">
+      <div v-else-if="quizResults.length && !isLoaderVisible">
         <h2 class="text-primary text-center text-md-start mt-4">
           Results List
         </h2>
@@ -177,7 +174,7 @@ function pushRoute(candidateId: string, resultId: string) {
       </div>
       <div
         v-else-if="
-          selectCandidate.length >= 1 &&
+          selectedCandidate.length >= 5 &&
           quizResults.length === 0 &&
           !isLoaderVisible
         "

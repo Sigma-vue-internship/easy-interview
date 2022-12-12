@@ -6,11 +6,11 @@ export function formattingDate(date: number) {
   });
 }
 
-export function formattingHours(date: number) {
-  if (new Date(date).getMinutes() < 10) {
-    return `${new Date(date).getHours()}:0${new Date(date).getMinutes()}`;
-  }
-  return `${new Date(date).getHours()}:${new Date(date).getMinutes()}`;
+export function formattingHours(pureDate: number) {
+  const date = new Date(pureDate);
+  const minutes = date.getMinutes();
+
+  return `${date.getHours()}:${minutes < 10 ? "0" : ""}${minutes}`;
 }
 
 export function calculateTime(startDate: number, endDate: number) {

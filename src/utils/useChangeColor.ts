@@ -1,11 +1,19 @@
-export default function changeBarColor(startNumb: number, finishNumb: number) {
-  if (startNumb / finishNumb < 0.5) {
-    return "#E82C2C";
-  } else if (startNumb / finishNumb >= 0.5 && startNumb / finishNumb < 0.85) {
-    return "#b6ca41";
-  } else if (startNumb / finishNumb >= 0.85) {
-    return "#87CF23";
+export const defaultBarColor = "#555555";
+const green = "#87CF23";
+const yellow = "#b6ca41";
+const red = "#E82C2C";
+
+export function getBarColor(answerPoints: number, questionPoints: number) {
+  const percents = answerPoints / questionPoints;
+  if (percents < 0.5) {
+    return red;
+  } else if (percents >= 0.5 && percents < 0.85) {
+    return yellow;
+  } else if (percents >= 0.85) {
+    return green;
   } else {
-    return "#C9C9C9";
+    return defaultBarColor;
   }
 }
+
+export default { getBarColor, defaultBarColor };

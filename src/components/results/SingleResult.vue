@@ -10,7 +10,7 @@ import { useRoute } from "vue-router";
 import { computed, ref } from "vue";
 import { useResultsStore } from "../../stores/results";
 import { Result, ResultParent } from "../../../dto/results";
-import changeBarColor from "../../utils/useChangeColor";
+import { getBarColor, defaultBarColor } from "../../utils/useChangeColor";
 
 defineProps({
   resultParent: {
@@ -192,24 +192,24 @@ const categories = computed(() =>
           class="col-3 mx-4 my-3"
           :completed-steps="answerPointsByCategory(category)"
           :total-steps="pointsByCategory(category)"
-          inner-stroke-color="#555555"
+          :inner-stroke-color="defaultBarColor"
           :stroke-width="10"
           :inner-stroke-width="12"
           :diameter="140"
           :start-color="
-            changeBarColor(
+            getBarColor(
               answerPointsByCategory(category),
               pointsByCategory(category),
             )
           "
           :stop-color="
-            changeBarColor(
+            getBarColor(
               answerPointsByCategory(category),
               pointsByCategory(category),
             )
           "
         >
-          <span class="ps-4">{{ category }}</span>
+          <span class="ps-4 text-center">{{ category }}</span>
         </radial-progress-bar>
       </div>
       <div
