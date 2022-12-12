@@ -110,24 +110,23 @@ getQuestionList();
           <div class="col-12 col-sm-3 col-lg-9 pt-2">
             <h5>Score: {{ item.point }}</h5>
           </div>
-          <div class="col-6 col-sm-2 col-lg-1 me-xl-2">
-            <button
+          <div
+            class="col-6 col-sm-3 col-lg-2 me-xl-2 d-flex align-items-center justify-content-end"
+          >
+            <font-awesome-icon
               type="button"
-              class="btn btn-primary"
+              class="btn text-primary fs-2 p-0"
               data-bs-toggle="modal"
               data-bs-target="#question"
+              icon="fa-solid fa-pencil"
               @click="setModalItem(item, 'put')"
-            >
-              Edit
-            </button>
-          </div>
-          <div class="col-6 col-sm-2 col-lg-1 text-center">
+            />
             <font-awesome-icon
               role="button"
               data-bs-toggle="modal"
               data-bs-target="#questionAlert"
               icon="fa-solid fa-square-xmark"
-              class="text-danger delete-question__btn pt-1"
+              class="text-danger delete-question__btn fs-1 px-3"
               @click="setDeleteQuestion(item.id)"
             />
           </div>
@@ -164,9 +163,3 @@ getQuestionList();
     </div>
   </EasyModal>
 </template>
-
-<style scoped>
-.delete-question__btn {
-  height: 44px;
-}
-</style>
