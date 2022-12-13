@@ -37,43 +37,53 @@ const emitSetDropdownObj = dropdownObj => {
   isDropdownObjVisible.value = false;
   emit("setDropdownObj", dropdownObj);
 };
+function handleBlur(e) {
+  if (!e.currentTarget.contains(e.relatedTarget)) {
+    isDropdownObjVisible.value = false;
+  }
+}
 </script>
 <template>
-  <input
-    id="candidateInput"
-    class="form-control container-fluid"
-    placeholder="Type something to search..."
-    :value="dropdownInput"
-    @input="emitDropdownUpdate"
-    @focusin="isDropdownObjVisible = true"
-  />
   <div
-    v-if="dropdownInput.length >= 1 && isDropdownObjVisible"
-    class="list-group overflow-scroll shadow-md w-100 position-absolute"
+    tabindex="1"
+    @focusout="handleBlur"
   >
-    <a
-      v-for="dropdownObj in dropdownData"
-      :key="dropdownObj.id"
-      class="list-group-item list-group-item-action p-0 px-2"
+    <input
+      id="candidateInput"
+      class="form-control container-fluid"
+      placeholder="Type something to search..."
+      :value="dropdownInput"
+      @input="emitDropdownUpdate"
+      @focusin="isDropdownObjVisible = true"
+    />
+    <div
+      v-if="dropdownInput.length >= 1 && isDropdownObjVisible"
+      class="list-group overflow-scroll shadow-md w-100 position-absolute"
     >
-      <div
-        :id="'dropdownObjBtn' + dropdownObj.id"
-        class="d-flex w-100 align-items-center gap-3"
-        @click="emitSetDropdownObj(dropdownObj)"
+      <a
+        v-for="dropdownObj in dropdownData"
+        :key="dropdownObj.id"
+        class="list-group-item list-group-item-action p-0 px-2"
       >
-        <img
-          :src="dropdownObj.avatarUrl"
-          class="rounded-circle"
-          height="50"
-          width="50"
-          alt="avatar"
-        />
-        <div class="flex-column text-start">
-          <p class="m-1 me-3">{{ dropdownObj.username }}</p>
-          <p class="m-1 me-3">{{ dropdownObj.position }}</p>
+        <div
+          :id="'dropdownObjBtn' + dropdownObj.id"
+          class="d-flex w-100 align-items-center gap-3"
+          @click="emitSetDropdownObj(dropdownObj)"
+        >
+          <img
+            :src="dropdownObj.avatarUrl"
+            class="rounded-circle"
+            height="50"
+            width="50"
+            alt="avatar"
+          />
+          <div class="flex-column text-start">
+            <p class="m-1 me-3">{{ dropdownObj.username }}</p>
+            <p class="m-1 me-3">{{ dropdownObj.position }}</p>
+          </div>
         </div>
-      </div>
-    </a>
+      </a>
+    </div>
   </div>
 </template>
 
@@ -94,5 +104,8 @@ const emitSetDropdownObj = dropdownObj => {
 ::-webkit-scrollbar-thumb {
   background: #87cf23;
   border-radius: 10px;
+}
+.candidateInput {
+  z-index: -100 !important;
 }
 </style>
