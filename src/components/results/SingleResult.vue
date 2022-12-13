@@ -9,42 +9,11 @@ import _uniq from "lodash/uniq";
 import { useRoute } from "vue-router";
 import { computed, ref } from "vue";
 import { useResultsStore } from "../../stores/results";
-import { Result, ResultParent } from "../../../dto/results";
+import { Result } from "../../../dto/results";
 import { getBarColor, defaultBarColor } from "../../utils/useChangeColor";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
 
-defineProps({
-  resultParent: {
-    type: Object as () => ResultParent,
-    default: () => ({
-      position: "",
-      username: "",
-      linkedinUrl: "",
-      feedback: "",
-      avatarUrl: "",
-      id: "",
-    }),
-  },
-  result: {
-    type: Object as () => Result,
-    default: () => ({
-      questionAnswer: [],
-      startedAt: 0,
-      endedAt: 0,
-      id: "",
-      title: "",
-      parent: {
-        position: "",
-        username: "",
-        linkedinUrl: "",
-        feedback: "",
-        avatarUrl: "",
-        id: "",
-      },
-    }),
-  },
-});
-
-const singleResult = ref<Result>({
+const result = ref<Result>({
   questionAnswer: [],
   startedAt: 0,
   endedAt: 0,
@@ -68,50 +37,49 @@ async function getOneResultForCandidateData() {
       route.params.candidateId,
       route.params.resultId,
     );
-    singleResult.value = { ...data };
+    result.value = { ...data };
   } catch (e) {
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
 }
 getOneResultForCandidateData();
 
 const resultPercentage = computed(() =>
   (
-    singleResult.value.questionAnswer.reduce(
+    result.value.questionAnswer.reduce(
       (summ, item) => summ + item.answerPoints,
       0,
-    ) /
-    singleResult.value.questionAnswer.reduce(
-      (summ, item) => summ + item.point,
-      0,
-    )
+    ) / result.value.questionAnswer.reduce((summ, item) => summ + item.point, 0)
   ).toLocaleString("en-GB", { style: "percent" }),
 );
 
-function answerPointsByCategory(category: string) {
-  const filterAnswers = singleResult.value.questionAnswer.filter(
-    answer => answer.category === category,
-  );
-  const summaryAnswerPoints = filterAnswers.reduce(
-    (summ, item) => summ + item.answerPoints,
-    0,
-  );
-  return summaryAnswerPoints;
-}
-
-function pointsByCategory(category: string) {
-  const filterAnswers = singleResult.value.questionAnswer.filter(
-    answer => answer.category === category,
-  );
-  const summaryQuestionPoints = filterAnswers.reduce(
-    (summ, item) => summ + item.point,
-    0,
-  );
-  return summaryQuestionPoints;
-}
-
 const categories = computed(() =>
-  _uniq(singleResult.value.questionAnswer.map(obj => obj.category)),
+  _uniq(result.value.questionAnswer.map(obj => obj.category)),
+);
+
+const categoriesWithPoints = computed(() =>
+  Object.fromEntries(
+    categories.value.map(category => [
+      category,
+      result.value.questionAnswer
+        .filter(answer => answer.category === category)
+        .reduce((summ, item) => summ + item.point, 0),
+    ]),
+  ),
+);
+
+const categoriesWithAnswerPoints = computed(() =>
+  Object.fromEntries(
+    categories.value.map(category => [
+      category,
+      result.value.questionAnswer
+        .filter(answer => answer.category === category)
+        .reduce((summ, item) => summ + item.answerPoints, 0),
+    ]),
+  ),
 );
 </script>
 
@@ -119,10 +87,10 @@ const categories = computed(() =>
   <div class="container mt-3 text-secondary">
     <div class="row">
       <div class="col-md-4 col-lg-3 col-xl-2 text-center text-md-start pt-4">
-        <router-link :to="'/candidates/' + singleResult.parent.id">
+        <router-link :to="'/candidates/' + result.parent.id">
           <img
             class="rounded-circle img-fluid p-2 border-primary border border-3"
-            :src="singleResult.parent.avatarUrl"
+            :src="result.parent.avatarUrl"
             width="200"
             height="200"
             alt="candidateAvatar"
@@ -134,21 +102,21 @@ const categories = computed(() =>
       </div>
       <div class="col-md-8 col-lg-4 mt-3 mt-lg-2">
         <h2 class="text-primary text-center text-md-start">
-          {{ singleResult.parent.username }}
+          {{ result.parent.username }}
         </h2>
         <div class="text-center text-md-start fs-4">
           <font-awesome-icon
             icon="fa-solid fa-user"
             class="text-primary"
           />
-          {{ singleResult.parent.position }}
+          {{ result.parent.position }}
         </div>
         <div class="text-center text-md-start fs-4">
           <font-awesome-icon
             icon="fa-regular fa-clock"
             class="text-primary fs-4"
           />
-          {{ calculateTime(singleResult.startedAt, singleResult.endedAt) }}
+          {{ calculateTime(result.startedAt, result.endedAt) }}
           minutes
         </div>
         <div class="text-center text-md-start fs-4">
@@ -156,8 +124,8 @@ const categories = computed(() =>
             icon="fa-solid fa-calendar-days"
             class="text-primary fs-5"
           />
-          {{ formattingDate(singleResult.endedAt) }},
-          {{ formattingHours(singleResult.endedAt) }}
+          {{ formattingDate(result.endedAt) }},
+          {{ formattingHours(result.endedAt) }}
         </div>
         <div class="text-center text-md-start mb-3 fs-4">
           Result: {{ resultPercentage }}
@@ -181,7 +149,7 @@ const categories = computed(() =>
       >
         <h4 class="fw-light">
           <span class="fw-bolder">Short summary:</span>
-          {{ singleResult.parent.feedback }}
+          {{ result.parent.feedback }}
         </h4>
       </div>
       <h4 class="text-center text-md-start ps-md-1 mt-4">Skills</h4>
@@ -190,22 +158,22 @@ const categories = computed(() =>
           v-for="category in categories"
           :key="category"
           class="col-3 mx-4 my-3"
-          :completed-steps="answerPointsByCategory(category)"
-          :total-steps="pointsByCategory(category)"
+          :completed-steps="categoriesWithAnswerPoints[`${category}`]"
+          :total-steps="categoriesWithPoints[`${category}`]"
           :inner-stroke-color="defaultBarColor"
           :stroke-width="10"
           :inner-stroke-width="12"
           :diameter="140"
           :start-color="
             getBarColor(
-              answerPointsByCategory(category),
-              pointsByCategory(category),
+              categoriesWithAnswerPoints[`${category}`],
+              categoriesWithPoints[`${category}`],
             )
           "
           :stop-color="
             getBarColor(
-              answerPointsByCategory(category),
-              pointsByCategory(category),
+              categoriesWithAnswerPoints[`${category}`],
+              categoriesWithPoints[`${category}`],
             )
           "
         >
@@ -243,7 +211,7 @@ const categories = computed(() =>
               :key="category"
               :item-id="index"
               :category="category"
-              :questions-array="singleResult.questionAnswer"
+              :questions-array="result.questionAnswer"
             />
           </div>
         </div>

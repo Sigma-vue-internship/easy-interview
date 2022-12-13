@@ -10,6 +10,7 @@ import { useResultsStore } from "../../stores/results";
 import { ref, watch } from "vue";
 import { Candidate } from "../../../dto/candidates";
 import { Result } from "../../../dto/results";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
 
 const router = useRouter();
 const { getAllCandidates } = useCandidateStore();
@@ -31,6 +32,9 @@ async function getAllCandidatesData() {
     candidatesList.value = candidates;
   } catch (e) {
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
   isLoaderVisible.value = false;
 }
@@ -43,6 +47,9 @@ async function getResultsForCandidateData(candidateId: number) {
     quizResults.value = data;
   } catch (e) {
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
   isLoaderVisible.value = false;
 }
@@ -96,7 +103,7 @@ function pushRoute(candidateId: string, resultId: string) {
         @focusin="isCandidatesVisible = true"
       />
       <div
-        v-if="selectedCandidate.length >= 1 && isCandidatesVisible"
+        v-if="selectedCandidate && isCandidatesVisible"
         class="list-group overflow-scroll w-100 position-absolute"
       >
         <a
@@ -174,9 +181,7 @@ function pushRoute(candidateId: string, resultId: string) {
       </div>
       <div
         v-else-if="
-          selectedCandidate.length >= 5 &&
-          quizResults.length === 0 &&
-          !isLoaderVisible
+          selectedCandidate && quizResults.length === 0 && !isLoaderVisible
         "
       >
         <h5 class="text-primary text-center mt-5">
