@@ -3,32 +3,74 @@ import { ref, watch } from "vue";
 import { useCandidateStore } from "../../stores/candidates";
 import { useQuestionStore } from "../../stores/questions";
 import { Candidate } from "../../../dto/candidates";
-interface SearchData {}
-
+import { Categories } from "../../utils/useCategories";
+import { useRouter } from "vue-router";
 const searchInput = ref<string>("");
 const isCandidateMode = ref<boolean>(false);
 const isCategoryMode = ref<boolean>(false);
 const candidateStore = useCandidateStore();
 const questionStore = useQuestionStore();
-const searchData = ref<Array<Candidate>>([]);
-watch(searchInput, async () => {
-  if (isCandidateMode.value && !isCategoryMode.value) {
-    const {
-      data: { candidates },
-    }: { data: { candidates: Candidate[] } } =
-      await candidateStore.getCandidatesByUsername(searchInput.value);
-    searchData.value = [...candidates];
-    console.log(searchData.value);
-    return;
-  } else if (isCategoryMode.value && !isCandidateMode.value) {
-    console.log("Search for results", searchInput);
-    return;
-  } else if (isCandidateMode.value && isCategoryMode.value) {
-    console.log("Search All", searchInput);
+// how to make type dynamic on object and string
+const searchData = ref([]);
+watch([searchInput, isCandidateMode, isCategoryMode], async () => {
+  if (searchInput.value.length === 0) {
     return;
   }
-  console.log("Do nothing");
+  if (isCandidateMode.value) {
+    const res = await candidateStore.getCandidatesByUsername(searchInput.value);
+    // BUG:fix on mode change dynamic array filtering inside dropdown
+    // BUG:auth0 test is falling
+    searchData.value = [...res.data.candidates];
+    console.log(searchData.value);
+    return;
+  } else if (isCategoryMode.value) {
+    searchData.value = Categories().filter(category =>
+      category.toLowerCase().includes(searchInput.value.toLowerCase()),
+    );
+    console.log(searchData.value);
+
+    return;
+  }
+  const resCandidate = await candidateStore.getCandidatesByUsername(
+    searchInput.value,
+  );
+  const searchedCategories: Array<String> = Categories().filter(category =>
+    category.toLowerCase().includes(searchInput.value.toLowerCase()),
+  );
+  searchData.value = [
+    ...spreadDynamicly(resCandidate.data.candidates, searchedCategories),
+  ];
 });
+function spreadDynamicly(
+  candidates: Array<Candidate>,
+  categories: Array<String>,
+) {
+  const dynamicArray: Array<object> = [];
+  let maxLength = 0;
+  if (candidates.length > categories.length) {
+    maxLength = candidates.length;
+  } else {
+    maxLength = categories.length;
+  }
+  for (let i = 0; i < maxLength; i++) {
+    if (candidates[i]) {
+      dynamicArray.push(candidates[i]);
+    }
+    if (categories[i]) {
+      dynamicArray.push(categories[i]);
+    }
+  }
+  return dynamicArray;
+}
+function redirectTo(dropdownObj) {
+  const router = useRouter();
+
+  if (dropdownObj.id) {
+    router.push({ path: `/candidates/${dropdownObj.id}`, replace: true });
+  } else {
+    router.push({ path: `/questions/${dropdownObj}`, replace: true });
+  }
+}
 </script>
 <template>
   <div>
@@ -39,7 +81,8 @@ watch(searchInput, async () => {
         <div class="col-12 col-md-9">
           <EasyDropdown
             v-model:dropdownInput="searchInput"
-            dropdown-data="searchData"
+            :dropdown-data="searchData"
+            @set-dropdown-obj="redirectTo"
           />
           <!-- <input
             class="form-control text-secondary border-primary"
@@ -49,7 +92,10 @@ watch(searchInput, async () => {
           /> -->
         </div>
 
-        <div class="dropdown d-flex col-md-1 align-items-center">
+        <div
+          tabindex="1"
+          class="dropdown d-flex col-md-1 align-items-center"
+        >
           <button
             id="dropdownMenuButton"
             class="btn btn-outline-primary rounded-pill border-0 dropdown-toggle drop-img"
@@ -73,6 +119,7 @@ watch(searchInput, async () => {
                   v-model="isCandidateMode"
                   class="form-check-input"
                   type="checkbox"
+                  @click="isCategoryMode = false"
                 />
                 <label
                   class="form-check-label"
@@ -89,6 +136,7 @@ watch(searchInput, async () => {
                   v-model="isCategoryMode"
                   class="form-check-input"
                   type="checkbox"
+                  @click="isCandidateMode = false"
                 />
                 <label
                   class="form-check-label"
@@ -101,7 +149,7 @@ watch(searchInput, async () => {
           </ul>
         </div>
       </div>
-      <div class="col-2 ps-2 align-self-center">
+      <!-- <div class="col-2 ps-2 align-self-center">
         <button
           class="btn btn-outline-primary border-0 rounded-pill"
           type="submit"
@@ -110,7 +158,7 @@ watch(searchInput, async () => {
             icon="btn fa-solid fa-magnifying-glass text-primary"
           />
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

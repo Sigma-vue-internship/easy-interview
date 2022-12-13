@@ -4,7 +4,7 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { ref, onUpdated } from "vue";
+import { ref, onUpdated, reactive } from "vue";
 import debounce from "lodash/debounce";
 interface Emit {
   (e: "update:dropdownInput", targetValue: string): void;
@@ -25,13 +25,20 @@ const props = defineProps({
       return [];
     },
   },
+  zIndexStyle: {
+    type: Number,
+    required: false,
+    default: 1000,
+  },
 });
-
+const zIndexStyle = reactive({
+  "z-index": props.zIndexStyle,
+});
 const isDropdownObjVisible = ref(false);
 const emit = defineEmits<Emit>();
 const emitDropdownUpdate = debounce(e => {
   emit("update:dropdownInput", e.target.value);
-}, 500);
+}, 250);
 
 const emitSetDropdownObj = dropdownObj => {
   isDropdownObjVisible.value = false;
@@ -46,6 +53,7 @@ function handleBlur(e) {
 <template>
   <div
     tabindex="1"
+    class="w-100 position-relative"
     @focusout="handleBlur"
   >
     <input
@@ -59,27 +67,38 @@ function handleBlur(e) {
     <div
       v-if="dropdownInput.length >= 1 && isDropdownObjVisible"
       class="list-group overflow-scroll shadow-md w-100 position-absolute"
+      :style="zIndexStyle"
     >
       <a
         v-for="dropdownObj in dropdownData"
         :key="dropdownObj.id"
-        class="list-group-item list-group-item-action p-0 px-2"
+        class="list-group-item list-group-item-action p-0 px-2 h-100 w-100"
       >
         <div
           :id="'dropdownObjBtn' + dropdownObj.id"
           class="d-flex w-100 align-items-center gap-3"
+          :style="{ height: '65px' }"
           @click="emitSetDropdownObj(dropdownObj)"
         >
           <img
+            v-if="dropdownObj.avatarUrl"
             :src="dropdownObj.avatarUrl"
             class="rounded-circle"
             height="50"
             width="50"
             alt="avatar"
           />
+          <div
+            v-else
+            class="badge rounded-pill text-bg-primary d-none d-lg-block"
+          >
+            Category
+          </div>
           <div class="flex-column text-start">
-            <p class="m-1 me-3">{{ dropdownObj.username }}</p>
-            <p class="m-1 me-3">{{ dropdownObj.position }}</p>
+            <p class="m-1 me-3">
+              {{ dropdownObj.username ? dropdownObj.username : dropdownObj }}
+            </p>
+            <p class="m-1 me-3 d-none d-lg-block">{{ dropdownObj.position }}</p>
           </div>
         </div>
       </a>

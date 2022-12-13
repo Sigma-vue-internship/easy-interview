@@ -53,12 +53,22 @@ const router = createRouter({
       name: "candidate",
       component: CandidateView,
       beforeEnter: authGuard,
+      beforeRouteUpdate(to, from, next) {
+        if (to.path !== from.path) {
+          window.location = to.path;
+        }
+      },
     },
     {
       path: "/questions",
       name: "categoriesList",
       component: CategoriesListView,
       beforeEnter: authGuard,
+      beforeRouteUpdate(to, from, next) {
+        if (to.path !== from.path) {
+          window.location = to.path;
+        }
+      },
     },
     {
       path: "/questions/:title",

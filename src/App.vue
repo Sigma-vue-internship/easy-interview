@@ -10,5 +10,8 @@ const isLoading = auth0.isLoading;
 <template>
   <Header />
   <SpinnerLoader v-if="isLoading" />
-  <RouterView v-else />
+  <RouterView
+    v-else
+    :key="$route.path"
+  />
 </template>

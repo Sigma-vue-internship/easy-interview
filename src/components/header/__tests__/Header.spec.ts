@@ -5,7 +5,7 @@ import { useRoute } from "vue-router";
 
 const loginWithRedirect = vi.fn();
 const logout = vi.fn();
-let isAuthenticated = false;
+const isAuthenticated = false;
 
 vi.mock("@auth0/auth0-vue", () => ({
   useAuth0: () => ({
