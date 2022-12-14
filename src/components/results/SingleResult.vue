@@ -86,13 +86,13 @@ const categoriesWithAnswerPoints = computed(() =>
 <template>
   <div class="container mt-3 text-secondary">
     <div class="row">
-      <div class="col-md-4 col-lg-3 col-xl-2 text-center text-md-start pt-4">
+      <div
+        class="col-md-4 col-lg-3 col-xl-2 text-center text-md-start pt-4 avatar"
+      >
         <router-link :to="'/candidates/' + result.parent.id">
           <img
-            class="rounded-circle img-fluid p-2 border-primary border border-3"
+            class="rounded-circle img-fluid p-2 border-primary border border-3 fit"
             :src="result.parent.avatarUrl"
-            width="200"
-            height="200"
             alt="candidateAvatar"
             data-bs-toggle="tooltip"
             data-bs-placement="left"
@@ -219,3 +219,11 @@ const categoriesWithAnswerPoints = computed(() =>
     </div>
   </div>
 </template>
+
+<style>
+.avatar .fit {
+  object-fit: cover;
+  height: 200px;
+  width: 200px;
+}
+</style>
