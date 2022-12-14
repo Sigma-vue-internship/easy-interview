@@ -83,7 +83,7 @@ const router = createRouter({
       beforeEnter: authGuard,
     },
     {
-      path: "/results/:id",
+      path: "/candidates/:candidateId/results/:resultId",
       name: "singleResult",
       component: SingleResultView,
       beforeEnter: authGuard,

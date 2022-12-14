@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach, vitest } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
 import QuestionsList from "../QuestionsList.vue";
 import EasyModal from "../../common/EasyModal.vue";
-import DeleteButton from "../../common/DeleteButton.vue";
 
 import { createTestingPinia } from "@pinia/testing";
 import { useQuestionStore } from "../../../stores/questions";
@@ -16,7 +15,6 @@ const getWrapper = (props = {}) =>
     global: {
       components: {
         EasyModal,
-        DeleteButton,
       },
       plugins: [
         createTestingPinia({
@@ -67,7 +65,7 @@ describe("QuestionsList.vue", () => {
     const { getAllQuestions, deleteQuestion } = useQuestionStore();
     expect(getAllQuestions).toBeCalledWith("test_category");
     await flushPromises();
-    const btn = wrapper.find(".btn-outline-danger");
+    const btn = wrapper.find(".delete-question__btn");
     await btn.trigger("click");
     expect(wrapper.vm.deleteQuestionId).toEqual("34");
     const btnDelete = wrapper.find(".btn-danger");
