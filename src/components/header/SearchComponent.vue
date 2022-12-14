@@ -15,29 +15,30 @@ watch([searchInput, currentMode], async ([newInput, newCurrentMode]) => {
   if (newInput.length === 0) {
     return;
   }
-
-  if (newCurrentMode === "candidate") {
+  switch (newCurrentMode) {
+    case "candidate":
     const res = await candidateStore.getCandidatesByUsername(newInput);
     searchData.value = [...res.data.candidates];
-    return;
-  }
+    break;
 
-  if (newCurrentMode === "category") {
-    return (searchData.value = [
+    case "category":
+    searchData.value = [
       ...Categories().filter(category =>
         category.toLowerCase().includes(newInput.toLowerCase()),
       ),
-    ]);
-  }
-
-  if (newCurrentMode === "all") {
-    const resCandidate = await candidateStore.getCandidatesByUsername(newInput);
+    ];
+    break;
+    default:
+    const resCandidate = await candidateStore.getCandidatesByUsername(
+      newInput,
+    );
     const searchedCategories: Array<String> = Categories().filter(category =>
       category.toLowerCase().includes(newInput.toLowerCase()),
     );
     searchData.value = [
       ...spreadDynamicly(resCandidate.data.candidates, searchedCategories),
     ];
+    break;
   }
 });
 function spreadDynamicly(

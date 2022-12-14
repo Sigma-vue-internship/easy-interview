@@ -57,7 +57,6 @@ function handleBlur(e) {
   <div
     tabindex="1"
     class="w-100 position-relative"
-    @focusout="handleBlur"
   >
     <input
       id="candidateInput"
@@ -78,20 +77,18 @@ function handleBlur(e) {
             ? `${dropdownObj.username}${dropdownObj.id}`
             : `${dropdownObj}`
         "
-        class="list-group-item list-group-item-action p-0 px-2 h-100 w-100"
+        class="list-group-item list-group-item-action px-2 h-100 w-100"
       >
         <div
           :id="'dropdownObjBtn' + index"
           class="d-flex w-100 align-items-center gap-3"
-          :style="{ height: '65px' }"
+          :style="{ height: '85px' }"
           @click="emitSetDropdownObj(dropdownObj)"
         >
           <img
             v-if="dropdownObj.avatarUrl"
             :src="dropdownObj.avatarUrl"
-            class="rounded-circle"
-            height="50"
-            width="50"
+            class="rounded-circle candidate__img"
             alt="avatar"
           />
           <div
@@ -101,10 +98,15 @@ function handleBlur(e) {
             Category
           </div>
           <div class="flex-column text-start">
-            <p class="m-1 me-3">
+            <p class="py-2 m-0">
               {{ dropdownObj.username ? dropdownObj.username : dropdownObj }}
             </p>
-            <p class="m-1 me-3 d-none d-lg-block">{{ dropdownObj.position }}</p>
+            <p
+              v-if="dropdownObj.position"
+              class="py-2 d-none d-lg-block m-0"
+            >
+              {{ dropdownObj.position }}
+            </p>
           </div>
         </div>
       </a>
@@ -132,5 +134,11 @@ function handleBlur(e) {
 }
 .candidateInput {
   z-index: -100 !important;
+}
+.candidate__img {
+  object-fit: cover;
+  object-position: center;
+  width: 50px;
+  height: 50px;
 }
 </style>
