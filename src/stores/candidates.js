@@ -24,7 +24,6 @@ export const useCandidateStore = defineStore("candidates", {
     },
     async getCandidatesByFilter(request) {
       return this.$axios.get(`/candidates?filter=${request}`);
-
     },
   },
 });

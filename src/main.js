@@ -28,8 +28,12 @@ import {
   faPencil,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
-import { faFaceFrown, faClock, faSquareMinus,
-  faSquarePlus, } from "@fortawesome/free-regular-svg-icons";
+import {
+  faFaceFrown,
+  faClock,
+  faSquareMinus,
+  faSquarePlus,
+} from "@fortawesome/free-regular-svg-icons";
 import "./assets/fonts/css/fontello.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
