@@ -128,7 +128,7 @@ getCandidateData();
             class="text-secondary my-4 d-flex align-items-center justify-content-center justify-content-lg-start"
           >
             <font-awesome-icon
-              v-if="currentCandidate.linkedinUrl.length"
+              v-if="currentCandidate.linkedinUrl"
               icon="fa-brands fa-linkedin"
               class="text-primary me-2 fs-3"
             />
