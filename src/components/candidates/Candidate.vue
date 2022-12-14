@@ -106,7 +106,7 @@ getCandidateData();
             alt="singleCandidate image"
             width="298"
             height="298"
-            class="img-fluid rounded-4 border bg-light p-1"
+            class="candidate__img rounded-4 border bg-light p-1"
           />
         </div>
         <div
@@ -128,6 +128,7 @@ getCandidateData();
             class="text-secondary my-4 d-flex align-items-center justify-content-center justify-content-lg-start"
           >
             <font-awesome-icon
+              v-if="currentCandidate.linkedinUrl.length"
               icon="fa-brands fa-linkedin"
               class="text-primary me-2 fs-3"
             />
@@ -207,3 +208,11 @@ getCandidateData();
     </div>
   </EasyModal>
 </template>
+<style scoped>
+.candidate__img {
+  object-fit: cover;
+  object-position: center;
+  max-width: 270px;
+  height: 270px;
+}
+</style>
