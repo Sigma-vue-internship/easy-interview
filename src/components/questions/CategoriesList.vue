@@ -57,28 +57,29 @@ function questionsQuantity(category: string) {
           icon="fa-solid fa-circle-info"
           class="text-secondary fs-6"
         />
-        Questions based on categories click below to category name for see list
+        Questions based on categories, click below to category name for see list
         of questions
       </p>
       <div
         class="col-lg-2 my-xs-4 my-lg-0 ms-lg-5 ms-xl-4 ms-xxl-0 text-center text-md-start"
       ></div>
     </div>
-    <ul class="list-unstyled mt-5">
+    <ul class="list-unstyled mt-md-5">
       <li
         v-for="category in Categories()"
         :key="category"
-        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow-sm"
+        role="button"
+        class="border border-light mt-4 p-2 rounded-3 shadow"
         @click="pushRoute(category)"
       >
         <div class="row">
-          <div class="col-9">
-            <h5 class="text-secondary pt-2">
+          <div class="col-10">
+            <h5 class="text-secondary pt-2 text-start ps-3 ps-md-5">
               {{ category }}
             </h5>
           </div>
           <div
-            class="col-1 d-flex text-primary align-items-center justify-content-center rounded-5 badge bg-light"
+            class="col-1 d-flex text-primary align-items-center justify-content-center rounded-5 badge bg-light ms-md-5"
           >
             <h4 class="m-0 pb-1 fs-5">
               {{ questionsQuantity(category) }}

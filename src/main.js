@@ -20,6 +20,8 @@ import {
   faCalendarDays,
   faUser,
   faChevronDown,
+  faSquareXmark,
+  faPencil,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { faFaceFrown, faClock } from "@fortawesome/free-regular-svg-icons";
@@ -50,6 +52,8 @@ library.add(
   faClock,
   faUser,
   faChevronDown,
+  faSquareXmark,
+  faPencil,
 );
 
 app.use(router);
