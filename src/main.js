@@ -21,10 +21,16 @@ import {
   faCircleQuestion,
   faArrowDownShortWide,
   faTags,
+  faCalendarDays,
+  faUser,
+  faChevronDown,
+  faSquareXmark,
+  faPencil,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import {
   faFaceFrown,
+  faClock,
   faSquareMinus,
   faSquarePlus,
 } from "@fortawesome/free-regular-svg-icons";
@@ -33,11 +39,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 import "./assets/scss/custom.scss";
 import axiosInstance from "./service/axiosInstance";
+import RadialProgressBar from "vue3-radial-progress";
+
 const app = createApp(App);
 const pinia = createPinia();
 pinia.use(() => ({ $axios: axiosInstance }));
 
 app.use(pinia);
+app.use(RadialProgressBar);
 
 library.add(
   faFilter,
@@ -54,6 +63,12 @@ library.add(
   faCircleCheck,
   faCircleQuestion,
   faTags,
+  faCalendarDays,
+  faClock,
+  faUser,
+  faChevronDown,
+  faSquareXmark,
+  faPencil,
 );
 
 app.use(router);
