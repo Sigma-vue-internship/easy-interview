@@ -10,5 +10,11 @@ export const useResultsStore = defineStore("results", {
     async getPercentageResults() {
       return this.$axios.get("/candidateResults");
     },
+    async getResultsForCandidate(candidateId) {
+      return this.$axios.get(`/candidates/${candidateId}/results`);
+    },
+    async getOneResultForCandidate(candidateId, resultId) {
+      return this.$axios.get(`/candidates/${candidateId}/results/${resultId}`);
+    },
   },
 });

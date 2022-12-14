@@ -1,117 +1,229 @@
 <script setup lang="ts">
-import formattingDate from "../../utils/dateFormatting";
+import {
+  formattingDate,
+  formattingHours,
+  calculateTime,
+} from "../../utils/dateFormatting";
 import CategoryListItem from "./CategoryListItem.vue";
 import _uniq from "lodash/uniq";
-import { computed } from "vue";
+import { useRoute } from "vue-router";
+import { computed, ref } from "vue";
+import { useResultsStore } from "../../stores/results";
+import { Result } from "../../../dto/results";
+import { getBarColor, defaultBarColor } from "../../utils/useChangeColor";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
 
-const result = {
-  questionAnswer: [
-    {
-      question: "question1",
-      questionScore: 1,
-      answerPoints: 1,
-      category: "category 1",
-      answer: "answer 1",
-    },
-    {
-      question: "question2",
-      questionScore: 5,
-      answerPoints: 3,
-      category: "category 1",
-      answer: "answer 2",
-    },
-    {
-      question: "question3",
-      questionScore: 1,
-      answerPoints: 0,
-      category: "category 1",
-      answer: "answer 3",
-    },
-    {
-      question: "question4",
-      questionScore: 5,
-      answerPoints: 4,
-      category: "category 4",
-      answer: "answer 4",
-    },
-    {
-      question: "question5",
-      questionScore: 5,
-      answerPoints: 0,
-      category: "category 5",
-      answer: "answer 5",
-    },
-    {
-      question: "question6",
-      questionScore: 1,
-      answerPoints: 1,
-      category: "category 6",
-      answer: "answer 6",
-    },
-    {
-      question: "question7",
-      questionScore: 5,
-      answerPoints: 2,
-      category: "category 7",
-      answer: "answer 7",
-    },
-  ],
-  startedAt: 1668092016,
-  endedAt: 1668092016,
-  title: "title 1",
-  id: "1",
-  candidateId: "1",
+const result = ref<Result>({
+  questionAnswer: [],
+  startedAt: 0,
+  endedAt: 0,
+  id: "",
+  title: "",
   parent: {
-    position: "position 1",
-    username: "username 1",
-    linkedinUrl: "linkedinUrl 1",
-    feedback: "feedback 1",
-    avatarUrl:
-      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/602.jpg",
-    id: "1",
+    position: "",
+    username: "",
+    linkedinUrl: "",
+    feedback: "",
+    avatarUrl: "",
+    id: "",
   },
-};
+});
+
+const route = useRoute();
+const { getOneResultForCandidate } = useResultsStore();
+async function getOneResultForCandidateData() {
+  try {
+    const { data } = await getOneResultForCandidate(
+      route.params.candidateId,
+      route.params.resultId,
+    );
+    result.value = { ...data };
+  } catch (e) {
+    console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
+  }
+}
+getOneResultForCandidateData();
 
 const resultPercentage = computed(() =>
   (
-    (result.questionAnswer.reduce((summ, item) => summ + item.answerPoints, 0) *
-      100) /
-    result.questionAnswer.reduce((summ, item) => summ + item.questionScore, 0)
-  ).toFixed(1),
+    result.value.questionAnswer.reduce(
+      (summ, item) => summ + item.answerPoints,
+      0,
+    ) / result.value.questionAnswer.reduce((summ, item) => summ + item.point, 0)
+  ).toLocaleString("en-GB", { style: "percent" }),
 );
 
 const categories = computed(() =>
-  _uniq(result.questionAnswer.map(obj => obj.category)),
+  _uniq(result.value.questionAnswer.map(obj => obj.category)),
+);
+
+const categoriesWithPoints = computed(() =>
+  Object.fromEntries(
+    categories.value.map(category => [
+      category,
+      result.value.questionAnswer
+        .filter(answer => answer.category === category)
+        .reduce((summ, item) => summ + item.point, 0),
+    ]),
+  ),
+);
+
+const categoriesWithAnswerPoints = computed(() =>
+  Object.fromEntries(
+    categories.value.map(category => [
+      category,
+      result.value.questionAnswer
+        .filter(answer => answer.category === category)
+        .reduce((summ, item) => summ + item.answerPoints, 0),
+    ]),
+  ),
 );
 </script>
 
 <template>
   <div class="container mt-3 text-secondary">
-    <h2 class="text-primary text-center text-md-start">{{ result.title }}</h2>
     <div class="row">
-      <div class="col-12 text-center text-md-start">
-        <h3>{{ result.parent.username }}</h3>
+      <div
+        class="col-md-4 col-lg-3 col-xl-2 text-center text-md-start pt-4 avatar"
+      >
+        <router-link :to="'/candidates/' + result.parent.id">
+          <img
+            class="rounded-circle img-fluid p-2 border-primary border border-3 fit"
+            :src="result.parent.avatarUrl"
+            alt="candidateAvatar"
+            data-bs-toggle="tooltip"
+            data-bs-placement="left"
+            title="Go to candidate`s page"
+          />
+        </router-link>
       </div>
-      <div class="col-12 text-center text-md-start">
-        <h3>{{ result.parent.position }}</h3>
+      <div class="col-md-8 col-lg-4 mt-3 mt-lg-2">
+        <h2 class="text-primary text-center text-md-start">
+          {{ result.parent.username }}
+        </h2>
+        <div class="text-center text-md-start fs-4">
+          <font-awesome-icon
+            icon="fa-solid fa-user"
+            class="text-primary"
+          />
+          {{ result.parent.position }}
+        </div>
+        <div class="text-center text-md-start fs-4">
+          <font-awesome-icon
+            icon="fa-regular fa-clock"
+            class="text-primary fs-4"
+          />
+          {{ calculateTime(result.startedAt, result.endedAt) }}
+          minutes
+        </div>
+        <div class="text-center text-md-start fs-4">
+          <font-awesome-icon
+            icon="fa-solid fa-calendar-days"
+            class="text-primary fs-5"
+          />
+          {{ formattingDate(result.endedAt) }},
+          {{ formattingHours(result.endedAt) }}
+        </div>
+        <div class="text-center text-md-start mb-3 fs-4">
+          Result: {{ resultPercentage }}
+        </div>
+        <div class="progress">
+          <div
+            class="progress-bar progress-bar-striped progress-bar-animated"
+            role="progressbar"
+            aria-label="candidate score"
+            :style="`width: ${resultPercentage}`"
+            aria-valuenow="75"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          ></div>
+        </div>
       </div>
-      <div class="col-12 text-center text-md-start">
-        <h4>Result: {{ resultPercentage }}%</h4>
+    </div>
+    <div class="col-12 mt-md-5">
+      <div
+        class="text-center text-md-start shadow border border-secondary p-3 rounded border-1 mt-3"
+      >
+        <h4 class="fw-light">
+          <span class="fw-bolder">Short summary:</span>
+          {{ result.parent.feedback }}
+        </h4>
       </div>
-      <CategoryListItem
-        v-for="(category, index) in categories"
-        :key="category"
-        :item-id="index"
-        :category="category"
-        :questions-array="result.questionAnswer"
-      />
-
-      <div class="col-12 text-center text-md-end mt-3">
-        Start Date: {{ formattingDate(result.startedAt) }}
+      <h4 class="text-center text-md-start ps-md-1 mt-4">Skills</h4>
+      <div class="row">
+        <radial-progress-bar
+          v-for="category in categories"
+          :key="category"
+          class="col-3 mx-4 my-3"
+          :completed-steps="categoriesWithAnswerPoints[`${category}`]"
+          :total-steps="categoriesWithPoints[`${category}`]"
+          :inner-stroke-color="defaultBarColor"
+          :stroke-width="10"
+          :inner-stroke-width="12"
+          :diameter="140"
+          :start-color="
+            getBarColor(
+              categoriesWithAnswerPoints[`${category}`],
+              categoriesWithPoints[`${category}`],
+            )
+          "
+          :stop-color="
+            getBarColor(
+              categoriesWithAnswerPoints[`${category}`],
+              categoriesWithPoints[`${category}`],
+            )
+          "
+        >
+          <span class="ps-4 text-center">{{ category }}</span>
+        </radial-progress-bar>
       </div>
-      <div class="col-12 text-center text-md-end">
-        End Date: {{ formattingDate(result.endedAt) }}
+      <div
+        id="detailedByCategory"
+        class="accordion accordion-flush mt-5"
+      >
+        <div class="accordion-item">
+          <h2
+            id="detaildResultInfo"
+            class="accordion-header"
+          >
+            <button
+              class="accordion-button collapsed text-primary fs-5 shadow border border-light rounded py-4 fs-5 text-md-start mb-3"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#detaildResult"
+              aria-expanded="false"
+              aria-controls="detaildResult"
+            >
+              Detailed Result
+            </button>
+          </h2>
+          <div
+            id="detaildResult"
+            class="accordion-collapse collapse text-secondary"
+            aria-labelledby="headingResult"
+            data-bs-parent="#detailedByCategory"
+          >
+            <CategoryListItem
+              v-for="(category, index) in categories"
+              :key="category"
+              :item-id="index"
+              :category="category"
+              :questions-array="result.questionAnswer"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
+
+<style>
+.avatar .fit {
+  object-fit: cover;
+  height: 200px;
+  width: 200px;
+}
+</style>

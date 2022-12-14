@@ -24,31 +24,41 @@ const questionsSegregation = computed(() =>
 </script>
 
 <template>
-  <div>
-    <p class="text-center text-md-start">
-      <button
-        class="btn btn-outline-primary mt-2"
-        type="button"
-        data-bs-toggle="collapse"
-        :data-bs-target="'#collapseButton' + itemId"
-        aria-expanded="false"
-        :aria-controls="'collapseButton' + itemId"
+  <div
+    id="categoryAccordionFlush"
+    class="accordion accordion-flush mb-3 mx-2"
+  >
+    <div class="accordion-category">
+      <h2
+        id="flush-heading"
+        class="accordion-header"
       >
-        {{ props.category }}
-      </button>
-    </p>
-    <div
-      :id="'collapseButton' + itemId"
-      class="collapse multi-collapse"
-    >
-      <div class="card card-body bg-light">
-        <ul class="list-unstyled">
-          <ListItem
-            v-for="oneQuestion in questionsSegregation"
-            :key="oneQuestion.question"
-            :one-question="oneQuestion"
-          />
-        </ul>
+        <button
+          class="accordion-button collapsed text-primary fs-5 shadow border border-light rounded text-md-start mb-3"
+          type="button"
+          data-bs-toggle="collapse"
+          :data-bs-target="'#flush-collapseOne' + itemId"
+          aria-expanded="false"
+          :aria-controls="'flush-collapseOne' + itemId"
+        >
+          {{ props.category }}
+        </button>
+      </h2>
+      <div
+        :id="'flush-collapseOne' + itemId"
+        class="accordion-collapse collapse"
+        aria-labelledby="flush-heading"
+        data-bs-parent="#categoryAccordionFlush"
+      >
+        <div class="card card-body shadow py-0">
+          <ul class="list-unstyled">
+            <ListItem
+              v-for="question in questionsSegregation"
+              :key="question.text"
+              :question="question"
+            />
+          </ul>
+        </div>
       </div>
     </div>
   </div>

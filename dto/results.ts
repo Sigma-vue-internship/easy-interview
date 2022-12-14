@@ -1,6 +1,6 @@
 export interface QuestionAnswer {
-  question: string;
-  questionScore: number;
+  text: string;
+  point: number;
   answerPoints: number;
   category: string;
   answer: string;
@@ -19,6 +19,7 @@ export interface Result {
   questionAnswer: QuestionAnswer[];
   startedAt: number;
   endedAt: number;
+  title: string;
   id: string;
   parent: ResultParent;
 }
