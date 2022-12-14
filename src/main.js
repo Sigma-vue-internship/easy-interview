@@ -17,6 +17,10 @@ import {
   faTrashCan,
   faUserPlus,
   faCircleInfo,
+  faCircleCheck,
+  faCircleQuestion,
+  faArrowDownShortWide,
+  faTags,
   faCalendarDays,
   faUser,
   faChevronDown,
@@ -24,7 +28,12 @@ import {
   faPencil,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
-import { faFaceFrown, faClock } from "@fortawesome/free-regular-svg-icons";
+import {
+  faFaceFrown,
+  faClock,
+  faSquareMinus,
+  faSquarePlus,
+} from "@fortawesome/free-regular-svg-icons";
 import "./assets/fonts/css/fontello.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
@@ -48,6 +57,12 @@ library.add(
   faUserPlus,
   faFaceFrown,
   faCircleInfo,
+  faSquarePlus,
+  faSquareMinus,
+  faArrowDownShortWide,
+  faCircleCheck,
+  faCircleQuestion,
+  faTags,
   faCalendarDays,
   faClock,
   faUser,

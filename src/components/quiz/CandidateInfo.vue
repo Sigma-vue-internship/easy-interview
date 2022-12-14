@@ -1,98 +1,98 @@
 <script setup lang="ts">
 import { useCandidateStore } from "../../stores/candidates";
-import { ref, watch } from "vue";
+
+import { ref, watch, computed } from "vue";
+import _isEmpty from "lodash/isEmpty";
 import { Candidate } from "../../../dto/candidates";
+import EasyDropdown from "../common/EasyDropdown.vue";
+import SubmitButton from "../common/SubmitButton.vue";
 
 interface Emit {
-  (e: "choosedCandidate", id: number, name: string): void;
+  (e: "choosedCandidate", id: string, name: string): void;
+  (e: "setCandidateSelected"): void;
 }
-
-defineProps({
-  candidate: {
-    type: Object as () => Candidate,
-    default: () => ({
-      position: "",
-      username: "",
-      linkedinUrl: "",
-      feedback: "",
-      avatarUrl: "",
-      id: 0,
-    }),
-  },
-});
 
 const emit = defineEmits<Emit>();
-const candidatesList = ref<Candidate[]>([]);
-const { getAllCandidates } = useCandidateStore();
-const selectCandidate = ref("");
+const { getCandidatesByUsername } = useCandidateStore();
+const selectCandidate = ref(""); // v-model input
+const choosedCandidateObj = ref<Candidate>({}); // emitted candidate
 const isCandidatesVisible = ref(false);
 const choosedCandidates = ref<Candidate[]>([]);
-async function getAllCandidatesData() {
-  try {
-    const {
-      data: { candidates },
-    } = await getAllCandidates();
-    candidatesList.value = candidates;
-  } catch (e) {
-    console.log(e);
-  }
-}
 
-getAllCandidatesData();
-watch(selectCandidate, newCandidate => {
-  choosedCandidates.value = candidatesList.value.filter(candidate =>
-    candidate.username.includes(newCandidate),
-  );
+watch(selectCandidate, async newCandidate => {
+  const {
+    data: { candidates },
+  } = await getCandidatesByUsername(newCandidate);
+  choosedCandidates.value = candidates;
 });
 function setCandidate(user: Candidate) {
   isCandidatesVisible.value = false;
   emit("choosedCandidate", user.id, user.username);
+
   selectCandidate.value = user.username;
+  choosedCandidateObj.value = choosedCandidates.value.find(
+    candidate => candidate.id === user.id,
+  );
 }
+const isCandidateEmpty = computed(() => _isEmpty(choosedCandidateObj.value));
+
+const emitCandidateSelect = () => emit("setCandidateSelected");
 </script>
 
 <template>
   <h2 class="text-primary text-center text-md-start">Choose Candidate</h2>
-
-  <div class="col-12 w-50 position-relative">
-    <input
-      id="candadidateInput"
-      v-model="selectCandidate"
-      class="form-control"
-      placeholder="Enter username to search..."
-      @focusin="isCandidatesVisible = true"
+  <div
+    v-if="!choosedCandidateObj.id"
+    class="alert alert-primary d-flex align-items-center text-start"
+    role="alert"
+  >
+    <font-awesome-icon icon="fa-solid fa-circle-info" />
+    <div class="ps-3">We didn't find any candidate by current name</div>
+  </div>
+  <div class="col-12 position-relative">
+    <EasyDropdown
+      v-model:dropdown-input="selectCandidate"
+      :dropdown-data="choosedCandidates"
+      @set-dropdown-obj="setCandidate"
     />
-    <div
-      v-if="selectCandidate.length >= 1 && isCandidatesVisible"
-      class="list-group overflow-scroll w-100 position-absolute"
-    >
-      <a
-        v-for="singleCandidate in choosedCandidates"
-        :key="singleCandidate.id"
-        class="list-group-item list-group-item-action p-0 px-2"
+  </div>
+  <div
+    v-if="!isCandidateEmpty"
+    class="border rounded-2 border-light my-3 p-2 bg-body col-12 col-md-9"
+  >
+    <div class="row g-0 justfy-content-start">
+      <div
+        class="col-md-2 d-flex align-items-center justify-content-center justify-content-md-start ms-md-3 mb-3 mb-md-0"
       >
-        <div
-          class="d-flex w-100 align-items-center gap-3"
-          @click="setCandidate(singleCandidate)"
-        >
-          <img
-            :src="singleCandidate.avatarUrl"
-            class="rounded-circle"
-            height="50"
-            alt="avatar"
-          />
-          <div class="flex-column text-start">
-            <p class="m-1 me-3">{{ singleCandidate.username }}</p>
-            <p class="m-1 me-3">{{ singleCandidate.position }}</p>
-          </div>
+        <img
+          :src="choosedCandidateObj.avatarUrl"
+          class="d-block rounded-circle p-2 border border-2 border-primary"
+          width="150"
+          height="150"
+          alt="..."
+        />
+      </div>
+      <div class="col-md-6 offset-md-3 ms-lg-5">
+        <div class="text-center text-md-start text-primary">
+          <h5 class="">{{ choosedCandidateObj.username }}</h5>
+          <p class="">
+            {{ choosedCandidateObj.position }}
+          </p>
+          <p>
+            <small class="text-muted">{{
+              choosedCandidateObj.linkedinUrl
+            }}</small>
+          </p>
         </div>
-      </a>
+      </div>
     </div>
   </div>
+  <div class="text-center text-md-end">
+    <SubmitButton
+      v-if="!_isEmpty(choosedCandidateObj)"
+      id="stepToQuestions"
+      @click="emitCandidateSelect"
+      >Next step</SubmitButton
+    >
+  </div>
 </template>
-
-<style scoped>
-.overflow-scroll {
-  max-height: 245px;
-}
-</style>

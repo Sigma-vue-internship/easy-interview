@@ -19,6 +19,9 @@ export const useCandidateStore = defineStore("candidates", {
     async getAllCandidates() {
       return this.$axios.get("/candidates");
     },
+    async getCandidatesByUsername(username) {
+      return this.$axios.get(`/candidates?username=${username}`);
+    },
     async getCandidatesByFilter(request) {
       return this.$axios.get(`/candidates?filter=${request}`);
     },

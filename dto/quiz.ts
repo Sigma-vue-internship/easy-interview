@@ -1,7 +1,7 @@
 export interface QuizQuestion {
   text: string;
   point: number;
-  answerPoints: number;
+  answerPoints?: number;
   answer: string;
   category: string;
   id: string;
@@ -13,3 +13,8 @@ export interface QuizResult {
   startedAt: number;
   endedAt: number;
 }
+
+export interface CategoryQuestions {
+  [key: string]: QuizQuestion[];
+}
+// question -->
