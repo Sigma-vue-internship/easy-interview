@@ -1,6 +1,6 @@
 export interface QuestionAnswer {
-  question: string;
-  questionScore: number;
+  text: string;
+  point: number;
   answerPoints: number;
   category: string;
   answer: string;

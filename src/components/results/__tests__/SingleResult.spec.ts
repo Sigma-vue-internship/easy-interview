@@ -1,6 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mount } from "@vue/test-utils";
 import SingleResult from "../SingleResult.vue";
+import { createTestingPinia } from "@pinia/testing";
+
+const getWrapper = () =>
+  mount(SingleResult, {
+    global: {
+      plugins: [createTestingPinia()],
+    },
+  });
 
 describe("SingleResult.vue", () => {
   beforeEach(() => {
@@ -8,7 +16,7 @@ describe("SingleResult.vue", () => {
   });
 
   it("should render all answers from array", async () => {
-    const wrapper = mount(SingleResult);
+    const wrapper = getWrapper();
     const answerArrayLength = wrapper.findAll(".full-answer-list").length;
     const renderedList = wrapper.findAll(".answer-item").length;
 
