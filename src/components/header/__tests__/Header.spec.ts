@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mount } from "@vue/test-utils";
 import Header from "../Header.vue";
-import { useRoute } from "vue-router";
-
+import { useRoute, useRouter } from "vue-router";
+import { createTestingPinia } from "@pinia/testing";
 const loginWithRedirect = vi.fn();
 const logout = vi.fn();
 const isAuthenticated = false;
@@ -21,6 +21,11 @@ vi.mock("vue-router/dist/vue-router.mjs", () => ({
       title: "test_category",
     },
   }),
+  useRouter: () => ({
+    data: {
+      router: "test_router",
+    },
+  }),
 }));
 describe("Header.vue", () => {
   beforeEach(() => {
@@ -28,7 +33,11 @@ describe("Header.vue", () => {
   });
 
   it("should call auth0 login", async () => {
-    const wrapper = mount(Header);
+    const wrapper = mount(Header, {
+      global: {
+        plugins: [createTestingPinia()],
+      },
+    });
 
     const button = wrapper.find(".log-in");
     expect(button.exists()).toBe(true);

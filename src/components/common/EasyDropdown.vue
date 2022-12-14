@@ -4,7 +4,7 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { ref, onUpdated, reactive } from "vue";
+import { ref, reactive, watch, toRefs } from "vue";
 import debounce from "lodash/debounce";
 interface Emit {
   (e: "update:dropdownInput", targetValue: string): void;
@@ -34,14 +34,17 @@ const props = defineProps({
 const zIndexStyle = reactive({
   "z-index": props.zIndexStyle,
 });
+// const dropdownCurrentInput = ref("");
 const isDropdownObjVisible = ref(false);
 const emit = defineEmits<Emit>();
 const emitDropdownUpdate = debounce(e => {
+  // dropdownCurrentInput.value = e.target.value;
   emit("update:dropdownInput", e.target.value);
-}, 250);
+}, 350);
 
 const emitSetDropdownObj = dropdownObj => {
   isDropdownObjVisible.value = false;
+  // dropdownCurrentInput.value = e.target.value;
   emit("setDropdownObj", dropdownObj);
 };
 function handleBlur(e) {
@@ -60,7 +63,6 @@ function handleBlur(e) {
       id="candidateInput"
       class="form-control container-fluid"
       placeholder="Type something to search..."
-      :value="dropdownInput"
       @input="emitDropdownUpdate"
       @focusin="isDropdownObjVisible = true"
     />
@@ -70,12 +72,16 @@ function handleBlur(e) {
       :style="zIndexStyle"
     >
       <a
-        v-for="dropdownObj in dropdownData"
-        :key="dropdownObj.id"
+        v-for="(dropdownObj, index) in dropdownData"
+        :key="
+          `${dropdownObj.id}`
+            ? `${dropdownObj.username}${dropdownObj.id}`
+            : `${dropdownObj}`
+        "
         class="list-group-item list-group-item-action p-0 px-2 h-100 w-100"
       >
         <div
-          :id="'dropdownObjBtn' + dropdownObj.id"
+          :id="'dropdownObjBtn' + index"
           class="d-flex w-100 align-items-center gap-3"
           :style="{ height: '65px' }"
           @click="emitSetDropdownObj(dropdownObj)"

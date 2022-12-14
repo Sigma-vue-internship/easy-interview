@@ -1,45 +1,44 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useCandidateStore } from "../../stores/candidates";
-import { useQuestionStore } from "../../stores/questions";
 import { Candidate } from "../../../dto/candidates";
 import { Categories } from "../../utils/useCategories";
 import { useRouter } from "vue-router";
 const searchInput = ref<string>("");
-const isCandidateMode = ref<boolean>(false);
-const isCategoryMode = ref<boolean>(false);
+const isCandidateMode = ref(false);
+const isCategoryMode = ref(false);
+const currentMode = ref("all");
 const candidateStore = useCandidateStore();
-const questionStore = useQuestionStore();
-// how to make type dynamic on object and string
 const searchData = ref([]);
-watch([searchInput, isCandidateMode, isCategoryMode], async () => {
-  if (searchInput.value.length === 0) {
+const router = useRouter();
+watch([searchInput, currentMode], async ([newInput, newCurrentMode]) => {
+  if (newInput.length === 0) {
     return;
   }
-  if (isCandidateMode.value) {
-    const res = await candidateStore.getCandidatesByUsername(searchInput.value);
-    // BUG:fix on mode change dynamic array filtering inside dropdown
-    // BUG:auth0 test is falling
-    searchData.value = [...res.data.candidates];
-    console.log(searchData.value);
-    return;
-  } else if (isCategoryMode.value) {
-    searchData.value = Categories().filter(category =>
-      category.toLowerCase().includes(searchInput.value.toLowerCase()),
-    );
-    console.log(searchData.value);
 
+  if (newCurrentMode === "candidate") {
+    const res = await candidateStore.getCandidatesByUsername(newInput);
+    searchData.value = [...res.data.candidates];
     return;
   }
-  const resCandidate = await candidateStore.getCandidatesByUsername(
-    searchInput.value,
-  );
-  const searchedCategories: Array<String> = Categories().filter(category =>
-    category.toLowerCase().includes(searchInput.value.toLowerCase()),
-  );
-  searchData.value = [
-    ...spreadDynamicly(resCandidate.data.candidates, searchedCategories),
-  ];
+
+  if (newCurrentMode === "category") {
+    return (searchData.value = [
+      ...Categories().filter(category =>
+        category.toLowerCase().includes(newInput.toLowerCase()),
+      ),
+    ]);
+  }
+
+  if (newCurrentMode === "all") {
+    const resCandidate = await candidateStore.getCandidatesByUsername(newInput);
+    const searchedCategories: Array<String> = Categories().filter(category =>
+      category.toLowerCase().includes(newInput.toLowerCase()),
+    );
+    searchData.value = [
+      ...spreadDynamicly(resCandidate.data.candidates, searchedCategories),
+    ];
+  }
 });
 function spreadDynamicly(
   candidates: Array<Candidate>,
@@ -63,12 +62,35 @@ function spreadDynamicly(
   return dynamicArray;
 }
 function redirectTo(dropdownObj) {
-  const router = useRouter();
-
   if (dropdownObj.id) {
     router.push({ path: `/candidates/${dropdownObj.id}`, replace: true });
   } else {
     router.push({ path: `/questions/${dropdownObj}`, replace: true });
+  }
+}
+
+const tempSwitch = ref("");
+
+function handleSwitch(currentSwitch) {
+  if (tempSwitch.value === currentSwitch) {
+    tempSwitch.value = "";
+    isCandidateMode.value = false;
+    isCategoryMode.value = false;
+    return (currentMode.value = "all");
+  }
+
+  if (currentSwitch === "category") {
+    tempSwitch.value = "category";
+    isCategoryMode.value = true;
+    isCandidateMode.value = false;
+    return (currentMode.value = "category");
+  }
+
+  if (currentSwitch === "candidate") {
+    tempSwitch.value = "candidate";
+    isCandidateMode.value = true;
+    isCategoryMode.value = false;
+    return (currentMode.value = "candidate");
   }
 }
 </script>
@@ -119,7 +141,7 @@ function redirectTo(dropdownObj) {
                   v-model="isCandidateMode"
                   class="form-check-input"
                   type="checkbox"
-                  @click="isCategoryMode = false"
+                  @click="handleSwitch('candidate')"
                 />
                 <label
                   class="form-check-label"
@@ -136,7 +158,7 @@ function redirectTo(dropdownObj) {
                   v-model="isCategoryMode"
                   class="form-check-input"
                   type="checkbox"
-                  @click="isCandidateMode = false"
+                  @click="handleSwitch('category')"
                 />
                 <label
                   class="form-check-label"
