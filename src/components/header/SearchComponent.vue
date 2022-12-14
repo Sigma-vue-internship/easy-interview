@@ -2,7 +2,7 @@
 import { ref, watch } from "vue";
 import { useCandidateStore } from "../../stores/candidates";
 import { Candidate } from "../../../dto/candidates";
-import { Categories } from "../../utils/useCategories";
+import { categories } from "../../hooks/categories";
 import { useRouter } from "vue-router";
 const searchInput = ref<string>("");
 const isCandidateMode = ref(false);
@@ -23,7 +23,7 @@ watch([searchInput, currentMode], async ([newInput, newCurrentMode]) => {
 
     case "category":
       searchData.value = [
-        ...Categories().filter(category =>
+        ...categories.filter(category =>
           category.toLowerCase().includes(newInput.toLowerCase()),
         ),
       ];
@@ -32,7 +32,7 @@ watch([searchInput, currentMode], async ([newInput, newCurrentMode]) => {
       const resCandidate = await candidateStore.getCandidatesByUsername(
         newInput,
       );
-      const searchedCategories: Array<String> = Categories().filter(category =>
+      const searchedCategories: Array<String> = categories.filter(category =>
         category.toLowerCase().includes(newInput.toLowerCase()),
       );
       searchData.value = [
