@@ -8,6 +8,7 @@ import { useResultsStore } from "../../stores/results";
 import CandidateForm from "./CandidateForm.vue";
 import { Candidate } from "../../../dto/candidates";
 import { Result } from "../../../dto/results";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
 
 const { params } = useRoute();
 const router = useRouter();
@@ -31,6 +32,9 @@ async function getCandidateData() {
   } catch (e) {
     isLoaderVisible.value = false;
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
 }
 
@@ -42,6 +46,9 @@ async function getResultsForCandidateData() {
     candidateResults.value = data;
   } catch (e) {
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
 }
 getResultsForCandidateData();
@@ -66,6 +73,9 @@ async function editSingleCandidate() {
     currentCandidate.value = data;
   } catch (e) {
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
 }
 async function deleteCandidate() {
@@ -76,6 +86,9 @@ async function deleteCandidate() {
     });
   } catch (e) {
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
 }
 
