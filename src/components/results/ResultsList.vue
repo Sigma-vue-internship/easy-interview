@@ -1,130 +1,203 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import formattingDate from "../../utils/dateFormatting";
-
-const quizResults = [
-  {
-    questionAnswer: [],
-    startedAt: 1668092016,
-    endedAt: 1668092016,
-    title: "title 1",
-    id: "1",
-    candidateId: "1",
-    parent: {
-      position: "position 1",
-      username: "username 1",
-      linkedinUrl: "linkedinUrl 1",
-      feedback: "feedback 1",
-      avatarUrl:
-        "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/602.jpg",
-      id: "1",
-    },
-  },
-  {
-    questionAnswer: [],
-    startedAt: 1668091776,
-    endedAt: 1668091776,
-    title: "title 5",
-    id: "5",
-    candidateId: "1",
-    parent: {
-      position: "position 1",
-      username: "username 1",
-      linkedinUrl: "linkedinUrl 1",
-      feedback: "feedback 1",
-      avatarUrl:
-        "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/602.jpg",
-      id: "1",
-    },
-  },
-  {
-    questionAnswer: [],
-    startedAt: 1668091956,
-    endedAt: 1668091956,
-    title: "title 2",
-    id: "2",
-    candidateId: "2",
-    parent: {
-      position: "position 2",
-      username: "username 2",
-      linkedinUrl: "linkedinUrl 2",
-      feedback: "feedback 2",
-      avatarUrl:
-        "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/976.jpg",
-      id: "2",
-    },
-  },
-  {
-    questionAnswer: [],
-    startedAt: 1668091716,
-    endedAt: 1668091716,
-    title: "title 6",
-    id: "6",
-    candidateId: "2",
-    parent: {
-      position: "position 2",
-      username: "username 2",
-      linkedinUrl: "linkedinUrl 2",
-      feedback: "feedback 2",
-      avatarUrl:
-        "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/976.jpg",
-      id: "2",
-    },
-  },
-  {
-    questionAnswer: [],
-    startedAt: 1668091656,
-    endedAt: 1668091656,
-    title: "title 7",
-    id: "7",
-    candidateId: "3",
-    parent: {
-      position: "position 3",
-      username: "username 3",
-      linkedinUrl: "linkedinUrl 3",
-      feedback: "feedback 3",
-      avatarUrl:
-        "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/638.jpg",
-      id: "3",
-    },
-  },
-];
+import {
+  formattingDate,
+  formattingHours,
+  calculateTime,
+} from "../../utils/dateFormatting";
+import { useCandidateStore } from "../../stores/candidates";
+import { useResultsStore } from "../../stores/results";
+import { ref, watch } from "vue";
+import { Candidate } from "../../../dto/candidates";
+import { Result } from "../../../dto/results";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
 
 const router = useRouter();
+const { getAllCandidates } = useCandidateStore();
+const { getResultsForCandidate } = useResultsStore();
 
-function pushRoute(id: string) {
+const candidatesList = ref<Candidate[]>([]);
+const selectedCandidate = ref("");
+const isCandidatesVisible = ref(false);
+const choosedCandidates = ref<Candidate[]>([]);
+const quizResults = ref<Result[]>([]);
+const isLoaderVisible = ref(true);
+
+async function getAllCandidatesData() {
+  try {
+    isLoaderVisible.value = true;
+    const {
+      data: { candidates },
+    } = await getAllCandidates();
+    candidatesList.value = candidates;
+  } catch (e) {
+    console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
+  }
+  isLoaderVisible.value = false;
+}
+getAllCandidatesData();
+
+async function getResultsForCandidateData(candidateId: number) {
+  try {
+    isLoaderVisible.value = true;
+    const { data } = await getResultsForCandidate(candidateId);
+    quizResults.value = data;
+  } catch (e) {
+    console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
+  }
+  isLoaderVisible.value = false;
+}
+
+watch(selectedCandidate, newCandidate => {
+  choosedCandidates.value = candidatesList.value.filter(candidate =>
+    candidate.username.includes(newCandidate),
+  );
+});
+function setCandidate(user: Candidate) {
+  quizResults.value = [];
+  isCandidatesVisible.value = false;
+  selectedCandidate.value = user.username;
+  getResultsForCandidateData(user.id);
+}
+
+function pushRoute(candidateId: string, resultId: string) {
   router.push({
     name: "singleResult",
-    params: { id },
+    params: {
+      candidateId,
+      resultId,
+    },
   });
 }
 </script>
 
 <template>
   <div class="container mt-3">
-    <h2 class="text-primary text-center text-md-start">Quiz Results</h2>
-    <ul class="list-unstyled">
-      <li
-        v-for="item in quizResults"
-        :key="item.id"
-        class="border border-light mt-4 p-2 rounded-3 text-secondary mx-auto shadow-sm ps-4"
-        @click="pushRoute(item.id)"
+    <h2 class="text-primary text-center text-md-start mb-md-2">Quiz Results</h2>
+    <div
+      class="alert alert-warning"
+      role="alert"
+    >
+      <font-awesome-icon
+        icon="fa-solid fa-circle-info"
+        class="fs-6"
+      />
+      Quiz results are grouped by Candidates. For displaying results, please,
+      choose candidate from list
+    </div>
+    <div class="col-12 w-100 position-relative">
+      <h2 class="text-primary text-center text-md-start mt-2">
+        Choose candidate
+      </h2>
+      <input
+        id="candadidateInput"
+        v-model="selectedCandidate"
+        class="form-control"
+        placeholder="Enter username to search..."
+        @focusin="isCandidatesVisible = true"
+      />
+      <div
+        v-if="selectedCandidate && isCandidatesVisible"
+        class="list-group overflow-scroll w-100 position-absolute"
       >
-        <div class="row">
-          <h4 class="text-center text-lg-start">{{ item.title }}</h4>
-        </div>
-        <div class="row text-center text-lg-start">
-          <div class="col-12 col-lg-6">
-            {{ item.parent.username }}
+        <a
+          v-for="singleCandidate in choosedCandidates"
+          :key="singleCandidate.id"
+          class="list-group-item list-group-item-action p-0 px-2"
+        >
+          <div
+            class="d-flex w-100 align-items-center gap-3"
+            @click="setCandidate(singleCandidate)"
+          >
+            <img
+              :src="singleCandidate.avatarUrl"
+              class="rounded-circle"
+              height="50"
+              alt="avatar"
+            />
+            <div class="flex-column text-start">
+              <p class="m-1 me-3">{{ singleCandidate.username }}</p>
+              <p class="m-1 me-3">{{ singleCandidate.position }}</p>
+            </div>
           </div>
-          <div class="col-12 col-lg-3">
-            {{ item.parent.position }}
-          </div>
-          <div class="col-12 col-lg-3 text-lg-end pe-4">
-            {{ formattingDate(item.endedAt) }}
-          </div>
-        </div>
-      </li>
-    </ul>
+        </a>
+      </div>
+      <SpinnerLoader
+        v-if="isLoaderVisible"
+        class="mt-5"
+      />
+      <div v-else-if="quizResults.length && !isLoaderVisible">
+        <h2 class="text-primary text-center text-md-start mt-4">
+          Results List
+        </h2>
+        <ul class="list-unstyled">
+          <li
+            v-for="oneResult in quizResults"
+            :key="oneResult.id"
+            class="border border-light mt-3 mb-4 p-2 rounded-3 text-secondary mx-auto shadow ps-4 pe-auto"
+            role="button"
+            data-bs-toggle="tooltip"
+            data-bs-placement="left"
+            title="Click for showing full report"
+            @click="pushRoute(oneResult.parent.id, oneResult.id)"
+          >
+            <div class="row">
+              <div class="col-12 col-md-10 col-lg-11">
+                <h5 class="text-primary text-center text-md-start mb-1">
+                  Quiz Result {{ oneResult.id }}
+                </h5>
+                <span class="text-secondary text-center text-md-start d-block">
+                  <font-awesome-icon
+                    icon="fa-regular fa-clock"
+                    class="text-primary"
+                  />
+                  {{ calculateTime(oneResult.startedAt, oneResult.endedAt) }}
+                  minutes
+                </span>
+                <span class="d-block text-secondary text-center text-md-start">
+                  <font-awesome-icon
+                    icon="fa-solid fa-calendar-days"
+                    class="text-primary fs-6"
+                  />
+                  Ended at: {{ formattingDate(oneResult.endedAt) }},
+                  {{ formattingHours(oneResult.endedAt) }}
+                </span>
+              </div>
+              <div class="col-md-2 col-lg-1 text-center">
+                <font-awesome-icon
+                  icon="fa-solid fa-chevron-down"
+                  class="text-secondary fs-4 pt-4 text-opacity-25"
+                />
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div
+        v-else-if="
+          selectedCandidate && quizResults.length === 0 && !isLoaderVisible
+        "
+      >
+        <h5 class="text-primary text-center mt-5">
+          Sorry, this candidate has not passed any quiz yet
+          <font-awesome-icon
+            class="pt-4"
+            icon="fa-regular fa-face-frown"
+          />
+        </h5>
+      </div>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.overflow-scroll {
+  max-height: 245px;
+}
+</style>
