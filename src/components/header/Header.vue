@@ -16,7 +16,7 @@ function logoutUser() {
 </script>
 <template>
   <header>
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar navbar-light bg-light d-flex align-items-center">
       <div class="container">
         <div class="row justify-content-between w-100 gx-0">
           <router-link
@@ -31,7 +31,7 @@ function logoutUser() {
             />
           </router-link>
           <div
-            class="d-none d-md-flex col-md-8 row gx-5 gx-lg-0 justify-content-end justify-content-md-around"
+            class="d-none d-md-flex col-md-8 row gx-5 gx-lg-0 justify-content-end align-items-center justify-content-md-around"
           >
             <SearchComponent class="d-none d-md-block col-12 col-md-9" />
             <button
