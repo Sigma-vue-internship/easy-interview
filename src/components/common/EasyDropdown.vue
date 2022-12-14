@@ -4,7 +4,7 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { ref, reactive, watch, toRefs } from "vue";
+import { ref, reactive } from "vue";
 import debounce from "lodash/debounce";
 interface Emit {
   (e: "update:dropdownInput", targetValue: string): void;
