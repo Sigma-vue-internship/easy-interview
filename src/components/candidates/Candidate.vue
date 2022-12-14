@@ -1,53 +1,27 @@
-<script setup>
+<script setup lang="ts">
 import SubmitButton from "../common/SubmitButton.vue";
 import DeleteButton from "../common/DeleteButton.vue";
-
 import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue";
 import { useCandidateStore } from "../../stores/candidates";
+import { useResultsStore } from "../../stores/results";
 import CandidateForm from "./CandidateForm.vue";
+import { Candidate } from "../../../dto/candidates";
+import { Result } from "../../../dto/results";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
+
 const { params } = useRoute();
 const router = useRouter();
 const isLoaderVisible = ref(true);
-const currentCandidate = ref({});
-let candidateInit = {
+
+const currentCandidate = ref<Candidate>({
   position: "",
   username: "",
   linkedinUrl: "",
   feedback: "",
   avatarUrl: "",
   id: 0,
-};
-const candidateResults = ref([
-  {
-    questionAnswer: [],
-    startedAt: 1666948101,
-    endedAt: 1666948101,
-    title: "title 1",
-    id: "1",
-    candidateId: "1",
-  },
-  {
-    questionAnswer: [],
-    startedAt: 1666958718,
-    endedAt: 1666958718,
-    title: "title 5",
-    id: "5",
-    candidateId: "1",
-  },
-  {
-    questionAnswer: [],
-    startedAt: 1666958718,
-    endedAt: 1666958718,
-    title: "title 8",
-    id: "5523",
-    candidateId: "1",
-  },
-]);
-const formType = ref("put");
-const { getCandidateById, deleteCandidateById, editCandidate } =
-  useCandidateStore();
-
+});
 async function getCandidateData() {
   try {
     isLoaderVisible.value = true;
@@ -58,8 +32,40 @@ async function getCandidateData() {
   } catch (e) {
     isLoaderVisible.value = false;
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
 }
+
+const { getResultsForCandidate } = useResultsStore();
+const candidateResults = ref<Result[]>([]);
+async function getResultsForCandidateData() {
+  try {
+    const { data } = await getResultsForCandidate(params.id);
+    candidateResults.value = data;
+  } catch (e) {
+    console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
+  }
+}
+getResultsForCandidateData();
+
+const formType = ref("put");
+const { getCandidateById, deleteCandidateById, editCandidate } =
+  useCandidateStore();
+
+let candidateInit = {
+  position: "",
+  username: "",
+  linkedinUrl: "",
+  feedback: "",
+  avatarUrl: "",
+  id: 0,
+};
+
 async function editSingleCandidate() {
   try {
     const { data } = await editCandidate(currentCandidate.value);
@@ -67,6 +73,9 @@ async function editSingleCandidate() {
     currentCandidate.value = data;
   } catch (e) {
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
 }
 async function deleteCandidate() {
@@ -77,11 +86,22 @@ async function deleteCandidate() {
     });
   } catch (e) {
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
 }
-function resultsID(id) {
-  console.log(id);
+
+function pushRoute(candidateId: string, resultId: string) {
+  router.push({
+    name: "singleResult",
+    params: {
+      candidateId,
+      resultId,
+    },
+  });
 }
+
 function resetCandidate() {
   currentCandidate.value = { ...candidateInit };
 }
@@ -153,21 +173,29 @@ getCandidateData();
       </div>
       <div class="text-center mt-4">
         <h3 class="text-primary mb-3">Quiz results</h3>
-        <ul class="list-unstyled row">
+        <ul
+          v-if="candidateResults.length"
+          class="list-unstyled row"
+        >
           <li
             v-for="result in candidateResults"
             :key="result.id"
-            class="my-2 text-secondary col-12 col-md-6 col-lg-4"
+            class="my-2 text-secondary col-12 col-lg-4"
           >
             {{ result.title }}
             <button
               class="btn btn-outline-secondary rounded-pill ms-3 opacity-75 show-more"
-              @click="resultsID(result.id)"
+              @click="pushRoute(result.parent.id, result.id)"
             >
               show full
             </button>
           </li>
         </ul>
+        <div v-if="!candidateResults.length">
+          <p class="text-secondary">
+            All results will be displayed here after passing quiz by candidate
+          </p>
+        </div>
       </div>
     </div>
   </div>
