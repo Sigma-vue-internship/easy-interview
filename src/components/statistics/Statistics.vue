@@ -155,8 +155,26 @@ getAllResults();
 </script>
 <template>
   <div class="container p-4 rounded">
-    <h1 class="text-primary fs-2 pb-3">Statistics</h1>
-
+    <h1 class="text-primary fs-2 pb-1">Statistics</h1>
+    <div
+      class="alert alert-primary d-flex align-items-center mt-2"
+      role="alert"
+    >
+      <div
+        v-if="activeTab === 'Results'"
+        class="d-flex gap-2 align-items-center"
+      >
+        <font-awesome-icon icon="fa-solid fa-circle-info" />Top 10 candidate
+        results statistics
+      </div>
+      <div
+        v-if="activeTab === 'Questions'"
+        class="d-flex gap-2 align-items-center"
+      >
+        <font-awesome-icon icon="fa-solid fa-circle-info" />The quantity of all
+        questions
+      </div>
+    </div>
     <ul class="nav nav-tabs">
       <li class="nav-item">
         <button
