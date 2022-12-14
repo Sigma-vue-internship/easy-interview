@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
-import CandidatesList from "../CandidatesList.vue";
+import CandidatesList from "../CandidatesListView.vue";
 import { createTestingPinia } from "@pinia/testing";
-import { useCandidateStore } from "../../../stores/candidates";
+import { useCandidateStore } from "../../stores/candidates";
 import { createRouter, createWebHistory } from "vue-router";
 const router = createRouter({
   history: createWebHistory(),

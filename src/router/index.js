@@ -4,9 +4,8 @@ import DashboardView from "../views/DashboardView.vue";
 import CandidatesListView from "../views/CandidatesListView.vue";
 import CandidateView from "../views/CandidateView.vue";
 import CategoriesListView from "../views/CategoriesListView.vue";
-import CategoryView from "../views/CategoryView.vue";
+import QuestionsListView from "../views/QuestionsListView.vue";
 import StatisticsView from "../views/StatisticsView.vue";
-import QuizView from "../views/QuizView.vue";
 import QuizResultsView from "../views/QuizResultsView.vue";
 import QuizConstructorView from "../views/QuizConstructorView.vue";
 import SingleResultView from "../views/SingleResultView.vue";
@@ -28,12 +27,6 @@ const router = createRouter({
       path: "/",
       name: "dashboard",
       component: DashboardView,
-    },
-    {
-      path: "/quiz",
-      name: "quiz",
-      component: QuizView,
-      beforeEnter: authGuard,
     },
     {
       path: "/statistics",
@@ -73,7 +66,7 @@ const router = createRouter({
     {
       path: "/questions/:title",
       name: "category",
-      component: CategoryView,
+      component: QuestionsListView,
       beforeEnter: authGuard,
     },
     {

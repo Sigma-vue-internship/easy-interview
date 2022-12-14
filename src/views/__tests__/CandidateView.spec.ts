@@ -1,8 +1,8 @@
 import { createTestingPinia } from "@pinia/testing";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
-import Candidate from "../Candidate.vue";
-import { useCandidateStore } from "../../../stores/candidates";
+import Candidate from "../CandidateView.vue";
+import { useCandidateStore } from "../../stores/candidates";
 
 import { useRoute, useRouter } from "vue-router";
 
