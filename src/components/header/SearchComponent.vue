@@ -17,28 +17,28 @@ watch([searchInput, currentMode], async ([newInput, newCurrentMode]) => {
   }
   switch (newCurrentMode) {
     case "candidate":
-    const res = await candidateStore.getCandidatesByUsername(newInput);
-    searchData.value = [...res.data.candidates];
-    break;
+      const res = await candidateStore.getCandidatesByUsername(newInput);
+      searchData.value = [...res.data.candidates];
+      break;
 
     case "category":
-    searchData.value = [
-      ...Categories().filter(category =>
-        category.toLowerCase().includes(newInput.toLowerCase()),
-      ),
-    ];
-    break;
+      searchData.value = [
+        ...Categories().filter(category =>
+          category.toLowerCase().includes(newInput.toLowerCase()),
+        ),
+      ];
+      break;
     default:
-    const resCandidate = await candidateStore.getCandidatesByUsername(
-      newInput,
-    );
-    const searchedCategories: Array<String> = Categories().filter(category =>
-      category.toLowerCase().includes(newInput.toLowerCase()),
-    );
-    searchData.value = [
-      ...spreadDynamicly(resCandidate.data.candidates, searchedCategories),
-    ];
-    break;
+      const resCandidate = await candidateStore.getCandidatesByUsername(
+        newInput,
+      );
+      const searchedCategories: Array<String> = Categories().filter(category =>
+        category.toLowerCase().includes(newInput.toLowerCase()),
+      );
+      searchData.value = [
+        ...spreadDynamicly(resCandidate.data.candidates, searchedCategories),
+      ];
+      break;
   }
 });
 function spreadDynamicly(
