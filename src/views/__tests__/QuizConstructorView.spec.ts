@@ -1,15 +1,15 @@
 import { flushPromises, VueWrapper } from "@vue/test-utils";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { createTestingPinia } from "@pinia/testing";
-import QuizConstructor from "../QuizConstructor.vue";
-import { IEmit } from "../../../../dto/emit";
+import QuizConstructor from "../QuizConstructorView.vue";
+import { IEmit } from "../../../dto/emit";
 import _uniq from "lodash/uniq";
-import SubmitButton from "../../common/SubmitButton.vue";
-import EasyDropdown from "../../common/EasyDropdown.vue";
-import { useQuestionStore } from "../../../stores/questions";
-import { useCandidateStore } from "../../../stores/candidates";
-import CandidateInfo from "../../quiz/CandidateInfo.vue";
-import { wrapperFactory } from "../../../service/wrapperFactory";
+import SubmitButton from "../../components/common/SubmitButton.vue";
+import EasyDropdown from "../../components/common/EasyDropdown.vue";
+import { useQuestionStore } from "../../stores/questions";
+import { useCandidateStore } from "../../stores/candidates";
+import CandidateInfo from "../../components/quiz/CandidateInfo.vue";
+import { wrapperFactory } from "../../service/wrapperFactory";
 
 const plugins = [
   createTestingPinia({

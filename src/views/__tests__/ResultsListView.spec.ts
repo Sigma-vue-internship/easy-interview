@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mount } from "@vue/test-utils";
-import ResultsList from "../ResultsList.vue";
+import QuizResultsList from "../QuizResultsView.vue";
 import { createTestingPinia } from "@pinia/testing";
 
 const getWrapper = () =>
-  mount(ResultsList, {
+  mount(QuizResultsList, {
     global: {
       plugins: [createTestingPinia()],
     },

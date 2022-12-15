@@ -9,9 +9,11 @@ const isLoading = auth0.isLoading;
 
 <template>
   <Header />
-  <SpinnerLoader v-if="isLoading" />
-  <RouterView
-    v-else
-    :key="$route.path"
-  />
+  <div class="container mt-3 text-secondary">
+    <SpinnerLoader v-if="isLoading" />
+    <RouterView
+      v-else
+      :key="$route.path"
+    />
+  </div>
 </template>

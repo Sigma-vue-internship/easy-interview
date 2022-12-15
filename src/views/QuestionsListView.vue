@@ -1,7 +1,7 @@
 <script setup>
-import QuestionForm from "./QuestionForm.vue";
+import QuestionForm from "../components/questions/QuestionForm.vue";
 import { useRoute } from "vue-router";
-import { useQuestionStore } from "../../stores/questions";
+import { useQuestionStore } from "../stores/questions";
 import { ref, computed } from "vue";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 
@@ -69,71 +69,69 @@ function setDeleteQuestion(id) {
 getQuestionList();
 </script>
 <template>
-  <div class="container mt-3 text-center">
-    <div class="row mb-3 align-items-center">
-      <div class="d-flex justify-content-between">
-        <div
-          class="col-lg-2 mb-md-4 mb-lg-0 col-xl-2 col-xxl-2 text-center text-md-start text-primary"
+  <div class="row mb-3 align-items-center">
+    <div class="d-flex justify-content-between">
+      <div
+        class="col-lg-6 mb-md-4 mb-lg-0 col-xl-5 col-xxl-4 col-md-47 text-center text-md-start text-primary"
+      >
+        <h2>{{ route.params.title }}</h2>
+      </div>
+      <div
+        class="col-lg-2 my-xs-4 my-lg-0 ms-lg-5 ms-xl-4 ms-xxl-0 text-center text-md-end pt-1"
+      >
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#question"
+          @click="setModalItem(currentQuestion, 'post')"
         >
-          <h2>{{ route.params.title }}</h2>
-        </div>
-        <div
-          class="col-lg-2 my-xs-4 my-lg-0 ms-lg-5 ms-xl-4 ms-xxl-0 text-center text-md-end pt-1"
-        >
-          <button
-            type="button"
-            class="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#question"
-            @click="setModalItem(currentQuestion, 'post')"
-          >
-            Add question
-          </button>
-        </div>
+          Add question
+        </button>
       </div>
     </div>
-    <SpinnerLoader v-if="isLoaderVisible" />
-    <ul
-      v-else
-      class="list-unstyled"
-    >
-      <li
-        v-for="item in questionsList"
-        :key="item.id"
-        class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-sm-start ps-sm-3"
-      >
-        <h4 class="text-secondary mt-2">{{ item.text }}</h4>
-        <p class="text-secondary">{{ item.answer }}</p>
-        <div
-          class="row text-primary text-md-end align-items-center d-flex justify-content-end"
-        >
-          <div class="col-6 col-sm-3 col-lg-9 pt-2">
-            <h4>Score: {{ item.point }}</h4>
-          </div>
-          <div
-            class="col-6 col-md-2 me-xl-2 d-flex align-items-center justify-content-md-end ps-5 ps-md-0 pe-4 pe-md-0"
-          >
-            <font-awesome-icon
-              type="button"
-              class="btn text-primary fs-3 p-0 me-4"
-              data-bs-toggle="modal"
-              data-bs-target="#question"
-              icon="fa-solid fa-pencil"
-              @click="setModalItem(item, 'put')"
-            />
-            <font-awesome-icon
-              role="button"
-              data-bs-toggle="modal"
-              data-bs-target="#questionAlert"
-              icon="fa-solid fa-trash-can"
-              class="text-danger delete-question__btn fs-3 me-4"
-              @click="setDeleteQuestion(item.id)"
-            />
-          </div>
-        </div>
-      </li>
-    </ul>
   </div>
+  <SpinnerLoader v-if="isLoaderVisible" />
+  <ul
+    v-else
+    class="list-unstyled"
+  >
+    <li
+      v-for="item in questionsList"
+      :key="item.id"
+      class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-sm-start ps-sm-3"
+    >
+      <h4 class="text-secondary mt-2">{{ item.text }}</h4>
+      <p class="text-secondary">{{ item.answer }}</p>
+      <div
+        class="row text-primary text-md-end align-items-center d-flex justify-content-end"
+      >
+        <div class="col-6 col-sm-3 col-lg-9 pt-2">
+          <h4>Score: {{ item.point }}</h4>
+        </div>
+        <div
+          class="col-6 col-md-2 me-xl-2 d-flex align-items-center justify-content-md-end ps-5 ps-md-0 pe-4 pe-md-0"
+        >
+          <font-awesome-icon
+            type="button"
+            class="btn text-primary fs-3 p-0 me-4"
+            data-bs-toggle="modal"
+            data-bs-target="#question"
+            icon="fa-solid fa-pencil"
+            @click="setModalItem(item, 'put')"
+          />
+          <font-awesome-icon
+            role="button"
+            data-bs-toggle="modal"
+            data-bs-target="#questionAlert"
+            icon="fa-solid fa-trash-can"
+            class="text-danger delete-question__btn fs-3 me-4"
+            @click="setDeleteQuestion(item.id)"
+          />
+        </div>
+      </div>
+    </li>
+  </ul>
   <EasyModal
     :title="formTitle"
     :modal-id="'question'"
