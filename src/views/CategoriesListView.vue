@@ -4,6 +4,7 @@ import { useQuestionStore } from "../stores/questions";
 import Categories from "../utils/useCategories";
 import { onBeforeMount, ref } from "vue";
 import { Question } from "../../dto/questions";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
 
 defineProps({
   questionsList: {
@@ -24,6 +25,9 @@ async function getQuestionList() {
     questionsList.value = [...data];
   } catch (e) {
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
 }
 

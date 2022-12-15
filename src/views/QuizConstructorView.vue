@@ -8,6 +8,7 @@ import CandidateInfo from "../components/quiz/CandidateInfo.vue";
 import { useResultsStore } from "../stores/results";
 import { useQuestionStore } from "../stores/questions";
 import { useRouter } from "vue-router";
+import { Notify } from "notiflix";
 
 const router = useRouter();
 const resultsStore = useResultsStore();
@@ -180,12 +181,9 @@ async function postResult() {
       question => !question.answerPoints && question.answerPoints !== 0,
     ).length
   ) {
-    console.log(
-      "Please, complete quiz",
-      quizList.value.filter(question => !question.answerPoints),
-    );
-    return;
-    // TODO:notify that quiz is not done yet
+    Notify.warning("Please, complete quiz", {
+      distance: "65px",
+    });
   }
   result.value.questionAnswer = quizList.value;
   result.value.title = `Passed by ${
@@ -208,6 +206,9 @@ async function postResult() {
     });
   } catch (e) {
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
 }
 </script>
