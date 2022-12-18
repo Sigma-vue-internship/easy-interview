@@ -6,13 +6,6 @@ import { onBeforeMount, ref } from "vue";
 import { Question } from "../../dto/questions";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 
-defineProps({
-  questionsList: {
-    type: Array as () => Question[],
-    default: () => [],
-  },
-});
-
 const questionStore = useQuestionStore();
 const route = useRoute();
 const questionsList = ref<Question[]>([]);
@@ -21,8 +14,7 @@ onBeforeMount(() => getQuestionList());
 
 async function getQuestionList() {
   try {
-    const { data } = await questionStore.getAllQuestions();
-    questionsList.value = [...data];
+    questionsList.value = await questionStore.getAllQuestions();
   } catch (e) {
     console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {

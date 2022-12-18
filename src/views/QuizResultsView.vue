@@ -26,10 +26,7 @@ const isLoaderVisible = ref(true);
 async function getAllCandidatesData() {
   try {
     isLoaderVisible.value = true;
-    const {
-      data: { candidates },
-    } = await getAllCandidates();
-    candidatesList.value = candidates;
+    candidatesList.value = await getAllCandidates();
   } catch (e) {
     console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
@@ -40,11 +37,10 @@ async function getAllCandidatesData() {
 }
 getAllCandidatesData();
 
-async function getResultsForCandidateData(candidateId: number) {
+async function getResultsForCandidateData(candidateId: string) {
   try {
     isLoaderVisible.value = true;
-    const { data } = await getResultsForCandidate(candidateId);
-    quizResults.value = data;
+    quizResults.value = await getResultsForCandidate(candidateId);
   } catch (e) {
     console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
@@ -59,6 +55,7 @@ watch(selectedCandidate, newCandidate => {
     candidate.username.includes(newCandidate),
   );
 });
+
 function setCandidate(user: Candidate) {
   quizResults.value = [];
   isCandidatesVisible.value = false;

@@ -17,8 +17,7 @@ watch([searchInput, currentMode], async ([newInput, newCurrentMode]) => {
   }
   switch (newCurrentMode) {
     case "candidate":
-      const res = await candidateStore.getCandidatesByUsername(newInput);
-      searchData.value = [...res.data.candidates];
+      searchData.value = await candidateStore.getCandidatesByUsername(newInput);
       break;
 
     case "category":
@@ -35,9 +34,7 @@ watch([searchInput, currentMode], async ([newInput, newCurrentMode]) => {
       const searchedCategories: Array<String> = Categories().filter(category =>
         category.toLowerCase().includes(newInput.toLowerCase()),
       );
-      searchData.value = [
-        ...spreadDynamicly(resCandidate.data.candidates, searchedCategories),
-      ];
+      searchData.value = [...spreadDynamicly(resCandidate, searchedCategories)];
       break;
   }
 });

@@ -31,20 +31,27 @@ const result = ref<Result>({
 
 const route = useRoute();
 const { getOneResultForCandidate } = useResultsStore();
+const isLoaderVisible = ref(true);
+const getRouterParam = (param: string | string[]): string =>
+  Array.isArray(param) ? param[0] : param;
+
 async function getOneResultForCandidateData() {
   try {
-    const { data } = await getOneResultForCandidate(
-      route.params.candidateId,
-      route.params.resultId,
+    isLoaderVisible.value = true;
+    result.value = await getOneResultForCandidate(
+      getRouterParam(route.params.candidateId),
+      getRouterParam(route.params.resultId),
     );
-    result.value = { ...data };
+    isLoaderVisible.value = false;
   } catch (e) {
+    isLoaderVisible.value = false;
     console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });
   }
 }
+
 getOneResultForCandidateData();
 
 const resultPercentage = computed(() =>
@@ -84,7 +91,11 @@ const categoriesWithAnswerPoints = computed(() =>
 </script>
 
 <template>
-  <div class="row">
+  <SpinnerLoader v-if="isLoaderVisible" />
+  <div
+    v-if="!isLoaderVisible"
+    class="row"
+  >
     <div
       class="col-md-4 col-lg-3 col-xl-2 text-center text-md-start pt-4 avatar"
     >

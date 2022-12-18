@@ -20,7 +20,7 @@ describe("Candidate Store", () => {
       }),
     );
     const candidateStore = useCandidateStore();
-    const { data } = await candidateStore.getCandidateById("1");
+    const data = await candidateStore.getCandidateById("1");
     expect(axiosInstance.get).toBeCalled();
 
     expect(axiosInstance.get).toBeCalledWith("/candidates/1");
@@ -33,21 +33,38 @@ describe("Candidate Store", () => {
       }),
     );
     const { getCandidatesByPage } = useCandidateStore();
-    const { data } = await getCandidatesByPage(1);
+    const data = await getCandidatesByPage(1);
     expect(axiosInstance.get).toBeCalled();
     expect(data).toBe("123");
   });
   it("should call addCandidate action, with candidate body", async () => {
     axiosInstance.post = vi.fn().mockImplementation(() =>
       Promise.resolve({
-        data: "123",
+        position: "position",
+        username: "username",
+        linkedinUrl: "url",
+        feedback: "feedback",
+        avatarUrl: "avatar",
+        id: "1",
       }),
     );
     const { addCandidate } = useCandidateStore();
-    const { data } = await addCandidate({
-      test: "123",
+    const data = await addCandidate({
+      position: "position",
+      username: "username",
+      linkedinUrl: "url",
+      feedback: "feedback",
+      avatarUrl: "avatar",
+      id: "1",
     });
     expect(axiosInstance.post).toBeCalled();
-    expect(data).toBe("123");
+    expect(data).toMatchObject({
+      position: "position",
+      username: "username",
+      linkedinUrl: "url",
+      feedback: "feedback",
+      avatarUrl: "avatar",
+      id: "1",
+    });
   });
 });

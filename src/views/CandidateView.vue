@@ -20,14 +20,17 @@ const currentCandidate = ref<Candidate>({
   linkedinUrl: "",
   feedback: "",
   avatarUrl: "",
-  id: 0,
+  id: "",
 });
+
+const getRouterParam = (param: string | string[]): string =>
+  Array.isArray(param) ? param[0] : param;
+
 async function getCandidateData() {
   try {
     isLoaderVisible.value = true;
-    const { data } = await getCandidateById(params.id);
-    currentCandidate.value = data;
-    candidateInit = { ...data };
+    currentCandidate.value = await getCandidateById(getRouterParam(params.id));
+    candidateInit = { ...currentCandidate.value };
     isLoaderVisible.value = false;
   } catch (e) {
     isLoaderVisible.value = false;
@@ -40,10 +43,12 @@ async function getCandidateData() {
 
 const { getResultsForCandidate } = useResultsStore();
 const candidateResults = ref<Result[]>([]);
+
 async function getResultsForCandidateData() {
   try {
-    const { data } = await getResultsForCandidate(params.id);
-    candidateResults.value = data;
+    candidateResults.value = await getResultsForCandidate(
+      getRouterParam(params.id),
+    );
   } catch (e) {
     console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
@@ -63,14 +68,15 @@ let candidateInit = {
   linkedinUrl: "",
   feedback: "",
   avatarUrl: "",
-  id: 0,
+  id: "",
 };
 
 async function editSingleCandidate() {
   try {
-    const { data } = await editCandidate(currentCandidate.value);
-    candidateInit = { ...data };
-    currentCandidate.value = data;
+    isLoaderVisible.value = true;
+    candidateInit = await editCandidate(currentCandidate.value);
+    currentCandidate.value = candidateInit;
+    isLoaderVisible.value = false;
   } catch (e) {
     console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
@@ -211,18 +217,12 @@ getCandidateData();
   <EasyModal
     :title="'Delete candidate'"
     :modal-id="'alertCandidate'"
-    :modal-size="'modal-sm'"
+    :modal-size="'modal-m'"
   >
     <p class="text-secondary">
       Are you sure you want to delete this candidate ?
     </p>
     <div class="d-flex justify-content-end">
-      <button
-        class="btn btn-outline-secondary text-align-end me-2"
-        data-bs-dismiss="modal"
-      >
-        Cancel
-      </button>
       <button
         class="btn btn-danger text-align-end"
         data-bs-dismiss="modal"

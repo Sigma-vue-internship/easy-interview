@@ -34,7 +34,7 @@ describe("Question Store", () => {
       }),
     );
     const questionStore = useQuestionStore();
-    const { data } = await questionStore.getAllQuestions("category 1");
+    const data = await questionStore.getAllQuestions("category 1");
     expect(axiosInstance.get).toBeCalled();
 
     expect(axiosInstance.get).toBeCalledWith("/questions", {
@@ -48,24 +48,56 @@ describe("Question Store", () => {
   it("should call postQuestion action", async () => {
     axiosInstance.post = vi.fn().mockImplementation(() =>
       Promise.resolve({
-        data: "123",
+        text: "text",
+        point: 5,
+        category: "test",
+        answer: "text",
+        id: "1",
       }),
     );
     const questionStore = useQuestionStore();
-    const { data } = await questionStore.postQuestion("123");
-    expect(axiosInstance.post).toBeCalledWith("/questions", "123");
-    expect(data).toBe("123");
+    const data = await questionStore.postQuestion({
+      text: "text",
+      point: 5,
+      category: "test",
+      answer: "text",
+      id: "1",
+    });
+    expect(axiosInstance.post).toBeCalledWith("/questions", {
+      text: "text",
+      point: 5,
+      category: "test",
+      answer: "text",
+      id: "1",
+    });
+    expect(data).toMatchObject({
+      text: "text",
+      point: 5,
+      category: "test",
+      answer: "text",
+      id: "1",
+    });
   });
 
   it("should call deleteQuestion action", async () => {
     axiosInstance.delete = vi.fn().mockImplementation(() =>
       Promise.resolve({
-        data: "123",
+        text: "text",
+        point: 5,
+        category: "test",
+        answer: "text",
+        id: "1",
       }),
     );
     const questionStore = useQuestionStore();
-    const { data } = await questionStore.deleteQuestion("27");
-    expect(axiosInstance.delete).toBeCalledWith("/questions/27");
-    expect(data).toBe("123");
+    const data = await questionStore.deleteQuestion("1");
+    expect(axiosInstance.delete).toBeCalledWith("/questions/1");
+    expect(data).toMatchObject({
+      text: "text",
+      point: 5,
+      category: "test",
+      answer: "text",
+      id: "1",
+    });
   });
 });

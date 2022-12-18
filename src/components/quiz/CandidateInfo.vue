@@ -20,10 +20,7 @@ const isCandidatesVisible = ref(false);
 const choosedCandidates = ref<Candidate[]>([]);
 
 watch(selectCandidate, async newCandidate => {
-  const {
-    data: { candidates },
-  } = await getCandidatesByUsername(newCandidate);
-  choosedCandidates.value = candidates;
+  choosedCandidates.value = await getCandidatesByUsername(newCandidate);
 });
 function setCandidate(user: Candidate) {
   isCandidatesVisible.value = false;

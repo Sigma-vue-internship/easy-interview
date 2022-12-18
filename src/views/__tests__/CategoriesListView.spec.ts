@@ -5,7 +5,17 @@ import CategoriesList from "../CategoriesListView.vue";
 const getWrapper = () =>
   mount(CategoriesList, {
     global: {
-      plugins: [createTestingPinia()],
+      plugins: [
+        createTestingPinia({
+          createSpy: vi.fn,
+          stubActions: false,
+          plugins: [
+            () => ({
+              getAllQuestions: () => Promise.resolve([]),
+            }),
+          ],
+        }),
+      ],
     },
   });
 
@@ -18,7 +28,6 @@ describe("CategoriesList.vue", () => {
     const wrapper = getWrapper();
     const categoriesListArrayLength = wrapper.vm.Categories().length;
     const categoriesLength = wrapper.findAll("li").length;
-
     expect(categoriesListArrayLength).toEqual(categoriesLength);
   });
 });

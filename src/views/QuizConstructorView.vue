@@ -55,8 +55,7 @@ const resultPercents = computed(
 );
 async function getQuestionList() {
   try {
-    const { data } = await getAllQuestions();
-    questionList.value = [...data];
+    questionList.value = await getAllQuestions();
   } catch (e) {
     console.log(e);
   }
@@ -201,7 +200,7 @@ async function postResult() {
       name: "singleResult",
       params: {
         candidateId,
-        id,
+        resultId: id,
       },
     });
   } catch (e) {
