@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mount } from "@vue/test-utils";
 import { createTestingPinia } from "@pinia/testing";
-import CategoriesList from "../CategoriesList.vue";
+import CategoriesList from "../CategoriesListView.vue";
 const getWrapper = () =>
   mount(CategoriesList, {
     global: {
