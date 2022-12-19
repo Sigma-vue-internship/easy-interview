@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mount } from "@vue/test-utils";
-import SingleResult from "../SingleResult.vue";
+import SingleResult from "../SingleResultView.vue";
 import { createTestingPinia } from "@pinia/testing";
 
 const getWrapper = () =>

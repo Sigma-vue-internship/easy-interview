@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach, vitest } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
-import QuestionsList from "../QuestionsList.vue";
-import EasyModal from "../../common/EasyModal.vue";
+import QuestionsList from "../QuestionsListView.vue";
+import EasyModal from "../../components/common/EasyModal.vue";
 
 import { createTestingPinia } from "@pinia/testing";
-import { useQuestionStore } from "../../../stores/questions";
+import { useQuestionStore } from "../../stores/questions";
 import { useRoute } from "vue-router";
 
 const getWrapper = (props = {}) =>

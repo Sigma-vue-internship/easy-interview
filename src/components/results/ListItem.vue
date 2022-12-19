@@ -17,12 +17,26 @@ defineProps({
     <div class="col-12 col-md-9 col-lg-10 ps-3 fs-5">
       <div class="row">
         <p class="text-center text-md-start mb-1">
-          Question: {{ question.text }}
+          <span class="text-primary fs-5">
+            <FontAwesomeIcon
+              class="pe-1"
+              icon="fa-circle-question"
+            />
+            Question:
+          </span>
+          {{ question.text }}
         </p>
       </div>
       <div class="row fst-italic">
-        <p class="text-center text-md-start m-0">
-          Answer: {{ question.answer }}
+        <p class="text-center text-md-start m-0 fs-6">
+          <span class="text-primary">
+            <FontAwesomeIcon
+              class="pe-1"
+              icon="fa-circle-check"
+            />
+            Answer:
+          </span>
+          {{ question.answer }}
         </p>
       </div>
     </div>
