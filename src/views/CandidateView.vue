@@ -6,8 +6,8 @@ import { ref } from "vue";
 import { useCandidateStore } from "../stores/candidates";
 import { useResultsStore } from "../stores/results";
 import CandidateForm from "../components/candidates/CandidateForm.vue";
-import { Candidate } from "../../dto/candidates";
-import { Result } from "../../dto/results";
+import { Candidate } from "../dto/candidates";
+import { Result } from "../dto/results";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 
 const { params } = useRoute();

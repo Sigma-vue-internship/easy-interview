@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useCandidateStore } from "../../stores/candidates";
-import { Candidate } from "../../../dto/candidates";
+import { Candidate } from "../../dto/candidates";
 import { Categories } from "../../utils/useCategories";
 import { useRouter } from "vue-router";
 const searchInput = ref<string>("");

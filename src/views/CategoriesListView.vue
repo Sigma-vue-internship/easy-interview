@@ -3,7 +3,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useQuestionStore } from "../stores/questions";
 import Categories from "../utils/useCategories";
 import { onBeforeMount, ref } from "vue";
-import { Question } from "../../dto/questions";
+import { Question } from "../dto/questions";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 
 const questionStore = useQuestionStore();

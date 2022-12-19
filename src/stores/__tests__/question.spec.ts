@@ -1,7 +1,7 @@
 import { createPinia, setActivePinia } from "pinia";
 import { useQuestionStore } from "../questions";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import axiosInstance from "../../service/axiosInstance";
+import axios from "../../service/axiosInstance";
 import { createApp } from "vue";
 
 // TODO:try to make axios mock with vi.mock, and switch for url's
@@ -23,21 +23,21 @@ const app = createApp({});
 describe("Question Store", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    const pinia = createPinia().use(() => ({ $axios: axiosInstance }));
+    const pinia = createPinia();
     app.use(pinia);
     setActivePinia(pinia);
   });
   it("should call action with test params and proper address", async () => {
-    axiosInstance.get = vi.fn().mockImplementation(() =>
+    axios.get = vi.fn().mockImplementation(() =>
       Promise.resolve({
         data: "123",
       }),
     );
     const questionStore = useQuestionStore();
     const data = await questionStore.getAllQuestions("category 1");
-    expect(axiosInstance.get).toBeCalled();
+    expect(axios.get).toBeCalled();
 
-    expect(axiosInstance.get).toBeCalledWith("/questions", {
+    expect(axios.get).toBeCalledWith("/questions", {
       params: {
         category: "category 1",
       },
@@ -46,31 +46,16 @@ describe("Question Store", () => {
   });
 
   it("should call postQuestion action", async () => {
-    axiosInstance.post = vi.fn().mockImplementation(() =>
-      Promise.resolve({
-        text: "text",
-        point: 5,
-        category: "test",
-        answer: "text",
-        id: "1",
-      }),
-    );
+    axios.post = vi.fn().mockImplementation(() => Promise.resolve());
     const questionStore = useQuestionStore();
-    const data = await questionStore.postQuestion({
+    await questionStore.postQuestion({
       text: "text",
       point: 5,
       category: "test",
       answer: "text",
       id: "1",
     });
-    expect(axiosInstance.post).toBeCalledWith("/questions", {
-      text: "text",
-      point: 5,
-      category: "test",
-      answer: "text",
-      id: "1",
-    });
-    expect(data).toMatchObject({
+    expect(axios.post).toBeCalledWith("/questions", {
       text: "text",
       point: 5,
       category: "test",
@@ -80,24 +65,9 @@ describe("Question Store", () => {
   });
 
   it("should call deleteQuestion action", async () => {
-    axiosInstance.delete = vi.fn().mockImplementation(() =>
-      Promise.resolve({
-        text: "text",
-        point: 5,
-        category: "test",
-        answer: "text",
-        id: "1",
-      }),
-    );
+    axios.delete = vi.fn().mockImplementation(() => Promise.resolve());
     const questionStore = useQuestionStore();
-    const data = await questionStore.deleteQuestion("1");
-    expect(axiosInstance.delete).toBeCalledWith("/questions/1");
-    expect(data).toMatchObject({
-      text: "text",
-      point: 5,
-      category: "test",
-      answer: "text",
-      id: "1",
-    });
+    await questionStore.deleteQuestion("1");
+    expect(axios.delete).toBeCalledWith("/questions/1");
   });
 });

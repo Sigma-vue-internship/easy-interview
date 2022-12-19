@@ -43,7 +43,6 @@ import RadialProgressBar from "vue3-radial-progress";
 
 const app = createApp(App);
 const pinia = createPinia();
-pinia.use(() => ({ $axios: axiosInstance }));
 
 app.use(pinia);
 app.use(RadialProgressBar);

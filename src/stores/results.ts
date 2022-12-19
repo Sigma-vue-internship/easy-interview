@@ -1,30 +1,34 @@
 import { defineStore } from "pinia";
-import { Result, PercentsResult } from "../../dto/results";
+import { Result, PercentsResult } from "../dto/results";
+import axios from "../service/axiosInstance";
+
 export const useResultsStore = defineStore("results", {
   actions: {
-    async postResult(result: Result, candidateId: string): Promise<Result> {
-      return this.$axios.post(`/candidates/${candidateId}/results`, result);
+    async postResult(result: Result, candidateId: string) {
+      const response = await axios.post<Result>(
+        `/candidates/${candidateId}/results`,
+        result,
+      );
+      return response.data;
     },
-    async postPercentageResult(
-      result: PercentsResult,
-    ): Promise<PercentsResult> {
-      return this.$axios.post("/candidateResults", result);
+    async postPercentageResult(result: PercentsResult) {
+      await axios.post<void>("/candidateResults", result);
     },
-    async getPercentageResults(): Promise<PercentsResult[]> {
-      return this.$axios.get("/candidateResults").then(({ data }) => data);
+    async getPercentageResults() {
+      const response = await axios.get<PercentsResult[]>("/candidateResults");
+      return response.data;
     },
-    async getResultsForCandidate(candidateId: string): Promise<Result[]> {
-      return this.$axios
-        .get(`/candidates/${candidateId}/results`)
-        .then(({ data }) => data);
+    async getResultsForCandidate(candidateId: string) {
+      const response = await axios.get<Result[]>(
+        `/candidates/${candidateId}/results`,
+      );
+      return response.data;
     },
-    async getOneResultForCandidate(
-      candidateId: string,
-      resultId: string,
-    ): Promise<Result> {
-      return this.$axios
-        .get(`/candidates/${candidateId}/results/${resultId}`)
-        .then(({ data }) => data);
+    async getOneResultForCandidate(candidateId: string, resultId: string) {
+      const response = await axios.get<Result>(
+        `/candidates/${candidateId}/results/${resultId}`,
+      );
+      return response.data;
     },
   },
 });

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ListItem from "./ListItem.vue";
 import { computed } from "vue";
-import { QuestionAnswer } from "../../../dto/results";
+import { QuestionAnswer } from "../../dto/results";
 
 const props = defineProps({
   category: {

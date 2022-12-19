@@ -8,8 +8,8 @@ import {
 import { useCandidateStore } from "../stores/candidates";
 import { useResultsStore } from "../stores/results";
 import { ref, watch } from "vue";
-import { Candidate } from "../../dto/candidates";
-import { Result } from "../../dto/results";
+import { Candidate } from "../dto/candidates";
+import { Result } from "../dto/results";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 
 const router = useRouter();

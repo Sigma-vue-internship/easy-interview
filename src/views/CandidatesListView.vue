@@ -3,7 +3,7 @@ import CandidateForm from "../components/candidates/CandidateForm.vue";
 import { useCandidateStore } from "../stores/candidates";
 import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { Candidate } from "../../dto/candidates";
+import { Candidate } from "../dto/candidates";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 
 const { getCandidatesByPage, addCandidate } = useCandidateStore();

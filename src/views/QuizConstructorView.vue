@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import _uniq from "lodash/uniq";
 import { computed, onMounted, ref } from "vue";
-import { QuizQuestion, QuizResult } from "../../dto/quiz";
-import { Question } from "../../dto/questions";
+import { QuizQuestion, QuizResult } from "../dto/quiz";
+import { Question } from "../dto/questions";
 import QuizList from "../components/quiz/QuizList.vue";
 import CandidateInfo from "../components/quiz/CandidateInfo.vue";
 import { useResultsStore } from "../stores/results";
@@ -191,9 +191,7 @@ async function postResult() {
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
   try {
-    const {
-      data: { candidateId, id },
-    } = await resultsStore.postResult(result.value, currentCandidate.value.id);
+    const { candidateId, id } = await resultsStore.postResult(result.value, currentCandidate.value.id);
     postPercentageResult();
     quizList.value = [];
     router.push({

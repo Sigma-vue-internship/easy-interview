@@ -1,25 +1,29 @@
 import { defineStore } from "pinia";
-import { Question } from "../../dto/questions";
+import { Question } from "../dto/questions";
+import axios from "../service/axiosInstance";
 
 export const useQuestionStore = defineStore("question", {
   actions: {
-    async getAllQuestions(category?: string): Promise<Question[]> {
-      return this.$axios
-        .get("/questions", {
-          params: {
-            category,
-          },
-        })
-        .then(({ data }) => data);
+    async getAllQuestions(category?: string) {
+      const response = await axios.get<Question[]>("/questions", {
+        params: {
+          category,
+        },
+      });
+      return response.data;
     },
-    async sendQuestion(questionData: Question): Promise<Question> {
-      return this.$axios.put(`/questions/${questionData.id}`, questionData);
+    async sendQuestion(questionData: Question) {
+      const response = await axios.put<Question>(
+        `/questions/${questionData.id}`,
+        questionData,
+      );
+      return response.data;
     },
-    async postQuestion(question: Question): Promise<Question> {
-      return this.$axios.post("/questions", question);
+    async postQuestion(question: Question) {
+      await axios.post<void>("/questions", question);
     },
-    async deleteQuestion(id: string): Promise<Question> {
-      return this.$axios.delete(`/questions/${id}`);
+    async deleteQuestion(id: string) {
+      await axios.delete<void>(`/questions/${id}`);
     },
   },
 });

@@ -9,7 +9,7 @@ import _uniq from "lodash/uniq";
 import { useRoute } from "vue-router";
 import { computed, ref } from "vue";
 import { useResultsStore } from "../stores/results";
-import { Result } from "../../dto/results";
+import { Result } from "../dto/results";
 import { getBarColor, defaultBarColor } from "../utils/useChangeColor";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 

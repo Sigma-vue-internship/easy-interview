@@ -3,7 +3,7 @@ import { useCandidateStore } from "../../stores/candidates";
 
 import { ref, watch, computed } from "vue";
 import _isEmpty from "lodash/isEmpty";
-import { Candidate } from "../../../dto/candidates";
+import { Candidate } from "../../dto/candidates";
 import EasyDropdown from "../common/EasyDropdown.vue";
 import SubmitButton from "../common/SubmitButton.vue";
 

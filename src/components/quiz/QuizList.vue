@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { QuizQuestion, CategoryQuestions } from "../../../dto/quiz";
+import { QuizQuestion, CategoryQuestions } from "../../dto/quiz";
 import _uniq from "lodash/uniq";
 import SubmitButton from "../common/SubmitButton.vue";
-import { Question } from "../../../dto/questions";
+import { Question } from "../../dto/questions";
 
 interface Emit {
   (e: "addPoint", point: number, id: string): void;

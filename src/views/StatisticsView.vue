@@ -3,7 +3,7 @@ import { ref } from "vue";
 import BarChart from "../components/statistics/BarChart.vue";
 import DoughnutChart from "../components/statistics/DoughnutChart.vue";
 import _uniq from "lodash/uniq";
-import { Question } from "../../dto/questions";
+import { Question } from "../dto/questions";
 import { useQuestionStore } from "../stores/questions";
 import { useResultsStore } from "../stores/results";
 
