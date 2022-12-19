@@ -11,6 +11,10 @@ interface Emit {
   (e: "postQuiz");
   (e: "setMode"): void;
 }
+interface CorrectQuestion {
+  isCorrect: boolean;
+  questionId: string;
+}
 
 const props = defineProps({
   isModeReview: {
@@ -41,17 +45,35 @@ function postQuiz() {
   emit("postQuiz");
 }
 
-function deleteQuestion(index: number, item: QuizQuestion) {
+function deleteQuestion(index: string, item: QuizQuestion) {
   emit("deleteQuestion", index, item);
 }
 const checkedQuestions = ref<Array<string>>([]);
+const correctQuestions = ref<Array<CorrectQuestion>>([]);
 function addPoint(point: number, id: string) {
+  addCorrectQuestion(point, id);
   if (!checkedQuestions.value.find(questionId => questionId === id)) {
     checkedQuestions.value.push(id);
   }
   emit("addPoint", point, id);
 }
-
+function addCorrectQuestion(point: number, id: string) {
+  const isQuestionChecked: boolean = correctQuestions.value.some(
+    question => question.questionId === id,
+  );
+  const questionIndex: number = correctQuestions.value.findIndex(
+    question => question.questionId === id,
+  );
+  if (point === 0 && !isQuestionChecked) {
+    correctQuestions.value.push({ isCorrect: false, questionId: id });
+  } else if (point !== 0 && !isQuestionChecked) {
+    correctQuestions.value.push({ isCorrect: true, questionId: id });
+  } else if (point === 0 && isQuestionChecked) {
+    correctQuestions.value[questionIndex].isCorrect = false;
+  } else if (point !== 0 && isQuestionChecked) {
+    correctQuestions.value[questionIndex].isCorrect = true;
+  }
+}
 function pointsArray(point: number) {
   return Array.apply(null, Array(point + 1)).map((_, i: number) => i);
 }
@@ -62,6 +84,12 @@ const quizProgress = computed(() => {
     )}%`;
   }
   return "0%";
+});
+const correctCount = computed(() => {
+  return correctQuestions.value.filter(question => question.isCorrect).length;
+});
+const incorrectCount = computed(() => {
+  return correctQuestions.value.filter(question => !question.isCorrect).length;
 });
 </script>
 
@@ -76,7 +104,23 @@ const quizProgress = computed(() => {
     v-if="!isModeReview"
     class="mb-4 w-100"
   >
-    <h3 class="fs-4 text-primary pb-1">Progress: {{ quizProgress }}</h3>
+    <div class="d-flex pb-1">
+      <h3 class="fs-4 pe-4">
+        Progress: <span class="text-primary">{{ quizProgress }}</span>
+      </h3>
+      <h3 class="fs-4 pe-4">
+        Correct:
+        <span class="text-primary"
+          >{{ correctCount }}/{{ questions.length }}</span
+        >
+      </h3>
+      <h3 class="fs-4 pe-4">
+        Incorrect:
+        <span class="text-danger"
+          >{{ incorrectCount }}/{{ questions.length }}</span
+        >
+      </h3>
+    </div>
     <div class="progress">
       <div
         class="progress-bar progress-bar-striped progress-bar-animated"
@@ -158,8 +202,9 @@ const quizProgress = computed(() => {
                 @click="deleteQuestion(oneQuestion.id, oneQuestion)"
               />
             </div>
+            <!-- Loop for radios starts -->
             <div
-              v-if="!isModeReview && oneQuestion.point >= 1"
+              v-if="!isModeReview && oneQuestion.point > 1"
               class="col-12 col-md-6 col-xl-5 col-xxl-4"
             >
               <h5 class="d-inline pe-3 text-primary">Answer:</h5>
@@ -183,6 +228,17 @@ const quizProgress = computed(() => {
                   >{{ idNumber }}</label
                 >
               </div>
+            </div>
+            <!-- Loop for radios ends -->
+            <div
+              v-if="!isModeReview && oneQuestion.point === 1"
+              class="col-12 col-md-6 col-xl-5 col-xxl-4 text-center justify-content-center py-2"
+            >
+              <h5 class="mb-3 text-primary">Correct/Incorrect</h5>
+              <EasySwitch
+                :id="oneQuestion.id"
+                @set-checked="addPoint"
+              />
             </div>
           </li>
         </ul>
@@ -212,7 +268,7 @@ const quizProgress = computed(() => {
   >
     <font-awesome-icon icon="fa-solid fa-circle-info" />
 
-    <p class="text-center text-md-start ps-2 m-0">
+    <p class="text-md-center text-md-start ps-2 m-0">
       Choosed questions will display here
     </p>
   </div>
