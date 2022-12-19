@@ -2,8 +2,8 @@
 import { useQuestionStore } from "../../stores/questions";
 import { Question } from "../../dto/questions";
 import { ref, watch } from "vue";
-import { useFormValidator } from "../../utils/useFormValidator";
-import Categories from "../../utils/useCategories";
+import { useFormValidator } from "../../hooks/useFormValidator";
+import { categories } from "../../hooks/categories";
 const questionInit = {
   text: "",
   point: 0,
@@ -124,7 +124,7 @@ function emitUpdateQuestions() {
       class="form-select text-secondary"
     >
       <option
-        v-for="category in Categories()"
+        v-for="category in categories"
         :key="category"
         class="category__option"
         :value="category"

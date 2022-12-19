@@ -17,3 +17,10 @@ const isLoading = auth0.isLoading;
     />
   </div>
 </template>
+
+<style lang="scss">
+img {
+  object-fit: cover;
+  object-position: center;
+}
+</style>

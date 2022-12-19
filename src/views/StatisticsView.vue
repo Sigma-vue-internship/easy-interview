@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import BarChart from "../components/statistics/BarChart.vue";
 import DoughnutChart from "../components/statistics/DoughnutChart.vue";
 import _uniq from "lodash/uniq";
@@ -150,13 +150,28 @@ function resizeChart(chart, sizes) {
   }
   currentChartHeight.value.height = "450px";
 }
-getQuestions();
+const currentAlert = computed(() => {
+  switch (activeTab.value) {
+    case "Results":
+      return "Top 10 candidate results statistics";
+    default:
+      return "The quantity of all questions";
+  }
+});
+getAllQuestions();
 getAllResults();
 </script>
 <template>
   <div class="p-4 rounded">
-    <h1 class="text-primary fs-2 pb-3">Statistics</h1>
-
+    <h1 class="text-primary fs-2 pb-1">Statistics</h1>
+    <div
+      class="alert alert-primary d-flex align-items-center mt-2"
+      role="alert"
+    >
+      <div class="d-flex gap-2 align-items-center">
+        <font-awesome-icon icon="fa-solid fa-circle-info" />{{ currentAlert }}
+      </div>
+    </div>
     <ul class="nav nav-tabs">
       <li class="nav-item">
         <button
