@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex container flex-column justify-content-center text-primary">
+  <div class="d-flex flex-column justify-content-center text-primary">
     <font-awesome-icon
       class="pt-4"
       icon="fa-regular fa-face-frown"
