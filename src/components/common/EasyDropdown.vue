@@ -57,6 +57,7 @@ function handleBlur(e) {
   <div
     tabindex="1"
     class="w-100 position-relative"
+    @focusout="handleBlur"
   >
     <input
       id="candidateInput"
