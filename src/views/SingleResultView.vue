@@ -12,6 +12,7 @@ import { useResultsStore } from "../stores/results";
 import { Result } from "../dto/results";
 import { getBarColor, defaultBarColor } from "../utils/useChangeColor";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
+import { getRouterParam } from "../service/routerParam";
 
 const result = ref<Result>({
   questionAnswer: [],
@@ -32,8 +33,6 @@ const result = ref<Result>({
 const route = useRoute();
 const { getOneResultForCandidate } = useResultsStore();
 const isLoaderVisible = ref(true);
-const getRouterParam = (param: string | string[]): string =>
-  Array.isArray(param) ? param[0] : param;
 
 async function getOneResultForCandidateData() {
   try {

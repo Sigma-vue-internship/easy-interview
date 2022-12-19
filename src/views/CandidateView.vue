@@ -9,6 +9,7 @@ import CandidateForm from "../components/candidates/CandidateForm.vue";
 import { Candidate } from "../dto/candidates";
 import { Result } from "../dto/results";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
+import { getRouterParam } from "../service/routerParam";
 
 const { params } = useRoute();
 const router = useRouter();
@@ -22,9 +23,6 @@ const currentCandidate = ref<Candidate>({
   avatarUrl: "",
   id: "",
 });
-
-const getRouterParam = (param: string | string[]): string =>
-  Array.isArray(param) ? param[0] : param;
 
 async function getCandidateData() {
   try {
