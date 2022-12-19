@@ -169,7 +169,7 @@ const incorrectCount = computed(() => {
             v-for="oneQuestion in questionArraysByCategory[category]"
             id="questionItem"
             :key="oneQuestion"
-            class="row justify-content-md-between py-4 px-2 rounded-3 mx-auto ps-sm-3 border border-light my-3 align-items-center"
+            class="row justify-content-center text-center text-md-start justify-content-md-between py-4 px-2 rounded-3 mx-auto ps-sm-3 border border-light my-3"
           >
             <div class="col-9 col-md-6 col-xl-7 col-xxl-8">
               <p>
@@ -205,13 +205,13 @@ const incorrectCount = computed(() => {
             <!-- Loop for radios starts -->
             <div
               v-if="!isModeReview && oneQuestion.point > 1"
-              class="col-12 col-md-6 col-xl-5 col-xxl-4"
+              class="col-12 col-md-6 col-xl-5 col-xxl-4 text-md-end"
             >
-              <h5 class="d-inline pe-3 text-primary">Answer:</h5>
+              <h5 class="text-primary">Answer</h5>
               <div
                 v-for="idNumber in pointsArray(oneQuestion.point)"
                 :key="idNumber"
-                class="form-check form-check-inline"
+                class="form-check form-check-inline me-0 ms-3"
               >
                 <input
                   :id="oneQuestion.id"
@@ -232,7 +232,7 @@ const incorrectCount = computed(() => {
             <!-- Loop for radios ends -->
             <div
               v-if="!isModeReview && oneQuestion.point === 1"
-              class="col-12 col-md-6 col-xl-5 col-xxl-4 text-center justify-content-center py-2"
+              class="col-12 col-md-6 col-xl-5 col-xxl-4 text-md-end"
             >
               <h5 class="mb-3 text-primary">Correct/Incorrect</h5>
               <EasySwitch
