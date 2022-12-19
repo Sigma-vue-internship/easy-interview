@@ -106,10 +106,8 @@ getCandidates();
         :to="'/candidates/' + candidate.id"
       >
         <img
-          class="rounded-circle img-fluid p-2 border-primary border border-3"
+          class="rounded-circle p-2 border-primary border border-3 candidate__img"
           :src="candidate.avatarUrl"
-          width="150"
-          height="150"
           alt="candidateAvatar"
         />
 
@@ -117,15 +115,21 @@ getCandidates();
           <h2 class="fs-3">{{ candidate.username }}</h2>
 
           <p class="border-dark fs-5 m-0">Position: {{ candidate.position }}</p>
-          <button class="btn btn-primary mt-4">Open candidate</button>
+          <button class="btn btn-primary mt-4">See full description</button>
         </div>
       </router-link>
     </li>
   </ul>
   <Pagination
-    v-if="!isLoaderVisible"
+    v-if="!isLoaderVisible && candidatePagesNum > 1"
     v-model:currentPage="currentPage"
     class="pb-5 pt-2"
     :page-count="candidatePagesNum"
   />
 </template>
+<style lang="scss">
+.candidate__img {
+  width: 150px;
+  height: 150px;
+}
+</style>

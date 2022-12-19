@@ -123,9 +123,7 @@ getCandidateData();
           id="avatarUrl"
           :src="currentCandidate.avatarUrl"
           alt="singleCandidate image"
-          width="298"
-          height="298"
-          class="img-fluid rounded-4 border bg-light p-1"
+          class="candidate__img rounded-4 border bg-light p-1"
         />
       </div>
       <div
@@ -147,6 +145,7 @@ getCandidateData();
           class="text-secondary my-4 d-flex align-items-center justify-content-center justify-content-lg-start"
         >
           <font-awesome-icon
+            v-if="currentCandidate.linkedinUrl"
             icon="fa-brands fa-linkedin"
             class="text-primary me-2 fs-3"
           />
@@ -233,3 +232,9 @@ getCandidateData();
     </div>
   </EasyModal>
 </template>
+<style lang="scss" scoped>
+.candidate__img {
+  width: 270px;
+  height: 270px;
+}
+</style>
