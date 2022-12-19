@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
 import { useQuestionStore } from "../stores/questions";
-import Categories from "../utils/useCategories";
+import { categories } from "../hooks/categories";
 import { onBeforeMount, ref } from "vue";
 import { Question } from "../../dto/questions";
 
@@ -65,7 +65,7 @@ function questionsQuantity(category: string) {
   </div>
   <ul class="list-unstyled mt-md-5">
     <li
-      v-for="category in Categories()"
+      v-for="category in categories"
       :key="category"
       role="button"
       class="border border-light mt-4 p-2 rounded-3 shadow"
