@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { QuizQuestion, CategoryQuestions } from "../../../dto/quiz";
+import { QuizQuestion } from "../../../dto/quiz";
 import _uniq from "lodash/uniq";
 import SubmitButton from "../common/SubmitButton.vue";
 import { Question } from "../../../dto/questions";
+import { ref, computed } from "vue";
 
 interface Emit {
   (e: "addPoint", point: number, id: string): void;
@@ -24,6 +25,10 @@ const props = defineProps({
     type: Array<String>,
     default: () => [],
   },
+  questions: {
+    type: Array<Question>,
+    default: () => [],
+  },
 });
 
 const emit = defineEmits<Emit>();
@@ -39,14 +44,25 @@ function postQuiz() {
 function deleteQuestion(index: number, item: QuizQuestion) {
   emit("deleteQuestion", index, item);
 }
-
+const checkedQuestions = ref<Array<string>>([]);
 function addPoint(point: number, id: string) {
+  if (!checkedQuestions.value.find(questionId => questionId === id)) {
+    checkedQuestions.value.push(id);
+  }
   emit("addPoint", point, id);
 }
 
 function pointsArray(point: number) {
   return Array.apply(null, Array(point + 1)).map((_, i: number) => i);
 }
+const quizProgress = computed(() => {
+  if (checkedQuestions.value.length) {
+    return `${Math.floor(
+      (checkedQuestions.value.length * 100) / props.questions.length,
+    )}%`;
+  }
+  return "0%";
+});
 </script>
 
 <template>
@@ -56,6 +72,23 @@ function pointsArray(point: number) {
   >
     Question List
   </h2>
+  <div
+    v-if="!isModeReview"
+    class="mb-4 w-100"
+  >
+    <h3 class="fs-4 text-primary pb-1">Progress: {{ quizProgress }}</h3>
+    <div class="progress">
+      <div
+        class="progress-bar progress-bar-striped progress-bar-animated"
+        role="progressbar"
+        aria-label="Animated striped example"
+        aria-valuenow="75"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        :style="{ width: quizProgress }"
+      ></div>
+    </div>
+  </div>
   <!-- accordion starts  -->
   <div
     v-if="categories.length"
