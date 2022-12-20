@@ -5,7 +5,7 @@ import Candidate from "../CandidateView.vue";
 import { useCandidateStore } from "../../stores/candidates";
 import { useResultsStore } from "../../stores/results";
 import { useRoute, useRouter } from "vue-router";
-
+import DeleteButton from "../../components/common/DeleteButton.vue";
 vi.mock("vue-router/dist/vue-router.mjs", () => ({
   useRoute: () => ({
     params: {
@@ -63,6 +63,7 @@ const getWrapper = () =>
                   },
                 ]),
             }),
+            () => ({ deleteCandidateById: id => Promise.resolve() }),
           ],
         }),
       ],
@@ -77,6 +78,19 @@ describe("Candidate.vue", () => {
     const wrapper = getWrapper();
     const { getCandidateById } = useCandidateStore();
     expect(getCandidateById).toBeCalledWith("1");
+  });
+  it("should call deleteCandidateById after click", async () => {
+    const wrapper = getWrapper();
+    const { deleteCandidateById } = useCandidateStore();
+    await flushPromises();
+    const deleteBtn = wrapper.findComponent(DeleteButton);
+
+    deleteBtn.trigger("click");
+    await flushPromises();
+
+    wrapper.find(".btn-danger").trigger("click");
+    await flushPromises();
+    expect(deleteCandidateById).toBeCalled();
   });
   it("should render all candidate results", async () => {
     const wrapper = getWrapper();

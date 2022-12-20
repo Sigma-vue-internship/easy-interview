@@ -28,7 +28,6 @@ async function getAllCandidatesData() {
     isLoaderVisible.value = true;
     candidatesList.value = await getAllCandidates();
   } catch (e) {
-    console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });
@@ -42,7 +41,6 @@ async function getResultsForCandidateData(candidateId: string) {
     isLoaderVisible.value = true;
     quizResults.value = await getResultsForCandidate(candidateId);
   } catch (e) {
-    console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });

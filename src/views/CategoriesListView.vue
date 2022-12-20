@@ -16,7 +16,6 @@ async function getQuestionList() {
   try {
     questionsList.value = await questionStore.getAllQuestions();
   } catch (e) {
-    console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });

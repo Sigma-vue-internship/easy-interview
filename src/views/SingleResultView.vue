@@ -44,7 +44,6 @@ async function getOneResultForCandidateData() {
     isLoaderVisible.value = false;
   } catch (e) {
     isLoaderVisible.value = false;
-    console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });

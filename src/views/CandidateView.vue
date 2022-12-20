@@ -32,7 +32,6 @@ async function getCandidateData() {
     isLoaderVisible.value = false;
   } catch (e) {
     isLoaderVisible.value = false;
-    console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });
@@ -48,7 +47,6 @@ async function getResultsForCandidateData() {
       getRouterParam(params.id),
     );
   } catch (e) {
-    console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });
@@ -76,7 +74,7 @@ async function editSingleCandidate() {
     currentCandidate.value = candidateInit;
     isLoaderVisible.value = false;
   } catch (e) {
-    console.log(e);
+    isLoaderVisible.value = false;
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });
@@ -89,7 +87,6 @@ async function deleteCandidate() {
       name: "candidates",
     });
   } catch (e) {
-    console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });

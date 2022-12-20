@@ -35,7 +35,6 @@ async function getCandidates(page: number = 1) {
     isLoaderVisible.value = false;
   } catch (e) {
     isLoaderVisible.value = false;
-    console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });
@@ -47,7 +46,6 @@ async function postCandidate() {
     clearForm();
     await getCandidates();
   } catch (e) {
-    console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });

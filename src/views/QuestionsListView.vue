@@ -29,7 +29,6 @@ async function getQuestionList() {
     isLoaderVisible.value = false;
   } catch (e) {
     isLoaderVisible.value = false;
-    console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });
@@ -48,7 +47,6 @@ async function deleteQuestion() {
       },
     });
   } catch (e) {
-    console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });

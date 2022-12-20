@@ -10,21 +10,24 @@ import { useQuestionStore } from "../stores/questions";
 import { useRouter } from "vue-router";
 import { Notify } from "notiflix";
 
+interface CurrentCandidate {
+  name: string;
+  id: string;
+}
+
 const router = useRouter();
 const resultsStore = useResultsStore();
 const { getAllQuestions } = useQuestionStore();
 
-const selectedCategory = ref("");
-const quizMode = ref(true);
+const selectedCategory = ref<string>("");
+const quizMode = ref<boolean>(true);
 const questionList = ref<Array<QuizQuestion>>([]);
-const checkedAnswer = ref(0);
-const currentCandidateId = ref(0);
-const currentCandidate = ref({
+const checkedAnswer = ref<number>(0);
+const currentCandidate = ref<CurrentCandidate>({
   name: "",
   id: "",
 });
-const currentCandidateName = ref("");
-const startQuizDate = ref(0);
+const startQuizDate = ref<number>(0);
 const result = ref<QuizResult>({
   questionAnswer: [],
   title: "",
@@ -47,6 +50,7 @@ const categoryQuestions = computed(() =>
     question => question.category === selectedCategory.value,
   ),
 );
+const quizList = ref<QuizQuestion[]>([]);
 const resultPercents = computed(
   () =>
     (quizList.value.reduce((summ, answer) => summ + answer?.answerPoints, 0) *
@@ -61,7 +65,6 @@ async function getQuestionList() {
   }
 }
 
-const quizList = ref<QuizQuestion[]>([]);
 function addQuestions(question: QuizQuestion) {
   questionList.value = [
     ...questionList.value.filter(
@@ -142,7 +145,7 @@ const setCandidateSelected = async () => {
   isCandidateChoosed.value = true;
   await getQuestionList();
 };
-
+// TODO: add test for post persentageResult
 async function postPercentageResult() {
   try {
     await resultsStore.postPercentageResult({
@@ -191,7 +194,10 @@ async function postResult() {
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
   try {
-    const { candidateId, id } = await resultsStore.postResult(result.value, currentCandidate.value.id);
+    const { candidateId, id } = await resultsStore.postResult(
+      result.value,
+      currentCandidate.value.id,
+    );
     postPercentageResult();
     quizList.value = [];
     router.push({
@@ -202,7 +208,6 @@ async function postResult() {
       },
     });
   } catch (e) {
-    console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });

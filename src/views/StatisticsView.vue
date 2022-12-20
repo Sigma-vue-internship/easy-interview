@@ -36,7 +36,6 @@ const categoriesAmounts = ref<categoryAmount[]>([]);
 const doughnutColors = ref<string[]>([]);
 const chartData = ref<Object>({
   labels: [],
-  // TODO:create multiple datasets, for different legend colors, and different candidates quizes
   datasets: [
     {
       label: "Top 10 candidates",
