@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useCandidateStore } from "../../stores/candidates";
 
-import { ref, watch, computed, defineProps } from "vue";
+import { ref, watch, computed } from "vue";
 import _isEmpty from "lodash/isEmpty";
 import { Candidate } from "../../../dto/candidates";
 import EasyDropdown from "../common/EasyDropdown.vue";
@@ -16,7 +16,7 @@ const props = defineProps({
     type: Boolean,
     required: true,
     default() {
-      return false;
+      return true;
     },
   },
 });
