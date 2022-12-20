@@ -115,9 +115,6 @@ function answerPoints(point: number, id: string) {
   );
   if (filtredElement) {
     filtredElement.answerPoints = checkedAnswer.value;
-    if (startQuizDate.value === 0) {
-      startQuizDate.value = Date.now();
-    }
     return filtredElement;
   }
 }
@@ -157,6 +154,7 @@ async function postPercentageResult() {
 const setModeQuiz = () => {
   quizMode.value = false;
   questionCategories.value = _uniq(quizList.value.map(obj => obj.category));
+  startQuizDate.value = Date.now();
   // questionsByCategories.value = { ...spreadQuestionsByCategories() };
   // here ok
 };
@@ -185,13 +183,16 @@ async function postResult() {
     });
   }
   result.value.questionAnswer = quizList.value;
-  result.value.title = `Passed by ${
-    currentCandidate.value.name
-  }, ${Date.now()}`;
+  result.value.title = `${currentCandidate.value.name}, ${Math.round(
+    resultPercents.value,
+  )}%`;
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
   try {
-    const { candidateId, id } = await resultsStore.postResult(result.value, currentCandidate.value.id);
+    const { candidateId, id } = await resultsStore.postResult(
+      result.value,
+      currentCandidate.value.id,
+    );
     postPercentageResult();
     quizList.value = [];
     router.push({
