@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import _uniq from "lodash/uniq";
 import { computed, onMounted, ref } from "vue";
-import { QuizQuestion, QuizResult } from "../../dto/quiz";
-import { Question } from "../../dto/questions";
+import { QuizQuestion, QuizResult } from "../dto/quiz";
+import { Question } from "../dto/questions";
 import QuizList from "../components/quiz/QuizList.vue";
 import CandidateInfo from "../components/quiz/CandidateInfo.vue";
 import { useResultsStore } from "../stores/results";
 import { useQuestionStore } from "../stores/questions";
 import { useRouter } from "vue-router";
+import { Notify } from "notiflix";
 
 const router = useRouter();
 const resultsStore = useResultsStore();
@@ -54,8 +55,7 @@ const resultPercents = computed(
 );
 async function getQuestionList() {
   try {
-    const { data } = await getAllQuestions();
-    questionList.value = [...data];
+    questionList.value = await getAllQuestions();
   } catch (e) {
     console.log(e);
   }
@@ -180,12 +180,9 @@ async function postResult() {
       question => !question.answerPoints && question.answerPoints !== 0,
     ).length
   ) {
-    console.log(
-      "Please, complete quiz",
-      quizList.value.filter(question => !question.answerPoints),
-    );
-    return;
-    // TODO:notify that quiz is not done yet
+    Notify.warning("Please, complete quiz", {
+      distance: "65px",
+    });
   }
   result.value.questionAnswer = quizList.value;
   result.value.title = `Passed by ${
@@ -194,20 +191,21 @@ async function postResult() {
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
   try {
-    const {
-      data: { candidateId, id },
-    } = await resultsStore.postResult(result.value, currentCandidate.value.id);
+    const { candidateId, id } = await resultsStore.postResult(result.value, currentCandidate.value.id);
     postPercentageResult();
     quizList.value = [];
     router.push({
       name: "singleResult",
       params: {
         candidateId,
-        id,
+        resultId: id,
       },
     });
   } catch (e) {
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
 }
 </script>

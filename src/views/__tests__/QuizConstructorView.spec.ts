@@ -18,40 +18,33 @@ const plugins = [
     plugins: [
       () => ({
         getAllQuestions: () =>
-          Promise.resolve({
-            data: [
-              {
-                point: 2,
-                text: "На чем основывается ООП в JavaScript ",
-                answer: "На прототипном наследовании",
-                category: "HTML",
-                id: "34",
-              },
-              {
-                point: 5,
-                text: "На чем основывается JavaScript ",
-                answer: "На наследовании",
-                category: "HTML",
-                id: "32",
-              },
-            ],
-          }),
-        getCandidatesByUsername: username =>
-          Promise.resolve({
-            data: {
-              candidates: [
-                {
-                  position: "Mihael Shumaher",
-                  username: "shoom911",
-                  linkedinUrl: "",
-                  feedback: "Lol racer",
-                  avatarUrl: "123",
-                  id: "1",
-                },
-              ],
-              count: 1,
+          Promise.resolve([
+            {
+              point: 2,
+              text: "На чем основывается ООП в JavaScript ",
+              answer: "На прототипном наследовании",
+              category: "HTML",
+              id: "34",
             },
-          }),
+            {
+              point: 5,
+              text: "На чем основывается JavaScript ",
+              answer: "На наследовании",
+              category: "HTML",
+              id: "32",
+            },
+          ]),
+        getCandidatesByUsername: username =>
+          Promise.resolve([
+            {
+              position: "Mihael Shumaher",
+              username: "shoom911",
+              linkedinUrl: "",
+              feedback: "Lol racer",
+              avatarUrl: "123",
+              id: "1",
+            },
+          ]),
         deleteQuestion: () => Promise.resolve("Question deleted"),
       }),
     ],

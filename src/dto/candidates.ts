@@ -4,5 +4,9 @@ export interface Candidate {
   linkedinUrl: string;
   feedback: string;
   avatarUrl: string;
-  id: number;
+  id: string;
+}
+
+export interface CandidatesResponse {
+  candidates: Candidate[];
 }

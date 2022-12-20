@@ -34,16 +34,14 @@ import {
   faSquareMinus,
   faSquarePlus,
 } from "@fortawesome/free-regular-svg-icons";
-import "./assets/fonts/css/fontello.css";
+import "../assets/fonts/css/fontello.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
-import "./assets/scss/custom.scss";
-import axiosInstance from "./service/axiosInstance";
+import "../assets/scss/custom.scss";
 import RadialProgressBar from "vue3-radial-progress";
 
 const app = createApp(App);
 const pinia = createPinia();
-pinia.use(() => ({ $axios: axiosInstance }));
 
 app.use(pinia);
 app.use(RadialProgressBar);
