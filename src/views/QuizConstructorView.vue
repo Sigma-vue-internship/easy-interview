@@ -183,6 +183,7 @@ async function postResult() {
     Notify.warning("Please, complete quiz", {
       distance: "65px",
     });
+    return;
   }
   result.value.questionAnswer = quizList.value;
   result.value.title = `Passed by ${
@@ -191,7 +192,10 @@ async function postResult() {
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
   try {
-    const { candidateId, id } = await resultsStore.postResult(result.value, currentCandidate.value.id);
+    const { candidateId, id } = await resultsStore.postResult(
+      result.value,
+      currentCandidate.value.id,
+    );
     postPercentageResult();
     quizList.value = [];
     router.push({
