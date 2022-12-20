@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { Candidate } from "../dto/candidates";
+import { Candidate, CandidatesResponse } from "../dto/candidates";
 import axios from "../service/axiosInstance";
 
 export const useCandidateStore = defineStore("candidates", {
@@ -9,7 +9,7 @@ export const useCandidateStore = defineStore("candidates", {
       return response.data;
     },
     async addCandidate(candidate: Candidate) {
-      await axios.post<void>("/candidates", candidate);
+      await axios.post("/candidates", candidate);
     },
     async editCandidate(candidate: Candidate) {
       const response = await axios.put<Candidate>(
@@ -19,7 +19,7 @@ export const useCandidateStore = defineStore("candidates", {
       return response.data;
     },
     async deleteCandidateById(id: string) {
-      await axios.delete<void>(`/candidates/${id}`);
+      await axios.delete(`/candidates/${id}`);
     },
     async getCandidatesByPage(page: number) {
       const response = await axios.get<Candidate[]>(
@@ -28,14 +28,14 @@ export const useCandidateStore = defineStore("candidates", {
       return response.data;
     },
     async getAllCandidates() {
-      const response = await axios.get<Candidate[]>("/candidates");
-      return response.data["candidates"];
+      const response = await axios.get<CandidatesResponse>("/candidates");
+      return response.data.candidates;
     },
     async getCandidatesByUsername(username: string) {
-      const response = await axios.get<Candidate[]>(
+      const response = await axios.get<CandidatesResponse>(
         `/candidates?username=${username}`,
       );
-      return response.data["candidates"];
+      return response.data.candidates;
     },
   },
 });

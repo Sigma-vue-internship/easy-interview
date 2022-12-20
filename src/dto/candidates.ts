@@ -6,3 +6,7 @@ export interface Candidate {
   avatarUrl: string;
   id: string;
 }
+
+export interface CandidatesResponse {
+  candidates: Candidate[];
+}

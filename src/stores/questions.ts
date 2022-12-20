@@ -20,10 +20,10 @@ export const useQuestionStore = defineStore("question", {
       return response.data;
     },
     async postQuestion(question: Question) {
-      await axios.post<void>("/questions", question);
+      await axios.post("/questions", question);
     },
     async deleteQuestion(id: string) {
-      await axios.delete<void>(`/questions/${id}`);
+      await axios.delete(`/questions/${id}`);
     },
   },
 });

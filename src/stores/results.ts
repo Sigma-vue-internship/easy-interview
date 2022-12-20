@@ -12,7 +12,7 @@ export const useResultsStore = defineStore("results", {
       return response.data;
     },
     async postPercentageResult(result: PercentsResult) {
-      await axios.post<void>("/candidateResults", result);
+      await axios.post("/candidateResults", result);
     },
     async getPercentageResults() {
       const response = await axios.get<PercentsResult[]>("/candidateResults");
