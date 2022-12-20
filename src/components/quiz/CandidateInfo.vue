@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useCandidateStore } from "../../stores/candidates";
 
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, defineProps } from "vue";
 import _isEmpty from "lodash/isEmpty";
 import { Candidate } from "../../../dto/candidates";
 import EasyDropdown from "../common/EasyDropdown.vue";
@@ -11,6 +11,15 @@ interface Emit {
   (e: "choosedCandidate", id: string, name: string): void;
   (e: "setCandidateSelected"): void;
 }
+const props = defineProps({
+  isQuizAvailable: {
+    type: Boolean,
+    required: true,
+    default() {
+      return false;
+    },
+  },
+});
 
 const emit = defineEmits<Emit>();
 const { getCandidatesByUsername } = useCandidateStore();
@@ -89,7 +98,7 @@ const emitCandidateSelect = () => emit("setCandidateSelected");
   </div>
   <div class="text-center text-md-end">
     <SubmitButton
-      v-if="!_isEmpty(choosedCandidateObj)"
+      v-if="!_isEmpty(choosedCandidateObj) && isQuizAvailable"
       id="stepToQuestions"
       @click="emitCandidateSelect"
       >Next step</SubmitButton
