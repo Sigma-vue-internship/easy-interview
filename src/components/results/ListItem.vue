@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { QuestionAnswer } from "../../../dto/results";
+import { QuestionAnswer } from "../../dto/results";
 import { getBarColor, defaultBarColor } from "../../utils/useChangeColor";
 
 defineProps({

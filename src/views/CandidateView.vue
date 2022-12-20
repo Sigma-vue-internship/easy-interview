@@ -6,9 +6,10 @@ import { ref } from "vue";
 import { useCandidateStore } from "../stores/candidates";
 import { useResultsStore } from "../stores/results";
 import CandidateForm from "../components/candidates/CandidateForm.vue";
-import { Candidate } from "../../dto/candidates";
-import { Result } from "../../dto/results";
+import { Candidate } from "../dto/candidates";
+import { Result } from "../dto/results";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
+import { getRouterParam } from "../service/routerParam";
 
 const { params } = useRoute();
 const router = useRouter();
@@ -20,14 +21,14 @@ const currentCandidate = ref<Candidate>({
   linkedinUrl: "",
   feedback: "",
   avatarUrl: "",
-  id: 0,
+  id: "",
 });
+
 async function getCandidateData() {
   try {
     isLoaderVisible.value = true;
-    const { data } = await getCandidateById(params.id);
-    currentCandidate.value = data;
-    candidateInit = { ...data };
+    currentCandidate.value = await getCandidateById(getRouterParam(params.id));
+    candidateInit = { ...currentCandidate.value };
     isLoaderVisible.value = false;
   } catch (e) {
     isLoaderVisible.value = false;
@@ -40,10 +41,12 @@ async function getCandidateData() {
 
 const { getResultsForCandidate } = useResultsStore();
 const candidateResults = ref<Result[]>([]);
+
 async function getResultsForCandidateData() {
   try {
-    const { data } = await getResultsForCandidate(params.id);
-    candidateResults.value = data;
+    candidateResults.value = await getResultsForCandidate(
+      getRouterParam(params.id),
+    );
   } catch (e) {
     console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
@@ -63,14 +66,15 @@ let candidateInit = {
   linkedinUrl: "",
   feedback: "",
   avatarUrl: "",
-  id: 0,
+  id: "",
 };
 
 async function editSingleCandidate() {
   try {
-    const { data } = await editCandidate(currentCandidate.value);
-    candidateInit = { ...data };
-    currentCandidate.value = data;
+    isLoaderVisible.value = true;
+    candidateInit = await editCandidate(currentCandidate.value);
+    currentCandidate.value = candidateInit;
+    isLoaderVisible.value = false;
   } catch (e) {
     console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
@@ -123,9 +127,7 @@ getCandidateData();
           id="avatarUrl"
           :src="currentCandidate.avatarUrl"
           alt="singleCandidate image"
-          width="298"
-          height="298"
-          class="img-fluid rounded-4 border bg-light p-1"
+          class="candidate__img rounded-4 border bg-light p-1"
         />
       </div>
       <div
@@ -147,6 +149,7 @@ getCandidateData();
           class="text-secondary my-4 d-flex align-items-center justify-content-center justify-content-lg-start"
         >
           <font-awesome-icon
+            v-if="currentCandidate.linkedinUrl"
             icon="fa-brands fa-linkedin"
             class="text-primary me-2 fs-3"
           />
@@ -211,18 +214,12 @@ getCandidateData();
   <EasyModal
     :title="'Delete candidate'"
     :modal-id="'alertCandidate'"
-    :modal-size="'modal-sm'"
+    :modal-size="'modal-m'"
   >
     <p class="text-secondary">
       Are you sure you want to delete this candidate ?
     </p>
     <div class="d-flex justify-content-end">
-      <button
-        class="btn btn-outline-secondary text-align-end me-2"
-        data-bs-dismiss="modal"
-      >
-        Cancel
-      </button>
       <button
         class="btn btn-danger text-align-end"
         data-bs-dismiss="modal"
@@ -233,3 +230,9 @@ getCandidateData();
     </div>
   </EasyModal>
 </template>
+<style lang="scss" scoped>
+.candidate__img {
+  width: 270px;
+  height: 270px;
+}
+</style>
