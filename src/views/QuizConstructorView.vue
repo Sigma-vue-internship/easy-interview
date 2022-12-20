@@ -139,7 +139,7 @@ async function setCandidate(id: string, name: string) {
   currentCandidate.value.id = id;
   currentCandidate.value.name = name;
   try {
-    const { data } = await resultsStore.getResultsForCandidate(id);
+    const data = await resultsStore.getResultsForCandidate(id);
     if (data.length >= 3) {
       return Notify.failure("This candidate has already passed 3 quizes", {
         distance: "65px",
@@ -198,6 +198,7 @@ async function postResult() {
     Notify.warning("Please, complete quiz", {
       distance: "65px",
     });
+    return;
   }
   result.value.questionAnswer = quizList.value;
   result.value.title = `Passed by ${
@@ -206,7 +207,10 @@ async function postResult() {
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
   try {
-    const { candidateId, id } = await resultsStore.postResult(result.value, currentCandidate.value.id);
+    const { candidateId, id } = await resultsStore.postResult(
+      result.value,
+      currentCandidate.value.id,
+    );
     postPercentageResult();
     quizList.value = [];
     router.push({
