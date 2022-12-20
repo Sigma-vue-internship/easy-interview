@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useQuestionStore } from "../../stores/questions";
-import { Question } from "../../../dto/questions";
+import { Question } from "../../dto/questions";
 import { ref, watch } from "vue";
 import { useFormValidator } from "../../hooks/useFormValidator";
 import { categories } from "../../hooks/categories";

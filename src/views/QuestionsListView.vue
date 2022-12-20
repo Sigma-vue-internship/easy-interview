@@ -22,9 +22,9 @@ const deleteQuestionId = ref("");
 async function getQuestionList() {
   try {
     isLoaderVisible.value = true;
-    const { data } = await questionStore.getAllQuestions(route.params.title);
-    questionsList.value = [...data];
-
+    questionsList.value = await questionStore.getAllQuestions(
+      route.params.title,
+    );
     clearForm();
     isLoaderVisible.value = false;
   } catch (e) {

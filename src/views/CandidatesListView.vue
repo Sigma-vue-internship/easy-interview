@@ -3,7 +3,9 @@ import CandidateForm from "../components/candidates/CandidateForm.vue";
 import { useCandidateStore } from "../stores/candidates";
 import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { Candidate } from "../../dto/candidates";
+import { Candidate } from "../dto/candidates";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
+
 const { getCandidatesByPage, addCandidate } = useCandidateStore();
 const candidatesList = ref<Array<Candidate>>([]);
 const candidatePagesNum = ref(0);
@@ -25,9 +27,7 @@ async function getCandidates(page: number = 1) {
   try {
     isLoaderVisible.value = true;
     router.push({ name: "candidates", query: { page } });
-    const {
-      data: { candidates, count },
-    } = await getCandidatesByPage(page);
+    const { candidates, count } = await getCandidatesByPage(page);
 
     candidatePagesNum.value = Math.ceil(count / 8);
 
@@ -36,6 +36,9 @@ async function getCandidates(page: number = 1) {
   } catch (e) {
     isLoaderVisible.value = false;
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
 }
 async function postCandidate() {
@@ -45,6 +48,9 @@ async function postCandidate() {
     await getCandidates();
   } catch (e) {
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
 }
 watch(currentPage, pageNum => {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useCandidateStore } from "../../stores/candidates";
-import { Candidate } from "../../../dto/candidates";
+import { Candidate } from "../../dto/candidates";
 import { categories } from "../../hooks/categories";
 import { useRouter } from "vue-router";
 const searchInput = ref<string>("");
@@ -17,8 +17,7 @@ watch([searchInput, currentMode], async ([newInput, newCurrentMode]) => {
   }
   switch (newCurrentMode) {
     case "candidate":
-      const res = await candidateStore.getCandidatesByUsername(newInput);
-      searchData.value = [...res.data.candidates];
+      searchData.value = await candidateStore.getCandidatesByUsername(newInput);
       break;
 
     case "category":
@@ -35,9 +34,7 @@ watch([searchInput, currentMode], async ([newInput, newCurrentMode]) => {
       const searchedCategories: Array<String> = categories.filter(category =>
         category.toLowerCase().includes(newInput.toLowerCase()),
       );
-      searchData.value = [
-        ...spreadDynamicly(resCandidate.data.candidates, searchedCategories),
-      ];
+      searchData.value = [...spreadDynamicly(resCandidate, searchedCategories)];
       break;
   }
 });

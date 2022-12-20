@@ -3,14 +3,8 @@ import { useRoute, useRouter } from "vue-router";
 import { useQuestionStore } from "../stores/questions";
 import { categories } from "../hooks/categories";
 import { onBeforeMount, ref } from "vue";
-import { Question } from "../../dto/questions";
-
-defineProps({
-  questionsList: {
-    type: Array as () => Question[],
-    default: () => [],
-  },
-});
+import { Question } from "../dto/questions";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
 
 const questionStore = useQuestionStore();
 const route = useRoute();
@@ -20,10 +14,12 @@ onBeforeMount(() => getQuestionList());
 
 async function getQuestionList() {
   try {
-    const { data } = await questionStore.getAllQuestions();
-    questionsList.value = [...data];
+    questionsList.value = await questionStore.getAllQuestions();
   } catch (e) {
     console.log(e);
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
   }
 }
 

@@ -3,7 +3,7 @@ import { ref, computed } from "vue";
 import BarChart from "../components/statistics/BarChart.vue";
 import DoughnutChart from "../components/statistics/DoughnutChart.vue";
 import _uniq from "lodash/uniq";
-import { Question } from "../../dto/questions";
+import { Question } from "../dto/questions";
 import { useQuestionStore } from "../stores/questions";
 import { useResultsStore } from "../stores/results";
 
@@ -27,7 +27,7 @@ interface chartData {
   datasets: Array<Object>;
 }
 
-const { getQuestions } = useQuestionStore();
+const { getAllQuestions } = useQuestionStore();
 const { getPercentageResults } = useResultsStore();
 
 const activeTab = ref("Results");
@@ -91,8 +91,8 @@ const doughnutOptions = ref({
   },
 });
 
-async function getAllQuestions() {
-  const { data } = await getQuestions();
+async function getQuestions() {
+  const data = await getAllQuestions();
   categories.value = _uniq(data.map((q: Question) => q.category));
   categoriesAmounts.value = categories.value.map((category: any) => {
     return {
@@ -115,7 +115,7 @@ async function getAllQuestions() {
   doughnutData.value.datasets[0].backgroundColor = [...doughnutColors.value];
 }
 async function getAllResults() {
-  const { data } = await getPercentageResults();
+  const data = await getPercentageResults();
   const topCandidates = getTopCandidates(data);
   chartData.value.labels = [
     ...topCandidates.map(result => result.candidateUsername),

@@ -3,7 +3,7 @@ import { useCandidateStore } from "../../stores/candidates";
 
 import { ref, watch, computed } from "vue";
 import _isEmpty from "lodash/isEmpty";
-import { Candidate } from "../../../dto/candidates";
+import { Candidate } from "../../dto/candidates";
 import EasyDropdown from "../common/EasyDropdown.vue";
 import SubmitButton from "../common/SubmitButton.vue";
 
@@ -20,10 +20,7 @@ const isCandidatesVisible = ref(false);
 const choosedCandidates = ref<Candidate[]>([]);
 
 watch(selectCandidate, async newCandidate => {
-  const {
-    data: { candidates },
-  } = await getCandidatesByUsername(newCandidate);
-  choosedCandidates.value = candidates;
+  choosedCandidates.value = await getCandidatesByUsername(newCandidate);
 });
 function setCandidate(user: Candidate) {
   isCandidatesVisible.value = false;

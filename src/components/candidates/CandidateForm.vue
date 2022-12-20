@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { toRefs } from "vue";
 import { useFormValidator } from "../../hooks/useFormValidator";
-import { Candidate } from "../../../dto/candidates";
+import { Candidate } from "../../dto/candidates";
 interface Emit {
   (e: "edit-candidate"): void;
   (e: "add-candidate"): void;

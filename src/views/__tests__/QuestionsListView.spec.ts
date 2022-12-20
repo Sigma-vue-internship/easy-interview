@@ -23,17 +23,15 @@ const getWrapper = (props = {}) =>
           plugins: [
             () => ({
               getAllQuestions: () =>
-                Promise.resolve({
-                  data: [
-                    {
-                      point: 2,
-                      text: "На чем основывается ООП в JavaScript ",
-                      answer: "На прототипном наследовании",
-                      category: "HTML",
-                      id: "34",
-                    },
-                  ],
-                }),
+                Promise.resolve([
+                  {
+                    point: 2,
+                    text: "На чем основывается ООП в JavaScript ",
+                    answer: "На прототипном наследовании",
+                    category: "HTML",
+                    id: "34",
+                  },
+                ]),
               deleteQuestion: () => Promise.resolve("Question deleted"),
             }),
           ],
