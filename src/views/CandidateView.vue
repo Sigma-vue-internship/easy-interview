@@ -146,10 +146,16 @@ getCandidateData();
         class="col-12 col-lg-4 mb-3 mb-lg-0 d-flex justify-content-center justify-content-lg-start ps-lg-4"
       >
         <img
+          v-if="currentCandidate.avatarUrl"
           id="avatarUrl"
           :src="currentCandidate.avatarUrl"
           alt="singleCandidate image"
           class="candidate__img rounded-4 border bg-light p-1"
+        />
+        <font-awesome-icon
+          v-else
+          icon="fa-solid fa-user-large"
+          class="text-primary m-auto"
         />
       </div>
       <div
@@ -273,5 +279,9 @@ getCandidateData();
 .candidate__img {
   width: 270px;
   height: 270px;
+}
+
+.fa-user-large {
+  height: 200px;
 }
 </style>

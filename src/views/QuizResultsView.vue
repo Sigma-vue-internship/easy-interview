@@ -112,10 +112,16 @@ function pushRoute(candidateId: string, resultId: string) {
           @click="setCandidate(singleCandidate)"
         >
           <img
+            v-if="singleCandidate.avatarUrl"
             :src="singleCandidate.avatarUrl"
-            class="rounded-circle"
+            class="rounded-circle avatar"
             height="50"
             alt="avatar"
+          />
+          <font-awesome-icon
+            v-else
+            icon="fa-solid fa-user-large"
+            class="text-primary not-found-photo"
           />
           <div class="flex-column text-start">
             <p class="m-1 me-3">{{ singleCandidate.username }}</p>
@@ -192,5 +198,16 @@ function pushRoute(candidateId: string, resultId: string) {
 <style scoped>
 .overflow-scroll {
   max-height: 245px;
+}
+
+.not-found-photo {
+  height: 50px;
+}
+
+.avatar {
+  object-fit: cover;
+  object-position: center;
+  height: 50px;
+  width: 50px;
 }
 </style>

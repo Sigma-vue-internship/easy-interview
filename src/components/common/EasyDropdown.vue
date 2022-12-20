@@ -93,6 +93,15 @@ function handleBlur(e) {
             alt="avatar"
           />
           <div
+            v-else-if="dropdownObj.position"
+            class="text-primary"
+          >
+            <font-awesome-icon
+              icon="fa-solid fa-user-large"
+              class="not-found"
+            />
+          </div>
+          <div
             v-else
             class="badge rounded-pill text-bg-primary d-none d-lg-block"
           >
@@ -141,5 +150,9 @@ function handleBlur(e) {
   object-position: center;
   width: 50px;
   height: 50px;
+}
+
+.not-found {
+  width: 40px !important;
 }
 </style>
