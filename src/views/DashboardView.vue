@@ -51,7 +51,7 @@
       <div class="col-md-4 col-lg-3">
         <router-link
           class="text-decoration-none"
-          to="/"
+          to="/lastresult"
         >
           <div class="border rounded-4 p-3">
             <span class="icon-loop-alt" />

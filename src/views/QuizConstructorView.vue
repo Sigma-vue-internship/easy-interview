@@ -145,6 +145,8 @@ async function postPercentageResult() {
     await resultsStore.postPercentageResult({
       candidateUsername: currentCandidate.value.name,
       resultPoints: resultPercents.value,
+      candidateId: currentCandidate.value.id,
+      id: "",
     });
   } catch (e) {
     console.log(e);
