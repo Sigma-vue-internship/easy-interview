@@ -49,6 +49,7 @@ const emitCandidateSelect = () => emit("setCandidateSelected");
   <div class="col-12 position-relative">
     <EasyDropdown
       v-model:dropdown-input="selectCandidate"
+      :selected-item="selectCandidate"
       :dropdown-data="choosedCandidates"
       @set-dropdown-obj="setCandidate"
     />

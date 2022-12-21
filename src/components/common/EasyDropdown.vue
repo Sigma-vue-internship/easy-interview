@@ -4,11 +4,12 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 import debounce from "lodash/debounce";
+
 interface Emit {
   (e: "update:dropdownInput", targetValue: string): void;
-  (e: "setDropdownObj", dropdownObj: object): void;
+  (e: "setDropdownObj", dropdownObj: any): void;
 }
 const props = defineProps({
   dropdownInput: {
@@ -30,6 +31,10 @@ const props = defineProps({
     required: false,
     default: 1000,
   },
+  selectedItem: {
+    type: String,
+    default: () => "",
+  },
 });
 const zIndexStyle = reactive({
   "z-index": props.zIndexStyle,
@@ -37,6 +42,7 @@ const zIndexStyle = reactive({
 // const dropdownCurrentInput = ref("");
 const isDropdownObjVisible = ref(false);
 const emit = defineEmits<Emit>();
+const newValue = ref("");
 const emitDropdownUpdate = debounce(e => {
   // dropdownCurrentInput.value = e.target.value;
   emit("update:dropdownInput", e.target.value);
@@ -52,6 +58,13 @@ function handleBlur(e) {
     isDropdownObjVisible.value = false;
   }
 }
+
+watch(
+  () => props.selectedItem,
+  value => {
+    newValue.value = value;
+  },
+);
 </script>
 <template>
   <div
@@ -61,6 +74,7 @@ function handleBlur(e) {
   >
     <input
       id="candidateInput"
+      v-model="newValue"
       class="form-control container-fluid"
       placeholder="Type something to search..."
       @input="emitDropdownUpdate"
