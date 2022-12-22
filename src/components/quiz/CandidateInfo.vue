@@ -11,6 +11,15 @@ interface Emit {
   (e: "choosedCandidate", id: string, name: string): void;
   (e: "setCandidateSelected"): void;
 }
+const props = defineProps({
+  isQuizAvailable: {
+    type: Boolean,
+    required: true,
+    default() {
+      return true;
+    },
+  },
+});
 
 const emit = defineEmits<Emit>();
 const { getCandidatesByUsername } = useCandidateStore();
@@ -94,7 +103,7 @@ const emitCandidateSelect = () => emit("setCandidateSelected");
   </div>
   <div class="text-center text-md-end">
     <SubmitButton
-      v-if="!_isEmpty(choosedCandidateObj)"
+      v-if="!_isEmpty(choosedCandidateObj) && isQuizAvailable"
       id="stepToQuestions"
       @click="emitCandidateSelect"
       >Next step</SubmitButton

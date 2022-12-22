@@ -131,9 +131,24 @@ function deleteQuestion(questionId: string, item: QuizQuestion) {
     );
   }
 }
-function setCandidate(id: string, name: string) {
+const isQuizAvailable = ref(false);
+async function setCandidate(id: string, name: string) {
   currentCandidate.value.id = id;
   currentCandidate.value.name = name;
+  try {
+    const data = await resultsStore.getResultsForCandidate(id);
+    if (data.length >= 3) {
+      return Notify.failure("This candidate has already passed 3 quizes", {
+        distance: "65px",
+      });
+    }
+    isQuizAvailable.value = true;
+  } catch (e) {
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
+  }
+  // here we need to check if candidate, has 3 results already
 }
 const setCandidateSelected = async () => {
   isCandidateChoosed.value = true;
@@ -183,6 +198,7 @@ async function postResult() {
     Notify.warning("Please, complete quiz", {
       distance: "65px",
     });
+    return;
   }
   result.value.questionAnswer = quizList.value;
   result.value.title = `${currentCandidate.value.name}, ${Math.round(
@@ -216,6 +232,7 @@ async function postResult() {
 <template>
   <CandidateInfo
     v-if="quizMode && !isCandidateChoosed"
+    :is-quiz-available="isQuizAvailable"
     @set-candidate-selected="setCandidateSelected"
     @choosed-candidate="setCandidate"
   />
