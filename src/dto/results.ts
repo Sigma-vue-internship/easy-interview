@@ -26,5 +26,7 @@ export interface Result {
 
 export interface PercentsResult {
   candidateUsername: string;
+  candidateId: string;
   resultPoints: number;
+  id: string;
 }

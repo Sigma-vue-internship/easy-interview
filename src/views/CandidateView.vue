@@ -10,6 +10,7 @@ import { Candidate } from "../dto/candidates";
 import { Result } from "../dto/results";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { getRouterParam } from "../service/routerParam";
+import { formattingDate } from "../utils/dateFormatting";
 
 const { params } = useRoute();
 const router = useRouter();
@@ -39,7 +40,8 @@ async function getCandidateData() {
   }
 }
 
-const { getResultsForCandidate } = useResultsStore();
+const { getResultsForCandidate, deleteResult, deletePercentageResult } =
+  useResultsStore();
 const candidateResults = ref<Result[]>([]);
 
 async function getResultsForCandidateData() {
@@ -96,6 +98,26 @@ async function deleteCandidate() {
   }
 }
 
+async function deleteQuizResult(candidateId: string, resultId: string) {
+  try {
+    await deleteResult(candidateId, resultId);
+    await deletePercentageResult(resultId);
+    candidateResults.value = candidateResults.value.filter(
+      result => result.id !== resultId,
+    );
+    Notify.success("Result successfully deleted", {
+      distance: "65px",
+      success: {
+        background: "#87CF23",
+      },
+    });
+  } catch (e) {
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
+  }
+}
+
 function pushRoute(candidateId: string, resultId: string) {
   router.push({
     name: "singleResult",
@@ -124,10 +146,16 @@ getCandidateData();
         class="col-12 col-lg-4 mb-3 mb-lg-0 d-flex justify-content-center justify-content-lg-start ps-lg-4"
       >
         <img
+          v-if="currentCandidate.avatarUrl"
           id="avatarUrl"
           :src="currentCandidate.avatarUrl"
           alt="singleCandidate image"
           class="candidate__img rounded-4 border bg-light p-1"
+        />
+        <font-awesome-icon
+          v-else
+          icon="fa-solid fa-user-large"
+          class="text-primary m-auto"
         />
       </div>
       <div
@@ -184,13 +212,30 @@ getCandidateData();
           :key="result.id"
           class="my-2 text-secondary col-12 col-lg-4"
         >
-          {{ result.title }}
-          <button
-            class="btn btn-outline-secondary rounded-pill ms-3 opacity-75 show-more"
-            @click="pushRoute(result.parent.id, result.id)"
-          >
-            show full
-          </button>
+          <div class="col-12 mb-2">
+            {{ result.title }}, {{ formattingDate(result.endedAt) }}
+          </div>
+          <div class="row align-items-center">
+            <div class="col-7 text-end">
+              <button
+                class="btn btn-outline-secondary rounded-pill px-4 opacity-75 show-more"
+                @click="pushRoute(result.parent.id, result.id)"
+              >
+                show full
+              </button>
+            </div>
+            <div class="col-5 text-start">
+              <font-awesome-icon
+                role="button"
+                icon="fa-solid fa-trash-can"
+                class="text-danger fs-4"
+                data-bs-toggle="tooltip"
+                data-bs-placement="left"
+                title="Delete quiz result"
+                @click="deleteQuizResult(result.parent.id, result.id)"
+              />
+            </div>
+          </div>
         </li>
       </ul>
       <div v-if="!candidateResults.length">
@@ -234,5 +279,9 @@ getCandidateData();
 .candidate__img {
   width: 270px;
   height: 270px;
+}
+
+.fa-user-large {
+  height: 200px;
 }
 </style>

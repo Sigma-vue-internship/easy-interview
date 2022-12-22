@@ -30,5 +30,11 @@ export const useResultsStore = defineStore("results", {
       );
       return response.data;
     },
+    async deleteResult(candidateId: string, resultId: string) {
+      await axios.delete(`/candidates/${candidateId}/results/${resultId}`);
+    },
+    async deletePercentageResult(resultId: string) {
+      await axios.delete(`/candidateResults/${resultId}`);
+    },
   },
 });

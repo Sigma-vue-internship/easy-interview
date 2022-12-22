@@ -96,13 +96,22 @@ const categoriesWithAnswerPoints = computed(() =>
     class="row"
   >
     <div
-      class="col-md-4 col-lg-3 col-xl-2 text-center text-md-start pt-4 avatar"
+      class="col-md-4 col-lg-3 col-xl-2 text-center text-md-start pt-4 avatar d-flex justify-content-center"
     >
       <router-link :to="'/candidates/' + result.parent.id">
         <img
+          v-if="result.parent.avatarUrl"
           class="rounded-circle img-fluid p-2 border-primary border border-3 fit"
           :src="result.parent.avatarUrl"
           alt="candidateAvatar"
+          data-bs-toggle="tooltip"
+          data-bs-placement="left"
+          title="Go to candidate`s page"
+        />
+        <font-awesome-icon
+          v-else
+          icon="fa-solid fa-user-large"
+          class="text-primary not-found"
           data-bs-toggle="tooltip"
           data-bs-placement="left"
           title="Go to candidate`s page"
@@ -233,5 +242,9 @@ const categoriesWithAnswerPoints = computed(() =>
   object-fit: cover;
   height: 200px;
   width: 200px;
+}
+
+.avatar .not-found {
+  height: 150px;
 }
 </style>
