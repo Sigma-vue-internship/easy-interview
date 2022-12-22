@@ -343,6 +343,7 @@ async function postResult() {
     :question-arrays-by-category="questionsByCategories"
     :is-mode-review="quizMode"
     :categories="questionCategories"
+    :questions="quizList"
     @add-point="answerPoints"
     @delete-question="deleteQuestion"
     @post-quiz="postResult"

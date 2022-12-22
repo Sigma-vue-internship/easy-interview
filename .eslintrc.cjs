@@ -65,7 +65,7 @@ module.exports = {
       },
     ],
     "use-isnan": "warn", // require calls to isNaN() when checking for NaN
-    "max-len": ["error", { code: 140 }], // enforce a maximum line length
+    "max-len": ["error", { code: 175 }], // enforce a maximum line length
     indent: ["error", 2, { SwitchCase: 1 }], // enforce consistent indentation
     quotes: ["error", "double"],
     "comma-dangle": ["error", "only-multiline"], // require or disallow trailing commas
