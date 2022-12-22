@@ -57,6 +57,7 @@ function addPoint(point: number, id: string) {
   }
   emit("addPoint", point, id);
 }
+// TODO: This function should be reorganized.
 function addCorrectQuestion(point: number, id: string) {
   const isQuestionChecked: boolean = correctQuestions.value.some(
     question => question.questionId === id,
