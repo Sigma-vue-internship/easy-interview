@@ -110,10 +110,17 @@ getCandidates();
         :to="'/candidates/' + candidate.id"
       >
         <img
+          v-if="candidate.avatarUrl"
           class="rounded-circle p-2 border-primary border border-3 candidate__img"
           :src="candidate.avatarUrl"
           alt="candidateAvatar"
         />
+        <div
+          v-else
+          class="text-primary rounded-circle p-2 border-primary border border-3 candidate__img"
+        >
+          <font-awesome-icon icon="fa-solid fa-user-large" />
+        </div>
 
         <div class="flex ms-4 text-start">
           <h2 class="fs-3">{{ candidate.username }}</h2>
@@ -135,5 +142,9 @@ getCandidates();
 .candidate__img {
   width: 150px;
   height: 150px;
+}
+
+.fa-user-large {
+  height: 110px;
 }
 </style>

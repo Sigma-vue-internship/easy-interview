@@ -138,4 +138,16 @@ describe("Results Store", () => {
     expect(axios.get).toBeCalledWith("/candidates/123/results/123");
     expect(data).toEqual("123");
   });
+  it("should call deleteResult action", async () => {
+    axios.delete = vi.fn().mockImplementation(() => Promise.resolve());
+    const resultStore = useResultsStore();
+    await resultStore.deleteResult("1", "2");
+    expect(axios.delete).toBeCalledWith("/candidates/1/results/2");
+  });
+  it("should call deletePercentageResult action", async () => {
+    axios.delete = vi.fn().mockImplementation(() => Promise.resolve());
+    const resultStore = useResultsStore();
+    await resultStore.deletePercentageResult("1");
+    expect(axios.delete).toBeCalledWith("/candidateResults/1");
+  });
 });

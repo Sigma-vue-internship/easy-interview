@@ -157,7 +157,7 @@ const currentAlert = computed(() => {
       return "The quantity of all questions";
   }
 });
-getAllQuestions();
+getQuestions();
 getAllResults();
 </script>
 <template>
