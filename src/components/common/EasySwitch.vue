@@ -50,51 +50,49 @@ export default {
 .switch-field {
   display: block;
   overflow: hidden;
+  input {
+    position: absolute !important;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    width: 1px;
+    border: 0;
+    overflow: hidden;
+  }
+  label {
+    background-color: #e4e4e4;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+    line-height: 1;
+    text-align: center;
+    padding: 8px 16px;
+    margin-right: -1px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3),
+      0 1px rgba(255, 255, 255, 0.1);
+    transition: all 0.1s ease-in-out;
+    &:hover {
+      cursor: pointer;
+    }
+    &:first-of-type {
+      border-radius: 4px 0 0 4px;
+    }
+    &:last-of-type {
+      border-radius: 0 4px 4px 0;
+    }
+  }
+  input[id*="radio-one"]:checked {
+    & + label {
+      background-color: #99ee68;
+      box-shadow: none;
+    }
+  }
+  input[id*="radio-two"]:checked {
+    & + label {
+      background-color: #f37171;
+      box-shadow: none;
+    }
+  }
 }
-
-.switch-field input {
-  position: absolute !important;
-  clip: rect(0, 0, 0, 0);
-  height: 1px;
-  width: 1px;
-  border: 0;
-  overflow: hidden;
-}
-
-.switch-field label {
-  background-color: #e4e4e4;
-  color: rgba(0, 0, 0, 0.6);
-  font-size: 14px;
-  line-height: 1;
-  text-align: center;
-  padding: 8px 16px;
-  margin-right: -1px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
-  transition: all 0.1s ease-in-out;
-}
-
-.switch-field label:hover {
-  cursor: pointer;
-}
-
-.switch-field input[id*="radio-one"]:checked + label {
-  background-color: #99ee68;
-  box-shadow: none;
-}
-.switch-field input[id*="radio-two"]:checked + label {
-  background-color: #f37171;
-  box-shadow: none;
-}
-
-.switch-field label:first-of-type {
-  border-radius: 4px 0 0 4px;
-}
-
-.switch-field label:last-of-type {
-  border-radius: 0 4px 4px 0;
-}
-
 .form {
   max-width: 600px;
   font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
@@ -103,7 +101,6 @@ export default {
   margin: 8px auto;
   padding: 16px;
 }
-
 h2 {
   font-size: 18px;
   margin-bottom: 8px;
