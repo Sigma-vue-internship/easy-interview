@@ -11,49 +11,33 @@ import { ref, watch } from "vue";
 import { Candidate } from "../dto/candidates";
 import { Result } from "../dto/results";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
+import EasyDropdown from "../components/common/EasyDropdown.vue";
 
 const router = useRouter();
-const { getAllCandidates } = useCandidateStore();
+const { getCandidatesByUsername } = useCandidateStore();
 const { getResultsForCandidate } = useResultsStore();
 
-const candidatesList = ref<Candidate[]>([]);
 const selectedCandidate = ref("");
 const isCandidatesVisible = ref(false);
 const choosedCandidates = ref<Candidate[]>([]);
 const quizResults = ref<Result[]>([]);
 const isLoaderVisible = ref(true);
 
-async function getAllCandidatesData() {
-  try {
-    isLoaderVisible.value = true;
-    candidatesList.value = await getAllCandidates();
-  } catch (e) {
-    console.log(e);
-    Notify.failure("Something went wrong. Please, try again.", {
-      distance: "65px",
-    });
-  }
-  isLoaderVisible.value = false;
-}
-getAllCandidatesData();
-
 async function getResultsForCandidateData(candidateId: string) {
   try {
     isLoaderVisible.value = true;
     quizResults.value = await getResultsForCandidate(candidateId);
+    isLoaderVisible.value = false;
   } catch (e) {
     console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });
   }
-  isLoaderVisible.value = false;
 }
 
-watch(selectedCandidate, newCandidate => {
-  choosedCandidates.value = candidatesList.value.filter(candidate =>
-    candidate.username.includes(newCandidate),
-  );
+watch(selectedCandidate, async newCandidate => {
+  choosedCandidates.value = await getCandidatesByUsername(newCandidate);
 });
 
 function setCandidate(user: Candidate) {
@@ -91,44 +75,15 @@ function pushRoute(candidateId: string, resultId: string) {
     <h2 class="text-primary text-center text-md-start mt-2">
       Choose candidate
     </h2>
-    <input
+    <EasyDropdown
       id="candadidateInput"
-      v-model="selectedCandidate"
-      class="form-control"
-      placeholder="Enter username to search..."
-      @focusin="isCandidatesVisible = true"
+      v-model:dropdown-input="selectedCandidate"
+      :dropdown-data="choosedCandidates"
+      :selected-item="selectedCandidate"
+      @set-dropdown-obj="setCandidate"
     />
-    <div
-      v-if="selectedCandidate && isCandidatesVisible"
-      class="list-group overflow-scroll w-100 position-absolute"
-    >
-      <a
-        v-for="singleCandidate in choosedCandidates"
-        :key="singleCandidate.id"
-        class="list-group-item list-group-item-action p-0 px-2"
-      >
-        <div
-          class="d-flex w-100 align-items-center gap-3"
-          @click="setCandidate(singleCandidate)"
-        >
-          <img
-            :src="singleCandidate.avatarUrl"
-            class="rounded-circle"
-            height="50"
-            alt="avatar"
-          />
-          <div class="flex-column text-start">
-            <p class="m-1 me-3">{{ singleCandidate.username }}</p>
-            <p class="m-1 me-3">{{ singleCandidate.position }}</p>
-          </div>
-        </div>
-      </a>
-    </div>
-    <SpinnerLoader
-      v-if="isLoaderVisible"
-      class="mt-5"
-    />
-    <div v-else-if="quizResults.length && !isLoaderVisible">
+
+    <div v-if="quizResults.length">
       <h2 class="text-primary text-center text-md-start mt-4">Results List</h2>
       <ul class="list-unstyled">
         <li
@@ -192,5 +147,16 @@ function pushRoute(candidateId: string, resultId: string) {
 <style scoped>
 .overflow-scroll {
   max-height: 245px;
+}
+
+.not-found-photo {
+  height: 50px;
+}
+
+.avatar {
+  object-fit: cover;
+  object-position: center;
+  height: 50px;
+  width: 50px;
 }
 </style>

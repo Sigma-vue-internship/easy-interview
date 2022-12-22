@@ -10,6 +10,7 @@ const isCategoryMode = ref(false);
 const currentMode = ref("all");
 const candidateStore = useCandidateStore();
 const searchData = ref([]);
+const inputValue = ref("");
 const router = useRouter();
 watch([searchInput, currentMode], async ([newInput, newCurrentMode]) => {
   if (newInput.length === 0) {
@@ -61,8 +62,10 @@ function spreadDynamicly(
 }
 function redirectTo(dropdownObj) {
   if (dropdownObj.id) {
+    inputValue.value = dropdownObj.username;
     router.push({ path: `/candidates/${dropdownObj.id}`, replace: true });
   } else {
+    inputValue.value = dropdownObj;
     router.push({ path: `/questions/${dropdownObj}`, replace: true });
   }
 }
@@ -101,6 +104,7 @@ function handleSwitch(currentSwitch) {
         <div class="col-12 col-md-9">
           <EasyDropdown
             v-model:dropdownInput="searchInput"
+            :selected-item="inputValue"
             :dropdown-data="searchData"
             @set-dropdown-obj="redirectTo"
           />

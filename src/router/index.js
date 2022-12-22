@@ -10,6 +10,7 @@ import QuizResultsView from "../views/QuizResultsView.vue";
 import QuizConstructorView from "../views/QuizConstructorView.vue";
 import SingleResultView from "../views/SingleResultView.vue";
 import MissingView from "../views/MissingView.vue";
+import LastResultView from "../views/LastResultView.vue";
 
 // const guardedRoutes = [
 //   "dashboard"
@@ -92,6 +93,11 @@ const router = createRouter({
       name: "NotFound",
       component: MissingView,
     },
+    {
+      path: "/lastresult",
+      name: "lastResult",
+      component: LastResultView,
+    }
   ],
 });
 // router.beforeEach((to, from, next) =>

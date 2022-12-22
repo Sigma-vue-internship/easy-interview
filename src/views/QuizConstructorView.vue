@@ -115,9 +115,6 @@ function answerPoints(point: number, id: string) {
   );
   if (filtredElement) {
     filtredElement.answerPoints = checkedAnswer.value;
-    if (startQuizDate.value === 0) {
-      startQuizDate.value = Date.now();
-    }
     return filtredElement;
   }
 }
@@ -134,9 +131,24 @@ function deleteQuestion(questionId: string, item: QuizQuestion) {
     );
   }
 }
-function setCandidate(id: string, name: string) {
+const isQuizAvailable = ref(false);
+async function setCandidate(id: string, name: string) {
   currentCandidate.value.id = id;
   currentCandidate.value.name = name;
+  try {
+    const data = await resultsStore.getResultsForCandidate(id);
+    if (data.length >= 3) {
+      return Notify.failure("This candidate has already passed 3 quizes", {
+        distance: "65px",
+      });
+    }
+    isQuizAvailable.value = true;
+  } catch (e) {
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
+  }
+  // here we need to check if candidate, has 3 results already
 }
 const setCandidateSelected = async () => {
   isCandidateChoosed.value = true;
@@ -148,6 +160,8 @@ async function postPercentageResult() {
     await resultsStore.postPercentageResult({
       candidateUsername: currentCandidate.value.name,
       resultPoints: resultPercents.value,
+      candidateId: currentCandidate.value.id,
+      id: "",
     });
   } catch (e) {
     console.log(e);
@@ -157,6 +171,7 @@ async function postPercentageResult() {
 const setModeQuiz = () => {
   quizMode.value = false;
   questionCategories.value = _uniq(quizList.value.map(obj => obj.category));
+  startQuizDate.value = Date.now();
   // questionsByCategories.value = { ...spreadQuestionsByCategories() };
   // here ok
 };
@@ -186,9 +201,9 @@ async function postResult() {
     return;
   }
   result.value.questionAnswer = quizList.value;
-  result.value.title = `Passed by ${
-    currentCandidate.value.name
-  }, ${Date.now()}`;
+  result.value.title = `${currentCandidate.value.name}, ${Math.round(
+    resultPercents.value,
+  )}%`;
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
   try {
@@ -217,6 +232,7 @@ async function postResult() {
 <template>
   <CandidateInfo
     v-if="quizMode && !isCandidateChoosed"
+    :is-quiz-available="isQuizAvailable"
     @set-candidate-selected="setCandidateSelected"
     @choosed-candidate="setCandidate"
   />
