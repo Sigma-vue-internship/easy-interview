@@ -1,8 +1,11 @@
 import { createPinia, setActivePinia } from "pinia";
 import { useResultsStore } from "../results";
+
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import axios from "../../service/axiosInstance";
 import { createApp } from "vue";
+import { Result, PercentsResult } from "../../dto/results";
+import { flushPromises } from "@vue/test-utils";
 
 const app = createApp({});
 describe("Results Store", () => {
@@ -51,7 +54,6 @@ describe("Results Store", () => {
       },
       "1",
     );
-    console.log(data, "!!!!!!!!!");
     expect(axios.post).toBeCalledWith("/candidates/1/results", {
       questionAnswer: [],
       startedAt: 123,
@@ -82,6 +84,59 @@ describe("Results Store", () => {
         id: "1",
       },
     });
+  });
+  it("should call postPercentageResult", async () => {
+    const resultStore = useResultsStore();
+    const result: PercentsResult = {
+      candidateUsername: "test",
+      resultPoints: 50,
+    };
+    axios.post = vi.fn().mockImplementation(() => Promise.resolve());
+    await resultStore.postPercentageResult(result);
+
+    expect(axios.post).toBeCalledWith("/candidateResults", result);
+  });
+  it("should call getPercentageResults", async () => {
+    const results: PercentsResult[] = [
+      {
+        candidateUsername: "123",
+        resultPoints: 50,
+      },
+    ];
+    axios.get = vi.fn().mockImplementation(() =>
+      Promise.resolve({
+        data: results,
+      }),
+    );
+
+    const resultStore = useResultsStore();
+    const data = await resultStore.getPercentageResults();
+    expect(axios.get).toBeCalledWith("/candidateResults");
+    expect(data).toEqual(results);
+  });
+  it("should call getResultsForCandidate", async () => {
+    axios.get = vi.fn().mockImplementation(() =>
+      Promise.resolve({
+        data: "123",
+      }),
+    );
+
+    const resultStore = useResultsStore();
+    const data = await resultStore.getResultsForCandidate("123");
+    expect(axios.get).toBeCalledWith("/candidates/123/results");
+    expect(data).toEqual("123");
+  });
+  it("should call getOneResultForCandidate", async () => {
+    axios.get = vi.fn().mockImplementation(() =>
+      Promise.resolve({
+        data: "123",
+      }),
+    );
+    const resultStore = useResultsStore();
+    const data = await resultStore.getOneResultForCandidate("123", "123");
+
+    expect(axios.get).toBeCalledWith("/candidates/123/results/123");
+    expect(data).toEqual("123");
   });
   it("should call deleteResult action", async () => {
     axios.delete = vi.fn().mockImplementation(() => Promise.resolve());

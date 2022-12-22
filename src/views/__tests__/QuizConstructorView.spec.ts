@@ -1,3 +1,4 @@
+import { useResultsStore } from "./../../stores/results";
 import { flushPromises, VueWrapper } from "@vue/test-utils";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { createTestingPinia } from "@pinia/testing";
@@ -9,6 +10,7 @@ import EasyDropdown from "../../components/common/EasyDropdown.vue";
 import { useQuestionStore } from "../../stores/questions";
 import { useCandidateStore } from "../../stores/candidates";
 import CandidateInfo from "../../components/quiz/CandidateInfo.vue";
+import QuizList from "../../components/quiz/QuizList.vue";
 import { wrapperFactory } from "../../service/wrapperFactory";
 
 const plugins = [
@@ -46,6 +48,12 @@ const plugins = [
             },
           ]),
         deleteQuestion: () => Promise.resolve("Question deleted"),
+        postPercentageResult: () => Promise.resolve("Result posted"),
+        postResult: () =>
+          Promise.resolve({
+            candidateId: "123",
+            id: "123",
+          }),
       }),
     ],
   }),
@@ -146,5 +154,51 @@ describe("QuizConstructor.vue", () => {
     await wrapper.find("#deleteQuestionBtn").trigger("click");
     await flushPromises();
     expect(wrapper.vm.quizList.length).toEqual(1);
+  });
+  it("should call PostPercentageResult", async () => {
+    const wrapper: VueWrapper = wrapperFactory(QuizConstructor, {}, plugins);
+    wrapper.vm.quizList = [
+      {
+        text: "string",
+        point: 5,
+        answerPoints: 3,
+        answer: "string",
+        category: "string",
+        id: "1",
+      },
+      {
+        text: "string",
+        point: 5,
+        answerPoints: 3,
+        answer: "string",
+        category: "string",
+        id: "2",
+      },
+      {
+        text: "string",
+        point: 5,
+        answerPoints: 3,
+        answer: "string",
+        category: "string",
+        id: "3",
+      },
+    ];
+    wrapper.vm.currentCandidate = {
+      name: "Test123",
+      id: "1",
+    };
+    const { postPercentageResult, postResult } = useResultsStore();
+
+    wrapper.vm.isCandidateChoosed = true;
+    await flushPromises();
+
+    const quizChildComponent = wrapper.findComponent(QuizList);
+    await flushPromises();
+
+    quizChildComponent.vm.$emit("post-quiz");
+    await flushPromises();
+
+    expect(postResult).toBeCalled();
+    expect(postPercentageResult).toBeCalled();
   });
 });

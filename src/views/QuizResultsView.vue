@@ -29,7 +29,6 @@ async function getResultsForCandidateData(candidateId: string) {
     quizResults.value = await getResultsForCandidate(candidateId);
     isLoaderVisible.value = false;
   } catch (e) {
-    console.log(e);
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });
