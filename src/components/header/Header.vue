@@ -13,14 +13,21 @@ function login() {
 function logoutUser() {
   auth0.logout({ returnTo: window.location.origin });
 }
+// TODO: after deploy, switch urls
+// function logoutUser() {
+//   auth0.logout({
+//     returnTo:
+//       "https://dev-epuimnxm.us.auth0.com/v2/logout?returnTo=http%3A%2F%2Flocalhost:5173/hero",
+//   });
+// }
 </script>
 <template>
   <header>
     <nav class="navbar navbar-light bg-light d-flex align-items-center">
       <div class="container">
-        <div class="row justify-content-between w-100 gx-0">
+        <div class="row justify-content-between align-items-center w-100 gx-0">
           <router-link
-            class="my-1 col-8 col-sm-4 col-md-3 align-self-start mt-2 mt-md-0"
+            class="col-8 col-sm-4 col-md-3"
             to="/"
           >
             <img

@@ -62,8 +62,7 @@ function questionsQuantity(category: string) {
     <li
       v-for="category in categories"
       :key="category"
-      role="button"
-      class="border border-light mt-4 p-2 rounded-3 shadow"
+      class="border border-light mt-4 p-2 rounded-3 shadow pointer"
       @click="pushRoute(category)"
     >
       <div class="row">
@@ -83,3 +82,8 @@ function questionsQuantity(category: string) {
     </li>
   </ul>
 </template>
+<style>
+.pointer {
+  cursor: pointer;
+}
+</style>

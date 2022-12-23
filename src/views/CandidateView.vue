@@ -16,6 +16,9 @@ const { params } = useRoute();
 const router = useRouter();
 const isLoaderVisible = ref(true);
 
+const { getCandidateById, deleteCandidateById, editCandidate } =
+  useCandidateStore();
+
 const currentCandidate = ref<Candidate>({
   position: "",
   username: "",
@@ -57,8 +60,6 @@ async function getResultsForCandidateData() {
 getResultsForCandidateData();
 
 const formType = ref("put");
-const { getCandidateById, deleteCandidateById, editCandidate } =
-  useCandidateStore();
 
 let candidateInit = {
   position: "",

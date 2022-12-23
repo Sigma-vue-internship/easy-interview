@@ -18,7 +18,7 @@ const candidateInit = {
   linkedinUrl: "",
   feedback: "",
   avatarUrl: "",
-  id: 0,
+  id: "0",
 };
 const currentCandidate = ref({ ...candidateInit });
 const formType = ref("post");

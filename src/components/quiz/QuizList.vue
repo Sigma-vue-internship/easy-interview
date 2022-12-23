@@ -26,7 +26,7 @@ const props = defineProps({
     default: () => {},
   },
   categories: {
-    type: Array<String>,
+    type: Array<string>,
     default: () => [],
   },
   questions: {
@@ -56,7 +56,6 @@ function addPoint(point: number, id: string) {
   }
   emit("addPoint", point, id);
 }
-// TODO: This function should be reorganized.
 function addCorrectQuestion(point: number, id: string) {
   const isQuestionChecked: boolean = correctQuestions.value.some(
     question => question.questionId === id,
@@ -64,14 +63,20 @@ function addCorrectQuestion(point: number, id: string) {
   const questionIndex: number = correctQuestions.value.findIndex(
     question => question.questionId === id,
   );
-  if (point === 0 && !isQuestionChecked) {
-    correctQuestions.value.push({ isCorrect: false, questionId: id });
-  } else if (point !== 0 && !isQuestionChecked) {
-    correctQuestions.value.push({ isCorrect: true, questionId: id });
-  } else if (point === 0 && isQuestionChecked) {
-    correctQuestions.value[questionIndex].isCorrect = false;
-  } else if (point !== 0 && isQuestionChecked) {
-    correctQuestions.value[questionIndex].isCorrect = true;
+  switch (true) {
+    case point === 0 && !isQuestionChecked:
+      correctQuestions.value.push({ isCorrect: false, questionId: id });
+      break;
+    case point !== 0 && !isQuestionChecked:
+      correctQuestions.value.push({ isCorrect: true, questionId: id });
+      break;
+    case point === 0 && isQuestionChecked:
+      correctQuestions.value[questionIndex].isCorrect = false;
+      break;
+    default: {
+      correctQuestions.value[questionIndex].isCorrect = true;
+      break;
+    }
   }
 }
 function pointsArray(point: number) {
