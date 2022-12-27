@@ -34,6 +34,7 @@ import {
   faClock,
   faSquareMinus,
   faSquarePlus,
+  faCircleRight,
 } from "@fortawesome/free-regular-svg-icons";
 import "../assets/fonts/css/fontello.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -69,6 +70,7 @@ library.add(
   faSquareXmark,
   faPencil,
   faUserLarge,
+  faCircleRight,
 );
 
 app.use(router);

@@ -15,6 +15,12 @@ import { formattingDate } from "../utils/dateFormatting";
 const { params } = useRoute();
 const router = useRouter();
 const isLoaderVisible = ref(true);
+const formType = ref("put");
+const { getCandidateById, deleteCandidateById, editCandidate } =
+  useCandidateStore();
+const { getResultsForCandidate, deleteResult, deletePercentageResult } =
+  useResultsStore();
+const candidateResults = ref<Result[]>([]);
 
 const currentCandidate = ref<Candidate>({
   position: "",
@@ -39,10 +45,6 @@ async function getCandidateData() {
   }
 }
 
-const { getResultsForCandidate, deleteResult, deletePercentageResult } =
-  useResultsStore();
-const candidateResults = ref<Result[]>([]);
-
 async function getResultsForCandidateData() {
   try {
     candidateResults.value = await getResultsForCandidate(
@@ -55,10 +57,6 @@ async function getResultsForCandidateData() {
   }
 }
 getResultsForCandidateData();
-
-const formType = ref("put");
-const { getCandidateById, deleteCandidateById, editCandidate } =
-  useCandidateStore();
 
 let candidateInit = {
   position: "",
@@ -138,9 +136,11 @@ getCandidateData();
     v-if="!isLoaderVisible"
     class="shadow border border-2 border-light py-4 rounded-3"
   >
-    <div class="row gx-0 justify-content-center justify-content-lg-between">
+    <div
+      class="row gx-0 justify-content-center justify-content-lg-between px-4"
+    >
       <div
-        class="col-12 col-lg-4 mb-3 mb-lg-0 d-flex justify-content-center justify-content-lg-start ps-lg-4"
+        class="col-12 col-lg-4 col-xxl-3 mb-3 mb-lg-0 d-flex justify-content-center justify-content-lg-start"
       >
         <img
           v-if="currentCandidate.avatarUrl"
@@ -156,13 +156,27 @@ getCandidateData();
         />
       </div>
       <div
-        class="col-11 col-lg-7 text-center text-lg-start shadow border border-2 border-light p-3 me-lg-4 rounded-3"
+        class="col-11 col-lg-8 col-xxl-9 text-center text-lg-start shadow border border-2 border-light p-3 rounded-3"
       >
         <h2
           id="username"
           class="text-primary"
         >
           {{ currentCandidate.username }}
+          <font-awesome-icon
+            role="button"
+            icon="fa-solid fa-pencil"
+            class="text-primary fs-4 mx-3 edit-button"
+            data-bs-toggle="modal"
+            data-bs-target="#editCandidate"
+          />
+          <font-awesome-icon
+            role="button"
+            icon="fa-solid fa-trash-can"
+            class="text-danger fs-4 delete-button"
+            data-bs-toggle="modal"
+            data-bs-target="#alertCandidate"
+          />
         </h2>
         <h3
           id="position"
@@ -178,17 +192,13 @@ getCandidateData();
             icon="fa-brands fa-linkedin"
             class="text-primary me-2 fs-3"
           />
-          {{ currentCandidate.linkedinUrl }}
+          <a
+            :href="currentCandidate.linkedinUrl"
+            target="blank"
+            class="candidate-link text-start text-truncate"
+            >{{ currentCandidate.linkedinUrl }}</a
+          >
         </div>
-        <SubmitButton
-          data-bs-toggle="modal"
-          data-bs-target="#editCandidate"
-          >Edit</SubmitButton
-        >
-        <DeleteButton
-          data-bs-toggle="modal"
-          data-bs-target="#alertCandidate"
-        />
         <p
           id="feedback"
           class="text-secondary mt-4"
@@ -198,45 +208,45 @@ getCandidateData();
         </p>
       </div>
     </div>
-    <div class="text-center mt-4">
-      <h3 class="text-primary mb-3">Quiz results</h3>
+    <div class="text-md-start mt-4 ps-4">
+      <h3 class="text-primary">Quiz results</h3>
       <ul
         v-if="candidateResults.length"
-        class="list-unstyled row"
+        class="list-unstyled row justify-content-lg-between"
       >
         <li
-          v-for="result in candidateResults"
+          v-for="(result, index) in candidateResults"
           :key="result.id"
-          class="my-2 text-secondary col-12 col-lg-4"
+          class="my-2 text-secondary row col-lg-4 align-items-center"
         >
-          <div class="col-12 mb-2">
-            {{ result.title }}, {{ formattingDate(result.endedAt) }}
+          <div class="col-7 col-md-5 col-lg-7 mb-2">
+            #{{ index + 1 }}. {{ result.title }},
+            {{ formattingDate(result.endedAt) }}
           </div>
-          <div class="row align-items-center">
-            <div class="col-7 text-end">
-              <button
-                class="btn btn-outline-secondary rounded-pill px-4 opacity-75 show-more"
-                @click="pushRoute(result.parent.id, result.id)"
-              >
-                show full
-              </button>
-            </div>
-            <div class="col-5 text-start">
-              <font-awesome-icon
-                role="button"
-                icon="fa-solid fa-trash-can"
-                class="text-danger fs-4"
-                data-bs-toggle="tooltip"
-                data-bs-placement="left"
-                title="Delete quiz result"
-                @click="deleteQuizResult(result.parent.id, result.id)"
-              />
-            </div>
+          <div class="col-4">
+            <font-awesome-icon
+              role="button"
+              icon="fa-regular fa-circle-right"
+              class="text-primary fs-4 me-3"
+              data-bs-toggle="tooltip"
+              data-bs-placement="left"
+              title="Go to full result"
+              @click="pushRoute(result.parent.id, result.id)"
+            />
+            <font-awesome-icon
+              role="button"
+              icon="fa-solid fa-trash-can"
+              class="text-danger fs-4"
+              data-bs-toggle="tooltip"
+              data-bs-placement="left"
+              title="Delete quiz result"
+              @click="deleteQuizResult(result.parent.id, result.id)"
+            />
           </div>
         </li>
       </ul>
       <div v-if="!candidateResults.length">
-        <p class="text-secondary">
+        <p class="text-secondary text-md-start ps-1">
           All results will be displayed here after passing quiz by candidate
         </p>
       </div>
@@ -280,5 +290,10 @@ getCandidateData();
 
 .fa-user-large {
   height: 200px;
+}
+
+.candidate-link {
+  word-wrap: break-word;
+  width: 100%;
 }
 </style>
