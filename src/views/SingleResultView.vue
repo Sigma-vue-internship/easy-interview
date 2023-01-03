@@ -86,6 +86,17 @@ const categoriesWithAnswerPoints = computed(() =>
     ]),
   ),
 );
+
+function toggleAccordion() {
+  const accordionSelection = document.querySelectorAll(".accordion .collapse");
+  accordionSelection.forEach(function (section) {
+    section.classList.toggle("show");
+  });
+}
+
+function printPage() {
+  window.print();
+}
 </script>
 
 <template>
@@ -170,7 +181,7 @@ const categoriesWithAnswerPoints = computed(() =>
       </h4>
     </div>
     <h4 class="text-center text-md-start ps-md-1 mt-4">Skills</h4>
-    <div class="row">
+    <div class="row d-flex justify-content-center justify-content-md-start">
       <radial-progress-bar
         v-for="category in categories"
         :key="category"
@@ -197,9 +208,22 @@ const categoriesWithAnswerPoints = computed(() =>
         <span class="ps-4 text-center">{{ category }}</span>
       </radial-progress-bar>
     </div>
+    <div class="mt-5 mb-2 text-end text-primary fs-5">
+      <a
+        role="button"
+        @click="toggleAccordion"
+        >Show All</a
+      >
+      |
+      <a
+        role="button"
+        @click="printPage"
+        >Print</a
+      >
+    </div>
     <div
       id="detailedByCategory"
-      class="accordion accordion-flush mt-5"
+      class="accordion accordion-flush"
     >
       <div class="accordion-item">
         <h2

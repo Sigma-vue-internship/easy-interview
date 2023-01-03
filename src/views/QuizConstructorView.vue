@@ -204,9 +204,7 @@ async function postResult() {
     return;
   }
   result.value.questionAnswer = quizList.value;
-  result.value.title = `${currentCandidate.value.name}, ${Math.round(
-    resultPercents.value,
-  )}%`;
+  result.value.title = `${Math.round(resultPercents.value)}%`;
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
   try {

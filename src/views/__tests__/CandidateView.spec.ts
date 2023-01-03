@@ -5,7 +5,7 @@ import Candidate from "../CandidateView.vue";
 import { useCandidateStore } from "../../stores/candidates";
 import { useResultsStore } from "../../stores/results";
 import { useRoute, useRouter } from "vue-router";
-import DeleteButton from "../../components/common/DeleteButton.vue";
+
 vi.mock("vue-router/dist/vue-router.mjs", () => ({
   useRoute: () => ({
     params: {
@@ -83,7 +83,7 @@ describe("Candidate.vue", () => {
     const wrapper = getWrapper();
     const { deleteCandidateById } = useCandidateStore();
     await flushPromises();
-    const deleteBtn = wrapper.findComponent(DeleteButton);
+    const deleteBtn = wrapper.find(".delete-button");
 
     deleteBtn.trigger("click");
     await flushPromises();
@@ -98,7 +98,7 @@ describe("Candidate.vue", () => {
     expect(getResultsForCandidate).toBeCalledWith("1");
     await flushPromises();
     const candidateResultsArray = wrapper.vm.candidateResults;
-    const resultsArray = wrapper.findAll(".show-more").length;
+    const resultsArray = wrapper.findAll("li").length;
     expect(resultsArray).toEqual(candidateResultsArray.length);
   });
 });
