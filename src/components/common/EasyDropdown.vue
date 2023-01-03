@@ -6,6 +6,7 @@ export default {
 <script setup lang="ts">
 import { ref, reactive, watch } from "vue";
 import debounce from "lodash/debounce";
+import { Candidate } from "../../dto/candidates";
 
 interface Emit {
   (e: "update:dropdownInput", targetValue: string): void;
@@ -20,7 +21,7 @@ const props = defineProps({
     },
   },
   dropdownData: {
-    type: Array,
+    type: Array<string | Candidate>,
     required: false,
     default() {
       return [];
@@ -36,7 +37,7 @@ const props = defineProps({
     default: () => "",
   },
 });
-const zIndexStyle = reactive({
+const zIndex = reactive({
   "z-index": props.zIndexStyle,
 });
 // const dropdownCurrentInput = ref("");
@@ -83,7 +84,7 @@ watch(
     <div
       v-if="dropdownInput.length >= 1 && isDropdownObjVisible"
       class="list-group overflow-scroll shadow-md w-100 position-absolute"
-      :style="zIndexStyle"
+      :style="zIndex"
     >
       <a
         v-for="(dropdownObj, index) in dropdownData"
@@ -92,7 +93,7 @@ watch(
             ? `${dropdownObj.username}${dropdownObj.id}`
             : `${dropdownObj}`
         "
-        class="list-group-item list-group-item-action px-2 h-100 w-100"
+        class="list-group-item list-group-item-action px-2 h-100 w-100 pointer"
       >
         <div
           :id="'dropdownObjBtn' + index"
@@ -139,6 +140,9 @@ watch(
 </template>
 
 <style scoped>
+.pointer {
+  cursor: pointer;
+}
 .overflow-scroll {
   max-height: 245px;
   overflow-x: hidden !important;

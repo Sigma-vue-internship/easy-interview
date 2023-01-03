@@ -88,6 +88,8 @@ describe("Results Store", () => {
   it("should call postPercentageResult", async () => {
     const resultStore = useResultsStore();
     const result: PercentsResult = {
+      candidateId: "333",
+      id: "1",
       candidateUsername: "test",
       resultPoints: 50,
     };
@@ -99,6 +101,8 @@ describe("Results Store", () => {
   it("should call getPercentageResults", async () => {
     const results: PercentsResult[] = [
       {
+        candidateId: "333",
+        id: "1",
         candidateUsername: "123",
         resultPoints: 50,
       },

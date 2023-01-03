@@ -1,7 +1,10 @@
 import { defineStore } from "pinia";
 import { Candidate, CandidatesResponse } from "../dto/candidates";
 import axios from "../service/axiosInstance";
-
+interface CandidatesByPage {
+  candidates: Candidate[];
+  count: number;
+}
 export const useCandidateStore = defineStore("candidates", {
   actions: {
     async getCandidateById(id: string) {
@@ -22,7 +25,7 @@ export const useCandidateStore = defineStore("candidates", {
       await axios.delete(`/candidates/${id}`);
     },
     async getCandidatesByPage(page: number) {
-      const response = await axios.get<Candidate[]>(
+      const response = await axios.get<CandidatesByPage>(
         `/candidates?p=${page}&l=8`,
       );
       return response.data;

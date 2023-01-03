@@ -60,7 +60,7 @@ function pushRoute(candidateId: string, resultId: string) {
 <template>
   <h2 class="text-primary text-center text-md-start mb-md-2">Quiz Results</h2>
   <div
-    class="alert alert-warning"
+    class="alert alert-primary"
     role="alert"
   >
     <font-awesome-icon

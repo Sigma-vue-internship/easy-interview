@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import SubmitButton from "../components/common/SubmitButton.vue";
-import DeleteButton from "../components/common/DeleteButton.vue";
 import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue";
 import { useCandidateStore } from "../stores/candidates";

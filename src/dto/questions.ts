@@ -3,5 +3,5 @@ export interface Question {
   point: number;
   category: string;
   answer: string;
-  id: string;
+  id?: string;
 }
