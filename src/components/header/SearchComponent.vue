@@ -4,12 +4,13 @@ import { useCandidateStore } from "../../stores/candidates";
 import { Candidate } from "../../dto/candidates";
 import { categories } from "../../hooks/categories";
 import { useRouter } from "vue-router";
+
 const searchInput = ref<string>("");
 const isCandidateMode = ref(false);
 const isCategoryMode = ref(false);
 const currentMode = ref("all");
 const candidateStore = useCandidateStore();
-const searchData = ref([]);
+const searchData = ref<Array<string | Candidate>>([]);
 const inputValue = ref("");
 const router = useRouter();
 watch([searchInput, currentMode], async ([newInput, newCurrentMode]) => {
@@ -32,7 +33,7 @@ watch([searchInput, currentMode], async ([newInput, newCurrentMode]) => {
       const resCandidate = await candidateStore.getCandidatesByUsername(
         newInput,
       );
-      const searchedCategories: Array<String> = categories.filter(category =>
+      const searchedCategories: Array<string> = categories.filter(category =>
         category.toLowerCase().includes(newInput.toLowerCase()),
       );
       searchData.value = [...spreadDynamicly(resCandidate, searchedCategories)];
@@ -41,9 +42,9 @@ watch([searchInput, currentMode], async ([newInput, newCurrentMode]) => {
 });
 function spreadDynamicly(
   candidates: Array<Candidate>,
-  categories: Array<String>,
+  categories: Array<string>,
 ) {
-  const dynamicArray: Array<object> = [];
+  const dynamicArray: Array<string | Candidate> = [];
   let maxLength = 0;
   if (candidates.length > categories.length) {
     maxLength = candidates.length;

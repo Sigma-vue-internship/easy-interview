@@ -11,23 +11,20 @@ import QuizConstructorView from "../views/QuizConstructorView.vue";
 import SingleResultView from "../views/SingleResultView.vue";
 import MissingView from "../views/MissingView.vue";
 import LastResultView from "../views/LastResultView.vue";
-
-// const guardedRoutes = [
-//   "dashboard"
-//   "candidates",
-//   "singleCandidate",
-//   "сategories",
-//   "singleCategory",
-//   "quiz",
-//   "quizResults",
-// ];
+import HeroView from "../views/HeroView.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: "/hero",
+      name: "hero",
+      component: HeroView,
+    },
+    {
       path: "/",
       name: "dashboard",
       component: DashboardView,
+      beforeEnter: authGuard,
     },
     {
       path: "/statistics",
@@ -97,11 +94,8 @@ const router = createRouter({
       path: "/lastresult",
       name: "lastResult",
       component: LastResultView,
-    }
+    },
   ],
 });
-// router.beforeEach((to, from, next) =>
-//   guardedRoutes.includes(to.name) ? authGuard(to.path) : next()
-// );
 
 export default router;
