@@ -122,6 +122,7 @@ getCandidates();
           v-else
           src="../../assets/not-found-img.svg"
           class="rounded-circle p-2 border-primary border border-3 candidate__img"
+          alt="avatar"
         />
 
         <div class="flex ms-4 text-start">

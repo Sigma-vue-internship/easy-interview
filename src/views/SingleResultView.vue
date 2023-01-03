@@ -119,11 +119,13 @@ function printPage() {
           data-bs-toggle="tooltip"
           data-bs-placement="left"
           title="Go to candidate`s page"
+          alt="avatar"
         />
         <img
           v-else
           src="../../assets/not-found-img.svg"
           class="rounded-circle img-fluid p-2 border-primary border border-3 fit"
+          alt="avatar"
           data-bs-toggle="tooltip"
           data-bs-placement="left"
           title="Go to candidate`s page"

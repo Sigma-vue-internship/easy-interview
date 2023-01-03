@@ -114,6 +114,7 @@ watch(
             v-else-if="dropdownObj.position"
             src="../../../assets/not-found-img.svg"
             class="rounded-circle candidate__img"
+            alt="avatar"
           />
           <div
             v-else
