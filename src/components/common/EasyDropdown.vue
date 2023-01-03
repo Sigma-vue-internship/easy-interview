@@ -106,16 +106,15 @@ watch(
             :src="dropdownObj.avatarUrl"
             class="rounded-circle candidate__img"
             alt="avatar"
+            onerror="this.onerror=null; 
+              this.src='../../assets/not-found-img.svg'
+            "
           />
-          <div
+          <img
             v-else-if="dropdownObj.position"
-            class="text-primary"
-          >
-            <font-awesome-icon
-              icon="fa-solid fa-user-large"
-              class="not-found"
-            />
-          </div>
+            src="../../../assets/not-found-img.svg"
+            class="rounded-circle candidate__img"
+          />
           <div
             v-else
             class="badge rounded-pill text-bg-primary d-none d-lg-block"

@@ -147,15 +147,4 @@ function pushRoute(candidateId: string, resultId: string) {
 .overflow-scroll {
   max-height: 245px;
 }
-
-.not-found-photo {
-  height: 50px;
-}
-
-.avatar {
-  object-fit: cover;
-  object-position: center;
-  height: 50px;
-  width: 50px;
-}
 </style>

@@ -146,11 +146,15 @@ getCandidateData();
           :src="currentCandidate.avatarUrl"
           alt="singleCandidate image"
           class="candidate__img rounded-4 border bg-light p-1"
+          onerror="this.onerror=null; 
+            this.src='../../assets/not-found-img.svg'
+          "
         />
-        <font-awesome-icon
+        <img
           v-else
-          icon="fa-solid fa-user-large"
-          class="text-primary m-auto"
+          src="../../assets/not-found-img.svg"
+          alt="singleCandidate image"
+          class="candidate__img rounded-4 border bg-light p-1"
         />
       </div>
       <div
@@ -287,7 +291,7 @@ getCandidateData();
 }
 
 .fa-user-large {
-  height: 200px;
+  height: 270px;
 }
 
 .candidate-link {
