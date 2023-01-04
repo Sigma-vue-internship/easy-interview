@@ -36,8 +36,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Run build script
-        run: deploy.sh
+      - uses: actions/checkout@v2
+      - name: Run script file
+        run: |
+         chmod +x deploy.sh
+         deploy.sh
         shell: bash
 
   # build:
