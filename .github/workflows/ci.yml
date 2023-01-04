@@ -52,4 +52,4 @@ jobs:
       with:
         GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         BRANCH: develop
-        FOLDER: dist
+        FOLDER: build
