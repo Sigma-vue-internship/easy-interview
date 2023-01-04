@@ -28,7 +28,6 @@
 
   display: inline-block;
   text-decoration: inherit;
-  width: 1em;
   margin-right: .2em;
   text-align: center;
   /* opacity: .8; */
@@ -43,12 +42,11 @@
   margin-left: .2em;
 
 /* you can be more comfortable with increased icons size */
-font-size: 30vw;
 
 /* Font smoothing. That was taken from TWBS */
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
-
+font-size: 46vw;
 /* Uncomment for 3D effect */
 /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
@@ -70,6 +68,18 @@ font-size: 13vw;
 [class*=" icon-"]:before {
 font-size: 10vw;
 }
+}
+@media (min-width:1440px){
+  [class^="icon-"]:before,
+  [class*=" icon-"]:before {
+  font-size: 9vw;
+  }
+}
+@media (min-width:1920px){
+  [class^="icon-"]:before,
+  [class*=" icon-"]:before {
+  font-size: 7vw;
+  }
 }
 
 .icon-nophoto:before { content: '\e800'; } /* '' */
