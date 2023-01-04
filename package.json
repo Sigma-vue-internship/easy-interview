@@ -4,6 +4,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "preview": "vite preview --port 4173",
     "test:unit": "vitest --environment jsdom",
     "test:coverage": "vitest run --coverage",
@@ -45,6 +47,7 @@
     "@vue/test-utils": "^2.0.2",
     "eslint": "^8.28.0",
     "eslint-plugin-vue": "^9.3.0",
+    "gh-pages": "4.0.0",
     "jsdom": "^20.0.0",
     "prettier": "2.8.0",
     "sass": "1.17.0",
