@@ -162,7 +162,7 @@ getAllResults();
 </script>
 <template>
   <div class="p-4 rounded">
-    <h1 class="text-primary fs-2 pb-1">Statistics</h1>
+    <h1 class="text-primary fs-2 pb-1">Stats</h1>
     <div
       class="alert alert-primary d-flex align-items-center mt-2"
       role="alert"
