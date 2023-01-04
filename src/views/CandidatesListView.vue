@@ -114,13 +114,16 @@ getCandidates();
           class="rounded-circle p-2 border-primary border border-3 candidate__img"
           :src="candidate.avatarUrl"
           alt="candidateAvatar"
+          onerror="this.onerror=null; 
+            this.src='../../assets/not-found-img.svg'
+          "
         />
-        <div
+        <img
           v-else
-          class="text-primary rounded-circle p-2 border-primary border border-3 candidate__img"
-        >
-          <font-awesome-icon icon="fa-solid fa-user-large" />
-        </div>
+          src="../../assets/not-found-img.svg"
+          class="rounded-circle p-2 border-primary border border-3 candidate__img"
+          alt="avatar"
+        />
 
         <div class="flex ms-4 text-start">
           <h2 class="fs-3">{{ candidate.username }}</h2>

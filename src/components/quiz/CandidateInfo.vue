@@ -74,17 +74,20 @@ const emitCandidateSelect = () => emit("setCandidateSelected");
         <img
           v-if="choosedCandidateObj.avatarUrl"
           :src="choosedCandidateObj.avatarUrl"
+          onerror="this.onerror=null; 
+            this.src='../../assets/not-found-img.svg'
+          "
           class="d-block rounded-circle p-2 border border-2 border-primary"
           width="150"
           height="150"
-          alt="..."
+          alt="candidate avatar"
         />
-        <div
+        <img
           v-else
+          src="../../../assets/not-found-img.svg"
+          alt="singleCandidate image"
           class="text-primary text-center rounded-circle p-2 border-primary border border-3 candidate__img"
-        >
-          <font-awesome-icon icon="fa-solid fa-user-large" />
-        </div>
+        />
       </div>
       <div class="col-md-6 offset-md-3 ms-lg-5">
         <div class="text-center text-md-start text-primary">

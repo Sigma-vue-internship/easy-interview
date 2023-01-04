@@ -113,15 +113,19 @@ function printPage() {
           v-if="result.parent.avatarUrl"
           class="rounded-circle img-fluid p-2 border-primary border border-3 fit"
           :src="result.parent.avatarUrl"
-          alt="candidateAvatar"
+          onerror="this.onerror=null; 
+            this.src='../../../assets/not-found-img.svg'
+          "
           data-bs-toggle="tooltip"
           data-bs-placement="left"
           title="Go to candidate`s page"
+          alt="avatar"
         />
-        <font-awesome-icon
+        <img
           v-else
-          icon="fa-solid fa-user-large"
-          class="text-primary not-found"
+          src="../../assets/not-found-img.svg"
+          class="rounded-circle img-fluid p-2 border-primary border border-3 fit"
+          alt="avatar"
           data-bs-toggle="tooltip"
           data-bs-placement="left"
           title="Go to candidate`s page"
@@ -265,9 +269,5 @@ function printPage() {
   object-fit: cover;
   height: 200px;
   width: 200px;
-}
-
-.avatar .not-found {
-  height: 150px;
 }
 </style>
