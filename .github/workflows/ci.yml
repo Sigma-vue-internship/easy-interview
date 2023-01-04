@@ -48,7 +48,7 @@ jobs:
         VITE_MOCK_API_URL: ${{ secrets.VITE_MOCK_API_URL }}
 
     - name: Deploy
-      uses: VerseVent/github-pages-deploy-action@releases/v3
+      uses: Sigma-vue-internship/easy-interview
       with:
         GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         BRANCH: develop
