@@ -27,29 +27,29 @@ jobs:
 
     - name: Run unit tests
       run: yarn test:unit --coverage
-  build:
+  # build:
 
-    runs-on: ubuntu-latest
+  #   runs-on: ubuntu-latest
 
-    steps:
+  #   steps:
     
-    - name: Checkout
-      uses: actions/checkout@v1
+  #   - name: Checkout
+  #     uses: actions/checkout@v1
 
-    - name: Build
-      run: |
-        npm install
-        npm run-script build
-      env:
-        VITE_AUTH_DOMAIN: ${{ secrets.VITE_AUTH_DOMAIN }}
-        VITE_AUTH_CLIENT_ID: ${{ secrets.VITE_AUTH_CLIENT_ID }}
-        VITE_AUTH_REDIRECT_URL: ${{ secrets.VITE_AUTH_REDIRECT_URL }}
-        VITE_API_AUDIENCE: ${{ secrets.VITE_API_AUDIENCE }}
-        VITE_MOCK_API_URL: ${{ secrets.VITE_MOCK_API_URL }}
+  #   - name: Build
+  #     run: |
+  #       npm install
+  #       npm run-script build
+  #     env:
+  #       VITE_AUTH_DOMAIN: ${{ secrets.VITE_AUTH_DOMAIN }}
+  #       VITE_AUTH_CLIENT_ID: ${{ secrets.VITE_AUTH_CLIENT_ID }}
+  #       VITE_AUTH_REDIRECT_URL: ${{ secrets.VITE_AUTH_REDIRECT_URL }}
+  #       VITE_API_AUDIENCE: ${{ secrets.VITE_API_AUDIENCE }}
+  #       VITE_MOCK_API_URL: ${{ secrets.VITE_MOCK_API_URL }}
 
-    - name: Deploy
-      uses: Sigma-vue-internship/easy-interview
-      with:
-        GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
-        BRANCH: develop
-        FOLDER: build
+  #   - name: Deploy
+  #     uses: Sigma-vue-internship/easy-interview
+  #     with:
+  #       GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+  #       BRANCH: develop
+  #       FOLDER: dist
