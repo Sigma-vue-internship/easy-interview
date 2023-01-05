@@ -1,3 +1,7 @@
+#Docs
+
+https://github.com/Sigma-vue-internship/easy-interview/wiki
+
 # Project requirements
 
 ## General description:
