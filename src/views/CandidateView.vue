@@ -80,6 +80,12 @@ async function editSingleCandidate() {
 }
 async function deleteCandidate() {
   try {
+    // BUG:delete results as well
+    const candidateResults = await getResultsForCandidate(
+      currentCandidate.value.id,
+    );
+    const resultsIds = candidateResults.map(result => result.id);
+    await sendDeleteRequests(resultsIds);
     await deleteCandidateById(currentCandidate.value.id);
     router.push({
       name: "candidates",
@@ -89,6 +95,12 @@ async function deleteCandidate() {
       distance: "65px",
     });
   }
+}
+async function sendDeleteRequests(resultsIds: Array<string>) {
+  resultsIds.forEach((id: string) => {
+    deleteResult(currentCandidate.value.id, id);
+    deletePercentageResult(id);
+  });
 }
 
 async function deleteQuizResult(candidateId: string, resultId: string) {

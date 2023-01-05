@@ -1,5 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import DashboardView from "./DashboardView.vue";
+</script>
 
 <template>
-  <h1>EasyInterview ;)</h1>
+  <DashboardView />
 </template>
