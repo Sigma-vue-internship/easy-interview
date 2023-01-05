@@ -7,7 +7,9 @@ const auth0 = useAuth0();
 const isUserAuthenticated = auth0.isAuthenticated;
 
 function login() {
-  auth0.loginWithRedirect();
+  auth0.loginWithRedirect({
+    redirect_uri: "https://easy-interview.netlify.app/dashboard",
+  });
 }
 
 // function logoutUser() {
