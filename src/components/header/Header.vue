@@ -29,7 +29,7 @@ function logoutUser() {
         <div class="row justify-content-between align-items-center w-100 gx-0">
           <router-link
             class="col-8 col-sm-4 col-md-3"
-            to="/"
+            to="/dashboard"
           >
             <img
               src="../icons/easylogo.svg"

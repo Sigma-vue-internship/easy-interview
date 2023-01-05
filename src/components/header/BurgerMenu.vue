@@ -39,7 +39,7 @@ function setTextColor(routeName) {
             <router-link
               class="text-decoration-none"
               :class="setTextColor('dashboard')"
-              to="/"
+              to="/dashboard"
               >Dashboard</router-link
             >
           </li>
