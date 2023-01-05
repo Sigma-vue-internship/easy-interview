@@ -16,12 +16,14 @@ echo > .nojekyll
 # echo 'www.example.com' > CNAME
 
 git init
+
+git config --global user.email "mike.82pronka.27a@gmail.com"
+git config --global user.name "VerseVent"
+
 git checkout -B main
 git add -A
 git commit -m 'deploy'
 
-git config --global user.email "mike.82pronka.27a@gmail.com"
-git config --global user.name "VerseVent"
 
 # if you are deploying to https://<USERNAME>.github.io
 # git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git main
