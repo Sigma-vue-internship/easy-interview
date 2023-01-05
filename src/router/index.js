@@ -13,7 +13,6 @@ import MissingView from "../views/MissingView.vue";
 import LastResultView from "../views/LastResultView.vue";
 import HeroView from "../views/HeroView.vue";
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
