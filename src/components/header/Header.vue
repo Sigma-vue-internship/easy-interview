@@ -16,7 +16,7 @@ function login() {
 // TODO: after deploy, switch urls
 function logoutUser() {
   auth0.logout({
-    returnTo: "https://easy-interview.netlify.app/hero",
+    returnTo: "https://easy-interview.netlify.app/",
     client_id: import.meta.env.VITE_AUTH_CLIENT_ID,
   });
 }
