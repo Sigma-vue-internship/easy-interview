@@ -16,8 +16,7 @@ function login() {
 // TODO: after deploy, switch urls
 function logoutUser() {
   auth0.logout({
-    returnTo:
-      "https://dev-epuimnxm.us.auth0.com/v2/logout?returnTo=https://easy-interview.netlify.app/hero",
+    returnTo: "https://easy-interview.netlify.app/hero",
     client_id: import.meta.env.VITE_AUTH_CLIENT_ID,
   });
 }
