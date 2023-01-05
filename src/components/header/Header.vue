@@ -10,16 +10,17 @@ function login() {
   auth0.loginWithRedirect();
 }
 
-function logoutUser() {
-  auth0.logout({ returnTo: window.location.origin });
-}
-// TODO: after deploy, switch urls
 // function logoutUser() {
-//   auth0.logout({
-//     returnTo:
-//       "https://dev-epuimnxm.us.auth0.com/v2/logout?returnTo=http%3A%2F%2Flocalhost:5173/hero",
-//   });
+//   auth0.logout({ returnTo: window.location.origin });
 // }
+// TODO: after deploy, switch urls
+function logoutUser() {
+  auth0.logout({
+    returnTo:
+      "https://dev-epuimnxm.us.auth0.com/v2/logout?returnTo=https://easy-interview.netlify.app/hero",
+    client_id: import.meta.env.VITE_AUTH_CLIENT_ID,
+  });
+}
 </script>
 <template>
   <header>
