@@ -16,12 +16,12 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/hero",
+      path: "/",
       name: "hero",
       component: HeroView,
     },
     {
-      path: "/",
+      path: "/dashboard",
       name: "dashboard",
       component: DashboardView,
       beforeEnter: authGuard,
