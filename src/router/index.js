@@ -94,6 +94,7 @@ const router = createRouter({
       path: "/lastresult",
       name: "lastResult",
       component: LastResultView,
+      beforeEnter: authGuard,
     },
   ],
 });
