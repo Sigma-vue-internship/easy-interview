@@ -16,8 +16,13 @@ const isLoaderVisible = ref(true);
 const formType = ref("put");
 const { getCandidateById, deleteCandidateById, editCandidate } =
   useCandidateStore();
-const { getResultsForCandidate, deleteResult, deletePercentageResult } =
-  useResultsStore();
+const {
+  getResultsForCandidate,
+  deleteResult,
+  deletePercentageResult,
+  postPercentageResult,
+  postResult,
+} = useResultsStore();
 const candidateResults = ref<Result[]>([]);
 
 const currentCandidate = ref<Candidate>({
@@ -46,7 +51,7 @@ async function getCandidateData() {
 async function getResultsForCandidateData() {
   try {
     candidateResults.value = await getResultsForCandidate(
-      getRouterParam(params.id),
+      getRouterParam(params.id)
     );
   } catch (e) {
     Notify.failure("Something went wrong. Please, try again.", {
@@ -78,29 +83,40 @@ async function editSingleCandidate() {
     });
   }
 }
+
 async function deleteCandidate() {
   try {
     // BUG:delete results as well
+    const deleteFunctions: Array<Function> = [];
     const candidateResults = await getResultsForCandidate(
-      currentCandidate.value.id,
+      currentCandidate.value.id
     );
-    const resultsIds = candidateResults.map(result => result.id);
-    await sendDeleteRequests(resultsIds);
-    await deleteCandidateById(currentCandidate.value.id);
+    const resultsIds = candidateResults.map((result) => result.id);
+
+    resultsIds.forEach(async (id: string) => {
+      deleteFunctions.push(
+        async () => await deleteResult(currentCandidate.value.id, id)
+      );
+      deleteFunctions.push(async () => await deletePercentageResult(id));
+    });
+
     router.push({
       name: "candidates",
     });
+
+    await sendDeleteRequests(deleteFunctions);
+    await deleteCandidateById(currentCandidate.value.id);
   } catch (e) {
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });
   }
 }
-async function sendDeleteRequests(resultsIds: Array<string>) {
-  resultsIds.forEach((id: string) => {
-    deleteResult(currentCandidate.value.id, id);
-    deletePercentageResult(id);
-  });
+
+async function sendDeleteRequests(deleteFunctions: Array<Function>) {
+  for (let i = 0; i < deleteFunctions.length; i++) {
+    await deleteFunctions[i]();
+  }
 }
 
 async function deleteQuizResult(candidateId: string, resultId: string) {
@@ -108,7 +124,7 @@ async function deleteQuizResult(candidateId: string, resultId: string) {
     await deleteResult(candidateId, resultId);
     await deletePercentageResult(resultId);
     candidateResults.value = candidateResults.value.filter(
-      result => result.id !== resultId,
+      (result) => result.id !== resultId
     );
     Notify.success("Result successfully deleted", {
       distance: "65px",
@@ -172,10 +188,7 @@ getCandidateData();
       <div
         class="col-11 col-lg-8 col-xxl-9 text-center text-lg-start shadow border border-2 border-light p-3 rounded-3"
       >
-        <h2
-          id="username"
-          class="text-primary"
-        >
+        <h2 id="username" class="text-primary">
           {{ currentCandidate.username }}
           <font-awesome-icon
             role="button"
@@ -192,10 +205,7 @@ getCandidateData();
             data-bs-target="#alertCandidate"
           />
         </h2>
-        <h3
-          id="position"
-          class="text-secondary"
-        >
+        <h3 id="position" class="text-secondary">
           {{ currentCandidate.position }}
         </h3>
         <div
@@ -213,10 +223,7 @@ getCandidateData();
             >{{ currentCandidate.linkedinUrl }}</a
           >
         </div>
-        <p
-          id="feedback"
-          class="text-secondary mt-4"
-        >
+        <p id="feedback" class="text-secondary mt-4">
           <span class="text-primary">Feedback:</span>
           {{ currentCandidate.feedback }}
         </p>
