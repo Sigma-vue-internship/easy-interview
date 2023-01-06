@@ -106,7 +106,7 @@ function printPage() {
     class="row"
   >
     <div
-      class="col-md-4 col-lg-3 col-xl-2 text-center text-md-start pt-4 avatar d-flex justify-content-center"
+      class="col-md-4 col-lg-3 col-xxl-2 text-center text-md-start pt-4 avatar d-flex justify-content-center"
     >
       <router-link :to="'/candidates/' + result.parent.id">
         <img
