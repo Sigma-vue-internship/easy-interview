@@ -140,7 +140,7 @@ function handleSwitch(currentSwitch) {
             <li>
               <div class="form-check form-switch">
                 <input
-                  id="flexSwitchCheckDefault"
+                  id="flexSwitchCandidate"
                   v-model="isCandidateMode"
                   class="form-check-input"
                   type="checkbox"
@@ -148,7 +148,7 @@ function handleSwitch(currentSwitch) {
                 />
                 <label
                   class="form-check-label"
-                  for="flexSwitchCheckDefault"
+                  for="flexSwitchCandidates"
                 >
                   Candidates
                 </label>
@@ -157,7 +157,7 @@ function handleSwitch(currentSwitch) {
             <li>
               <div class="form-check form-switch">
                 <input
-                  id="flexSwitchCheckDefault"
+                  id="flexSwitchCategory"
                   v-model="isCategoryMode"
                   class="form-check-input"
                   type="checkbox"
@@ -165,7 +165,7 @@ function handleSwitch(currentSwitch) {
                 />
                 <label
                   class="form-check-label"
-                  for="flexSwitchCheckDefault"
+                  for="flexSwitchCategory"
                 >
                   Questions
                 </label>
