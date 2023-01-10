@@ -79,11 +79,13 @@ describe("Candidate.vue", () => {
     const { getCandidateById } = useCandidateStore();
     expect(getCandidateById).toBeCalledWith("1");
   });
-  it("should call deleteCandidateById after click", async () => {
+  it("should call deleteCandidateById after click, when results are not present", async () => {
     const wrapper = getWrapper();
     const { deleteCandidateById } = useCandidateStore();
     await flushPromises();
     const deleteBtn = wrapper.find(".delete-button");
+    wrapper.vm.resultsExist = false;
+    await flushPromises();
 
     deleteBtn.trigger("click");
     await flushPromises();
@@ -95,8 +97,8 @@ describe("Candidate.vue", () => {
   it("should render all candidate results", async () => {
     const wrapper = getWrapper();
     const { getResultsForCandidate } = useResultsStore();
-    expect(getResultsForCandidate).toBeCalledWith("1");
     await flushPromises();
+    expect(getResultsForCandidate).toBeCalledWith("1");
     const candidateResultsArray = wrapper.vm.candidateResults;
     const resultsArray = wrapper.findAll("li").length;
     expect(resultsArray).toEqual(candidateResultsArray.length);
