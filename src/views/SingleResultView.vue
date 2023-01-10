@@ -114,7 +114,7 @@ function printPage() {
           class="rounded-circle img-fluid p-2 border-primary border border-3 fit"
           :src="result.parent.avatarUrl"
           onerror="this.onerror=null; 
-            this.src='../../../assets/not-found-img.svg'
+            this.src='../../../assets/not-found-img.3ed597be.svg'
           "
           data-bs-toggle="tooltip"
           data-bs-placement="left"

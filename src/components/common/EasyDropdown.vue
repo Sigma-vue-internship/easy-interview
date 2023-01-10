@@ -107,7 +107,7 @@ watch(
             class="rounded-circle candidate__img"
             alt="avatar"
             onerror="this.onerror=null; 
-              this.src='../../assets/not-found-img.svg'
+              this.src='../../assets/not-found-img.3ed597be.svg'
             "
           />
           <img

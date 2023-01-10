@@ -179,7 +179,7 @@ onMounted(() => {});
           alt="singleCandidate image"
           class="candidate__img rounded-4 border bg-light p-1"
           onerror="this.onerror=null; 
-            this.src='../../assets/not-found-img.svg'
+            this.src='../../assets/not-found-img.3ed597be.svg'
           "
         />
         <img
