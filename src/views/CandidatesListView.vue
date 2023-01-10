@@ -114,8 +114,8 @@ getCandidates();
           class="rounded-circle p-2 border-primary border border-3 candidate__img"
           :src="candidate.avatarUrl"
           alt="candidateAvatar"
-          onerror="this.onerror=null; 
-            this.src='../../assets/not-found-img.svg'
+          onerror="this.onerror=null;  
+            this.src='../../assets/not-found-img.3ed597be.svg' 
           "
         />
         <img
