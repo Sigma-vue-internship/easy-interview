@@ -1,6 +1,10 @@
-#Docs
+# Docs
 
 https://github.com/Sigma-vue-internship/easy-interview/wiki
+
+# Deployment
+
+https://easy-interview.netlify.app
 
 # Project requirements
 
