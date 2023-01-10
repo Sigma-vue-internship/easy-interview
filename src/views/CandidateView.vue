@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
-import { ref } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useCandidateStore } from "../stores/candidates";
 import { useResultsStore } from "../stores/results";
 import CandidateForm from "../components/candidates/CandidateForm.vue";
@@ -34,32 +34,16 @@ const currentCandidate = ref<Candidate>({
   id: "",
 });
 
-async function getCandidateData() {
-  try {
-    isLoaderVisible.value = true;
-    currentCandidate.value = await getCandidateById(getRouterParam(params.id));
-    candidateInit = { ...currentCandidate.value };
-    isLoaderVisible.value = false;
-  } catch (e) {
-    isLoaderVisible.value = false;
-    Notify.failure("Something went wrong. Please, try again.", {
-      distance: "65px",
-    });
-  }
+async function getCandidateData(): Promise<void> {
+  currentCandidate.value = await getCandidateById(getRouterParam(params.id));
+  candidateInit = { ...currentCandidate.value };
 }
 
-async function getResultsForCandidateData() {
-  try {
-    candidateResults.value = await getResultsForCandidate(
-      getRouterParam(params.id),
-    );
-  } catch (e) {
-    Notify.failure("Something went wrong. Please, try again.", {
-      distance: "65px",
-    });
-  }
+async function getResultsForCandidateData(): Promise<void> {
+  candidateResults.value = await getResultsForCandidate(
+    getRouterParam(params.id),
+  );
 }
-getResultsForCandidateData();
 
 let candidateInit = {
   position: "",
@@ -83,26 +67,31 @@ async function editSingleCandidate() {
     });
   }
 }
-
+const resultsExist = ref<boolean>(false);
+const alertContent = computed((): string => {
+  return resultsExist.value
+    ? "Please delete all candidate's results"
+    : "Are you sure you want to delete this candidate ?";
+});
+async function checkCurrentResults(): Promise<void> {
+  try {
+    if (candidateResults.value.length) {
+      resultsExist.value = true;
+      return;
+    }
+    resultsExist.value = false;
+  } catch (e) {
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
+  }
+}
 async function deleteCandidate() {
   try {
-    // BUG:delete results as well
-    const deleteFunctions: Array<Function> = [];
-    const candidateResults = await getResultsForCandidate(
-      currentCandidate.value.id,
-    );
-    const resultsIds = candidateResults.map(result => result.id);
-
+    if (resultsExist.value) {
+      return;
+    }
     await deleteCandidateById(currentCandidate.value.id);
-    resultsIds.forEach(async (id: string) => {
-      deleteFunctions.push(
-        async () => await deleteResult(currentCandidate.value.id, id),
-      );
-      deleteFunctions.push(async () => await deletePercentageResult(id));
-    });
-
-    await sendDeleteRequests(deleteFunctions);
-
     router.push({
       name: "candidates",
     });
@@ -113,16 +102,14 @@ async function deleteCandidate() {
   }
 }
 
-async function sendDeleteRequests(deleteFunctions: Array<Function>) {
-  for (let i = 0; i < deleteFunctions.length; i++) {
-    await deleteFunctions[i]();
-  }
-}
-
 async function deleteQuizResult(candidateId: string, resultId: string) {
   try {
+    isLoaderVisible.value = true;
+
     await deleteResult(candidateId, resultId);
     await deletePercentageResult(resultId);
+    await getResultsForCandidateData();
+    await checkCurrentResults();
     candidateResults.value = candidateResults.value.filter(
       result => result.id !== resultId,
     );
@@ -132,7 +119,10 @@ async function deleteQuizResult(candidateId: string, resultId: string) {
         background: "#87CF23",
       },
     });
+    isLoaderVisible.value = false;
   } catch (e) {
+    isLoaderVisible.value = false;
+
     Notify.failure("Something went wrong. Please, try again.", {
       distance: "65px",
     });
@@ -152,8 +142,22 @@ function pushRoute(candidateId: string, resultId: string) {
 function resetCandidate() {
   currentCandidate.value = { ...candidateInit };
 }
-
-getCandidateData();
+async function created(): Promise<void> {
+  try {
+    isLoaderVisible.value = true;
+    await getCandidateData();
+    await getResultsForCandidateData();
+    await checkCurrentResults();
+    isLoaderVisible.value = false;
+  } catch (e) {
+    isLoaderVisible.value = false;
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
+  }
+}
+created();
+onMounted(() => {});
 </script>
 
 <template>
@@ -299,10 +303,11 @@ getCandidateData();
     :modal-size="'modal-m'"
   >
     <p class="text-secondary">
-      Are you sure you want to delete this candidate ?
+      {{ alertContent }}
     </p>
     <div class="d-flex justify-content-end">
       <button
+        v-if="!resultsExist"
         class="btn btn-danger text-align-end"
         data-bs-dismiss="modal"
         @click="deleteCandidate"
