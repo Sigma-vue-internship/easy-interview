@@ -75,7 +75,7 @@ const emitCandidateSelect = () => emit("setCandidateSelected");
           v-if="choosedCandidateObj.avatarUrl"
           :src="choosedCandidateObj.avatarUrl"
           onerror="this.onerror=null; 
-            this.src='../../assets/not-found-img.svg'
+            this.src='../../assets/not-found-img.3ed597be.svg'
           "
           class="d-block rounded-circle p-2 border border-2 border-primary"
           width="150"
