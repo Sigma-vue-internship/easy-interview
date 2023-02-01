@@ -13,6 +13,11 @@ import LastResultView from "../views/LastResultView.vue";
 import HeroView from "../views/HeroView.vue";
 import SignupView from "../views/SignupView.vue";
 import LoginView from "../views/LoginView.vue";
+import { useUserStore } from "../stores/users";
+import { Notify } from "notiflix";
+import { useError } from "../hooks/useError";
+const notGuardedNames = ["signup", "login", "hero", "dashboard"];
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -98,6 +103,26 @@ const router = createRouter({
       component: LastResultView,
     },
   ],
+});
+
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore();
+  try {
+    if (!notGuardedNames.includes(to.name)) {
+      const res = await userStore.authUser();
+      console.log(res);
+    }
+    if (!notGuardedNames.includes(to.name) && !userStore.isAuthenticated) {
+      Notify.failure("Please, login first");
+      next({ name: "login" });
+    } else {
+      next();
+    }
+  } catch (e) {
+    userStore.isAuthenticated = false;
+    next({ name: "login" });
+    useError(e);
+  }
 });
 
 export default router;

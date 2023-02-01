@@ -53,12 +53,15 @@ const user = ref<IUser>({
   username: "",
   password: "",
 });
-const { loginUser } = useUserStore();
+const userStore = useUserStore();
 const router = useRouter();
 
 async function login() {
   try {
-    const res = await loginUser(user.value);
+    const res = await userStore.loginUser(user.value);
+    userStore.isAuthenticated = true;
+    console.log("Hello");
+
     Notify.success("You've successfuly login", {
       distance: "65px",
     });
