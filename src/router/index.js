@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { authGuard } from "@auth0/auth0-vue";
 import DashboardView from "../views/DashboardView.vue";
 import CandidatesListView from "../views/CandidatesListView.vue";
 import CandidateView from "../views/CandidateView.vue";
@@ -12,9 +11,21 @@ import SingleResultView from "../views/SingleResultView.vue";
 import MissingView from "../views/MissingView.vue";
 import LastResultView from "../views/LastResultView.vue";
 import HeroView from "../views/HeroView.vue";
+import SignupView from "../views/SignupView.vue";
+import LoginView from "../views/LoginView.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: "/signup",
+      name: "signup",
+      component: SignupView,
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: LoginView,
+    },
     {
       path: "/",
       name: "hero",
@@ -24,26 +35,22 @@ const router = createRouter({
       path: "/dashboard",
       name: "dashboard",
       component: DashboardView,
-      beforeEnter: authGuard,
     },
     {
       path: "/statistics",
       name: "statistics",
       component: StatisticsView,
-      beforeEnter: authGuard,
     },
 
     {
       path: "/candidates",
       name: "candidates",
       component: CandidatesListView,
-      beforeEnter: authGuard,
     },
     {
       path: "/candidates/:id",
       name: "candidate",
       component: CandidateView,
-      beforeEnter: authGuard,
       beforeRouteUpdate(to, from, next) {
         if (to.path !== from.path) {
           window.location = to.path;
@@ -54,7 +61,6 @@ const router = createRouter({
       path: "/questions",
       name: "categoriesList",
       component: CategoriesListView,
-      beforeEnter: authGuard,
       beforeRouteUpdate(to, from, next) {
         if (to.path !== from.path) {
           window.location = to.path;
@@ -65,25 +71,21 @@ const router = createRouter({
       path: "/questions/:title",
       name: "category",
       component: QuestionsListView,
-      beforeEnter: authGuard,
     },
     {
       path: "/results",
       name: "quizResults",
       component: QuizResultsView,
-      beforeEnter: authGuard,
     },
     {
       path: "/candidates/:candidateId/results/:resultId",
       name: "singleResult",
       component: SingleResultView,
-      beforeEnter: authGuard,
     },
     {
       path: "/constructor",
       name: "quizConstructor",
       component: QuizConstructorView,
-      beforeEnter: authGuard,
     },
     {
       path: "/:pathMatch(.*)*",
@@ -94,7 +96,6 @@ const router = createRouter({
       path: "/lastresult",
       name: "lastResult",
       component: LastResultView,
-      beforeEnter: authGuard,
     },
   ],
 });

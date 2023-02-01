@@ -9,7 +9,7 @@ import axiosInst from "axios";
 // })();
 
 const axios = axiosInst.create({
-  baseURL: `${(import.meta as any).env.VITE_MOCK_API_URL}`,
+  baseURL: `${(import.meta as any).env.VITE_DEV_API_URL}`,
 });
 
 export default axios;
