@@ -109,8 +109,8 @@ router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore();
   try {
     if (!notGuardedNames.includes(to.name)) {
-      const res = await userStore.authUser();
-      console.log(res);
+      await userStore.authUser(); // this one retarded
+      userStore.isAuthenticated = true;
     }
     if (!notGuardedNames.includes(to.name) && !userStore.isAuthenticated) {
       Notify.failure("Please, login first");

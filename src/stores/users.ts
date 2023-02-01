@@ -17,7 +17,6 @@ export const useUserStore = defineStore("users", {
     },
     async loginUser(user: IUser) {
       const res = await axios.post<ILoginResponse>("/users/login", user);
-
       return res;
     },
     async authUser() {

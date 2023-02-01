@@ -12,6 +12,5 @@ export function useError(e) {
     Notify.failure(`${dbError}`, {
       distance: "65px",
     });
-    console.log(e);
   }
 }

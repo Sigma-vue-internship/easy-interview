@@ -60,12 +60,10 @@ async function login() {
   try {
     const res = await userStore.loginUser(user.value);
     userStore.isAuthenticated = true;
-    console.log("Hello");
 
     Notify.success("You've successfuly login", {
       distance: "65px",
     });
-    console.log("Now do smthg with res: ", res);
     localStorage.setItem("auth_token", res.data.token);
     router.push({ name: "dashboard" });
   } catch (e) {

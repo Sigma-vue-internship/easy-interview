@@ -11,13 +11,12 @@ import { getAuthHeader } from "../hooks/getAuthHeader";
 const axios = axiosInst.create({
   baseURL: `${(import.meta as any).env.VITE_DEV_API_URL}`,
 });
-const authHeader = getAuthHeader();
-console.log(authHeader);
 axios.interceptors.request.use(
   config => {
-    if (authHeader.Authorization) {
-      console.log("AM I HERE");
+    const authHeader = getAuthHeader();
+    console.log(config);
 
+    if (config.url === "/users/auth") {
       config.headers.Authorization = authHeader.Authorization;
     }
     return config;

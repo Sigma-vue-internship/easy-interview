@@ -1,6 +1,15 @@
 <script setup>
 import BurgerMenu from "./BurgerMenu.vue";
 import SearchComponent from "./SearchComponent.vue";
+import { useUserStore } from "../../stores/users";
+import { useRouter } from "vue-router";
+const userStore = useUserStore();
+const router = useRouter();
+function logoutUser() {
+  localStorage.removeItem("auth_token");
+  router.push({ name: "hero" });
+  userStore.isAuthenticated = false;
+}
 </script>
 <template>
   <header>
@@ -23,18 +32,19 @@ import SearchComponent from "./SearchComponent.vue";
           >
             <SearchComponent class="d-none d-md-block col-12 col-md-9" />
             <router-link
+              v-if="!userStore.isAuthenticated"
               class="btn btn-outline-primary rounded-3 log-in col-md-2 d-none d-md-block"
               to="/login"
             >
               Log in
             </router-link>
-            <!-- <button
+            <button
               v-else
               class="btn btn-outline-primary rounded-3 log-out col-md-3 col-lg-2 d-none d-md-block"
               @click="logoutUser"
             >
               Logout
-            </button> -->
+            </button>
           </div>
           <BurgerMenu
             class="d-block col-3 col-sm-1 justify-content-end text-end col-md-1 my-auto"
