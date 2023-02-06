@@ -1,29 +1,42 @@
 import { defineStore } from "pinia";
-import { Question } from "../dto/questions";
+import { Question, questionResponse } from "../dto/questions";
 import axios from "../service/axiosInstance";
 
 export const useQuestionStore = defineStore("question", {
   actions: {
-    async getAllQuestions(category?: string) {
-      const response = await axios.get<Question[]>("/questions", {
-        params: {
-          category,
-        },
-      });
-      return response.data;
+    async getAllQuestions() {
+      const response = await axios.get<questionResponse>("/questions/get");
+      return response.data.questions;
     },
+
+    async getQuestionsByFilter(category: string) {
+      const response = await axios.get<questionResponse>(
+        `/questions/filter/${category}`,
+      );
+      return response.data.questions;
+    },
+
+    async postQuestion(question: Question) {
+      await axios.post("/questions/create", question);
+    },
+
     async sendQuestion(questionData: Question) {
-      const response = await axios.put<Question>(
-        `/questions/${questionData.id}`,
-        questionData,
+      const data = {
+        text: questionData.text,
+        answer: questionData.answer,
+        category: questionData.category,
+        point: questionData.point,
+      };
+
+      const response = await axios.patch<Question>(
+        `/questions/update/${questionData._id}`,
+        data,
       );
       return response.data;
     },
-    async postQuestion(question: Question) {
-      await axios.post("/questions", question);
-    },
+
     async deleteQuestion(id: string) {
-      await axios.delete(`/questions/${id}`);
+      await axios.delete(`/questions/delete/${id}`);
     },
   },
 });

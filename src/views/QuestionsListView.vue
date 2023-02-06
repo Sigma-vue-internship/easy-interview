@@ -22,7 +22,7 @@ const deleteQuestionId = ref("");
 async function getQuestionList() {
   try {
     isLoaderVisible.value = true;
-    questionsList.value = await questionStore.getAllQuestions(
+    questionsList.value = await questionStore.getQuestionsByFilter(
       route.params.title,
     );
     clearForm();
@@ -38,7 +38,7 @@ async function deleteQuestion() {
   try {
     await questionStore.deleteQuestion(deleteQuestionId.value);
     questionsList.value = questionsList.value.filter(
-      question => question.id !== deleteQuestionId.value,
+      question => question._id !== deleteQuestionId.value,
     );
     Notify.success("Question successfully deleted", {
       distance: "65px",
@@ -54,7 +54,6 @@ async function deleteQuestion() {
 }
 function setModalItem(item, action) {
   formType.value = action;
-
   currentQuestion.value = { ...item };
 }
 function clearForm() {
@@ -96,7 +95,7 @@ getQuestionList();
   >
     <li
       v-for="item in questionsList"
-      :key="item.id"
+      :key="item._id"
       class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-sm-start ps-sm-3"
     >
       <h4 class="text-secondary mt-2">{{ item.text }}</h4>
@@ -124,7 +123,7 @@ getQuestionList();
             data-bs-target="#questionAlert"
             icon="fa-solid fa-trash-can"
             class="text-danger delete-question__btn fs-3 me-4"
-            @click="setDeleteQuestion(item.id)"
+            @click="setDeleteQuestion(item._id)"
           />
         </div>
       </div>

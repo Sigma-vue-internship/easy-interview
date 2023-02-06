@@ -3,5 +3,9 @@ export interface Question {
   point: number;
   category: string;
   answer: string;
-  id?: string;
+  _id?: string;
+}
+
+export interface questionResponse {
+  questions: Question[];
 }

@@ -55,7 +55,7 @@ async function sendData() {
   }
   try {
     if (props.formType === "put") {
-      await questionStore.sendQuestion({ ...question.value });
+      await questionStore.sendQuestion(question.value);
       emitUpdateQuestions();
       return;
     }
