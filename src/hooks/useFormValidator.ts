@@ -28,7 +28,7 @@ export function useFormValidator(
     text: {
       required,
       minLength: minLength(5),
-      maxLength: maxLength(50),
+      maxLength: maxLength(150),
     } as ValidationRuleCollection,
     category: { required } as ValidationRuleCollection,
     answer: {
@@ -49,8 +49,6 @@ export function useFormValidator(
       maxLength: maxLength(50),
     } as ValidationRuleCollection,
     feedback: {
-      required,
-      minLength: minLength(5),
       maxLength: maxLength(250),
     } as ValidationRuleCollection,
   };

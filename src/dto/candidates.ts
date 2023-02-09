@@ -4,7 +4,9 @@ export interface Candidate {
   linkedinUrl: string;
   feedback: string;
   avatarUrl: string;
-  id: string;
+  createdAt?: string;
+  updatedAt?: string;
+  _id?: string;
 }
 
 export interface CandidatesResponse {

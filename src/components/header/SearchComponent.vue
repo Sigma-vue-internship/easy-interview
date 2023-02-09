@@ -62,9 +62,9 @@ function spreadDynamicly(
   return dynamicArray;
 }
 function redirectTo(dropdownObj) {
-  if (dropdownObj.id) {
+  if (dropdownObj._id) {
     inputValue.value = dropdownObj.username;
-    router.push({ path: `/candidates/${dropdownObj.id}`, replace: true });
+    router.push({ path: `/candidates/${dropdownObj._id}`, replace: true });
   } else {
     inputValue.value = dropdownObj;
     router.push({ path: `/questions/${dropdownObj}`, replace: true });

@@ -31,7 +31,7 @@ const currentCandidate = ref<Candidate>({
   linkedinUrl: "",
   feedback: "",
   avatarUrl: "",
-  id: "",
+  _id: "",
 });
 
 async function getCandidateData(): Promise<void> {
@@ -39,11 +39,11 @@ async function getCandidateData(): Promise<void> {
   candidateInit = { ...currentCandidate.value };
 }
 
-async function getResultsForCandidateData(): Promise<void> {
-  candidateResults.value = await getResultsForCandidate(
-    getRouterParam(params.id),
-  );
-}
+// async function getResultsForCandidateData(): Promise<void> {
+//   candidateResults.value = await getResultsForCandidate(
+//     getRouterParam(params.id),
+//   );
+// }
 
 let candidateInit = {
   position: "",
@@ -51,7 +51,6 @@ let candidateInit = {
   linkedinUrl: "",
   feedback: "",
   avatarUrl: "",
-  id: "",
 };
 
 async function editSingleCandidate() {
@@ -67,31 +66,31 @@ async function editSingleCandidate() {
     });
   }
 }
-const resultsExist = ref<boolean>(false);
-const alertContent = computed((): string => {
-  return resultsExist.value
-    ? "Please delete all candidate's results"
-    : "Are you sure you want to delete this candidate ?";
-});
-async function checkCurrentResults(): Promise<void> {
-  try {
-    if (candidateResults.value.length) {
-      resultsExist.value = true;
-      return;
-    }
-    resultsExist.value = false;
-  } catch (e) {
-    Notify.failure("Something went wrong. Please, try again.", {
-      distance: "65px",
-    });
-  }
-}
+// const resultsExist = ref<boolean>(false);
+// const alertContent = computed((): string => {
+//   return resultsExist.value
+//     ? "Please delete all candidate's results"
+//     : "Are you sure you want to delete this candidate ?";
+// });
+// async function checkCurrentResults(): Promise<void> {
+//   try {
+//     if (candidateResults.value.length) {
+//       resultsExist.value = true;
+//       return;
+//     }
+//     resultsExist.value = false;
+//   } catch (e) {
+//     Notify.failure("Something went wrong. Please, try again.", {
+//       distance: "65px",
+//     });
+//   }
+// }
 async function deleteCandidate() {
   try {
-    if (resultsExist.value) {
-      return;
-    }
-    await deleteCandidateById(currentCandidate.value.id);
+    // if (resultsExist.value) {
+    //   return;
+    // }
+    await deleteCandidateById(currentCandidate.value._id);
     router.push({
       name: "candidates",
     });
@@ -102,32 +101,32 @@ async function deleteCandidate() {
   }
 }
 
-async function deleteQuizResult(candidateId: string, resultId: string) {
-  try {
-    isLoaderVisible.value = true;
+// async function deleteQuizResult(candidateId: string, resultId: string) {
+//   try {
+//     isLoaderVisible.value = true;
 
-    await deleteResult(candidateId, resultId);
-    await deletePercentageResult(resultId);
-    await getResultsForCandidateData();
-    await checkCurrentResults();
-    candidateResults.value = candidateResults.value.filter(
-      result => result.id !== resultId,
-    );
-    Notify.success("Result successfully deleted", {
-      distance: "65px",
-      success: {
-        background: "#87CF23",
-      },
-    });
-    isLoaderVisible.value = false;
-  } catch (e) {
-    isLoaderVisible.value = false;
+//     await deleteResult(candidateId, resultId);
+//     await deletePercentageResult(resultId);
+//     await getResultsForCandidateData();
+//     await checkCurrentResults();
+//     candidateResults.value = candidateResults.value.filter(
+//       result => result.id !== resultId,
+//     );
+//     Notify.success("Result successfully deleted", {
+//       distance: "65px",
+//       success: {
+//         background: "#87CF23",
+//       },
+//     });
+//     isLoaderVisible.value = false;
+//   } catch (e) {
+//     isLoaderVisible.value = false;
 
-    Notify.failure("Something went wrong. Please, try again.", {
-      distance: "65px",
-    });
-  }
-}
+//     Notify.failure("Something went wrong. Please, try again.", {
+//       distance: "65px",
+//     });
+//   }
+// }
 
 function pushRoute(candidateId: string, resultId: string) {
   router.push({
@@ -146,8 +145,8 @@ async function created(): Promise<void> {
   try {
     isLoaderVisible.value = true;
     await getCandidateData();
-    await getResultsForCandidateData();
-    await checkCurrentResults();
+    // await getResultsForCandidateData();
+    // await checkCurrentResults();
     isLoaderVisible.value = false;
   } catch (e) {
     isLoaderVisible.value = false;
@@ -179,7 +178,7 @@ onMounted(() => {});
           alt="singleCandidate image"
           class="candidate__img rounded-4 border bg-light p-1"
           onerror="this.onerror=null; 
-            this.src='../../assets/not-found-img.3ed597be.svg'
+            this.src='../../assets/not-found-img.svg'
           "
         />
         <img
@@ -242,7 +241,7 @@ onMounted(() => {});
         </p>
       </div>
     </div>
-    <div class="text-md-start mt-4 ps-4">
+    <!-- <div class="text-md-start mt-4 ps-4">
       <h3 class="text-primary">Quiz results</h3>
       <ul
         v-if="candidateResults.length"
@@ -284,7 +283,7 @@ onMounted(() => {});
           All results will be displayed here after passing quiz by candidate
         </p>
       </div>
-    </div>
+    </div> -->
   </div>
   <EasyModal
     :title="'Edit candidate'"
@@ -307,7 +306,6 @@ onMounted(() => {});
     </p>
     <div class="d-flex justify-content-end">
       <button
-        v-if="!resultsExist"
         class="btn btn-danger text-align-end"
         data-bs-dismiss="modal"
         @click="deleteCandidate"

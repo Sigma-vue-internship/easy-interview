@@ -7,38 +7,45 @@ interface CandidatesByPage {
 }
 export const useCandidateStore = defineStore("candidates", {
   actions: {
-    async getCandidateById(id: string) {
-      const response = await axios.get<Candidate>(`/candidates/${id}`);
-      return response.data;
+    async getAllCandidates() {
+      const response = await axios.get("/candidates/get");
+      return response.data.candidates;
     },
     async addCandidate(candidate: Candidate) {
-      await axios.post("/candidates", candidate);
+      await axios.post("/candidates/create", candidate);
     },
-    async editCandidate(candidate: Candidate) {
-      const response = await axios.put<Candidate>(
-        `/candidates/${candidate.id}`,
-        candidate,
-      );
-      return response.data;
+    async getCandidateById(id: string) {
+      const response = await axios.get(`/candidates/get/${id}`);
+      return response.data.candidate;
     },
     async deleteCandidateById(id: string) {
-      await axios.delete(`/candidates/${id}`);
+      await axios.delete(`/candidates/delete/${id}`);
     },
-    async getCandidatesByPage(page: number) {
-      const response = await axios.get<CandidatesByPage>(
-        `/candidates?p=${page}&l=8`,
+    async editCandidate(candidate: Candidate) {
+      const data = {
+        username: candidate.username,
+        position: candidate.position,
+        linkedinUrl: candidate.linkedinUrl,
+        avatarUrl: candidate.avatarUrl,
+        feedback: candidate.feedback,
+      };
+      const response = await axios.patch(
+        `candidates/update/${candidate._id}`,
+        data,
       );
-      return response.data;
+      return response.data.candidate;
     },
-    async getAllCandidates() {
-      const response = await axios.get<CandidatesResponse>("/candidates");
-      return response.data.candidates;
-    },
+
     async getCandidatesByUsername(username: string) {
       const response = await axios.get<CandidatesResponse>(
-        `/candidates?username=${username}`,
+        `candidates/find/${username}`,
       );
+
       return response.data.candidates;
+    },
+    async getCandidatesByPage(page: number) {
+      const response = await axios.get(`/candidates/show/${page}`);
+      return response.data;
     },
   },
 });

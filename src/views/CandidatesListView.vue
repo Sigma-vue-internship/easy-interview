@@ -6,7 +6,7 @@ import { useRouter } from "vue-router";
 import { Candidate } from "../dto/candidates";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 
-const { getCandidatesByPage, addCandidate } = useCandidateStore();
+const { getCandidatesByPage, addCandidate, getAllCandidates } = useCandidateStore();
 const candidatesList = ref<Array<Candidate>>([]);
 const candidatePagesNum = ref(0);
 const currentPage = ref(1);
@@ -18,7 +18,6 @@ const candidateInit = {
   linkedinUrl: "",
   feedback: "",
   avatarUrl: "",
-  id: "0",
 };
 const currentCandidate = ref({ ...candidateInit });
 const formType = ref("post");
@@ -26,12 +25,10 @@ const formType = ref("post");
 async function getCandidates(page: number = 1) {
   try {
     isLoaderVisible.value = true;
-    router.push({ name: "candidates", query: { page } });
-    const { candidates, count } = await getCandidatesByPage(page);
-
-    candidatePagesNum.value = Math.ceil(count / 8);
-
-    candidatesList.value = candidates;
+    router.push({ name: "candidates", query: { page }});
+    candidatesList.value = await getCandidatesByPage(page);
+    const count = await getAllCandidates();
+    candidatePagesNum.value = Math.ceil(count.length / 8);
     isLoaderVisible.value = false;
   } catch (e) {
     isLoaderVisible.value = false;
@@ -102,12 +99,12 @@ getCandidates();
   >
     <li
       v-for="candidate in candidatesList"
-      :key="candidate.id"
+      :key="candidate._id"
       class="d-flex mx-auto mx-md-0 mb-3 mb-md-0 text-center candidate__item"
     >
       <router-link
         class="text-decoration-none d-flex w-100 rounded-3 p-2 bg-dark text-primary"
-        :to="'/candidates/' + candidate.id"
+        :to="'/candidates/' + candidate._id"
       >
         <img
           v-if="candidate.avatarUrl"
@@ -115,7 +112,7 @@ getCandidates();
           :src="candidate.avatarUrl"
           alt="candidateAvatar"
           onerror="this.onerror=null;  
-            this.src='../../assets/not-found-img.3ed597be.svg' 
+            this.src='../../assets/not-found-img.svg' 
           "
         />
         <img

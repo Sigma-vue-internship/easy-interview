@@ -19,7 +19,6 @@ const props = defineProps({
         linkedinUrl: "",
         feedback: "",
         avatarUrl: "",
-        id: 0,
       };
     },
   },
