@@ -114,10 +114,10 @@ async function getQuestions() {
   doughnutData.value.datasets[0].backgroundColor = [...doughnutColors.value];
 }
 async function getAllResultsData() {
-  const data = await getPercentageResults();
+  const data = await getAllResults();
   const topCandidates = getTopCandidates(data);
   chartData.value.labels = [
-    ...topCandidates.map(result => result.candidateUsername),
+    ...topCandidates.map(result => result.candidateId.username),
   ];
   chartData.value.datasets[0].data = [
     ...topCandidates.map(result => result.resultPoints),
