@@ -1,32 +1,43 @@
 <script setup lang="ts">
 import { useResultsStore } from "../stores/results";
-import { PercentsResult } from "../dto/results";
+import { Result } from "../dto/results";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-const { getPercentageResults } = useResultsStore();
+const { getLastResult } = useResultsStore();
 const isLoaderVisible = ref(true);
-const lastResult = ref<PercentsResult>({
-  candidateUsername: "",
-  resultPoints: 0,
-  candidateId: "",
-  id: "",
+const lastResult = ref<Result>({
+  answerArray: [],
+  startedAt: 0,
+  endedAt: 0,
+  title: "",
+  _id: "",
+  resultPoints: "",
+  candidateId: {
+    position: "",
+    username: "",
+    linkedinUrl: "",
+    feedback: "",
+    avatarUrl: "",
+    _id: "",
+    createdAt: "",
+    updatedAt: "",
+  },
+  createdAt: "",
+  updatedAt: "",
 });
 
 async function getAllResults() {
   isLoaderVisible.value = true;
-  const data = await getPercentageResults();
-  lastResult.value = data[data.length - 1];
-  pushRoute(lastResult.value.candidateId, lastResult.value.id);
-  isLoaderVisible.value = false;
+  lastResult.value = await getLastResult();
+  pushRoute(lastResult.value._id);
 }
 
-function pushRoute(candidateId: string, resultId: string) {
+function pushRoute(resultId: string) {
   router.push({
     name: "singleResult",
     params: {
-      candidateId,
       resultId,
     },
   });

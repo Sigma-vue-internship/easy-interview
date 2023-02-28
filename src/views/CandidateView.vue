@@ -16,13 +16,7 @@ const isLoaderVisible = ref(true);
 const formType = ref("put");
 const { getCandidateById, deleteCandidateById, editCandidate } =
   useCandidateStore();
-const {
-  getResultsForCandidate,
-  deleteResult,
-  deletePercentageResult,
-  postPercentageResult,
-  postResult,
-} = useResultsStore();
+const { getResultsForCandidate, deleteResult, postResult } = useResultsStore();
 const candidateResults = ref<Result[]>([]);
 
 const currentCandidate = ref<Candidate>({
@@ -39,11 +33,11 @@ async function getCandidateData(): Promise<void> {
   candidateInit = { ...currentCandidate.value };
 }
 
-// async function getResultsForCandidateData(): Promise<void> {
-//   candidateResults.value = await getResultsForCandidate(
-//     getRouterParam(params.id),
-//   );
-// }
+async function getResultsForCandidateData(): Promise<void> {
+  candidateResults.value = await getResultsForCandidate(
+    getRouterParam(params.id),
+  );
+}
 
 let candidateInit = {
   position: "",
@@ -51,6 +45,7 @@ let candidateInit = {
   linkedinUrl: "",
   feedback: "",
   avatarUrl: "",
+  _id: "",
 };
 
 async function editSingleCandidate() {
@@ -66,12 +61,12 @@ async function editSingleCandidate() {
     });
   }
 }
-// const resultsExist = ref<boolean>(false);
-// const alertContent = computed((): string => {
-//   return resultsExist.value
-//     ? "Please delete all candidate's results"
-//     : "Are you sure you want to delete this candidate ?";
-// });
+const resultsExist = ref<boolean>(false);
+const alertContent = computed((): string => {
+  return resultsExist.value
+    ? "Please delete all candidate's results"
+    : "Are you sure you want to delete this candidate ?";
+});
 // async function checkCurrentResults(): Promise<void> {
 //   try {
 //     if (candidateResults.value.length) {
@@ -87,9 +82,9 @@ async function editSingleCandidate() {
 // }
 async function deleteCandidate() {
   try {
-    // if (resultsExist.value) {
-    //   return;
-    // }
+    if (resultsExist.value) {
+      return;
+    }
     await deleteCandidateById(currentCandidate.value._id);
     router.push({
       name: "candidates",
@@ -101,38 +96,35 @@ async function deleteCandidate() {
   }
 }
 
-// async function deleteQuizResult(candidateId: string, resultId: string) {
-//   try {
-//     isLoaderVisible.value = true;
+async function deleteQuizResult(resultId: string) {
+  try {
+    isLoaderVisible.value = true;
+    await deleteResult(resultId);
+    await getResultsForCandidateData();
+    // await checkCurrentResults();
+    candidateResults.value = candidateResults.value.filter(
+      result => result._id !== resultId,
+    );
+    Notify.success("Result successfully deleted", {
+      distance: "65px",
+      success: {
+        background: "#87CF23",
+      },
+    });
+    isLoaderVisible.value = false;
+  } catch (e) {
+    isLoaderVisible.value = false;
 
-//     await deleteResult(candidateId, resultId);
-//     await deletePercentageResult(resultId);
-//     await getResultsForCandidateData();
-//     await checkCurrentResults();
-//     candidateResults.value = candidateResults.value.filter(
-//       result => result.id !== resultId,
-//     );
-//     Notify.success("Result successfully deleted", {
-//       distance: "65px",
-//       success: {
-//         background: "#87CF23",
-//       },
-//     });
-//     isLoaderVisible.value = false;
-//   } catch (e) {
-//     isLoaderVisible.value = false;
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
+  }
+}
 
-//     Notify.failure("Something went wrong. Please, try again.", {
-//       distance: "65px",
-//     });
-//   }
-// }
-
-function pushRoute(candidateId: string, resultId: string) {
+function pushRoute(resultId: string) {
   router.push({
     name: "singleResult",
     params: {
-      candidateId,
       resultId,
     },
   });
@@ -145,7 +137,7 @@ async function created(): Promise<void> {
   try {
     isLoaderVisible.value = true;
     await getCandidateData();
-    // await getResultsForCandidateData();
+    await getResultsForCandidateData();
     // await checkCurrentResults();
     isLoaderVisible.value = false;
   } catch (e) {
@@ -241,7 +233,7 @@ onMounted(() => {});
         </p>
       </div>
     </div>
-    <!-- <div class="text-md-start mt-4 ps-4">
+    <div class="text-md-start mt-4 ps-4">
       <h3 class="text-primary">Quiz results</h3>
       <ul
         v-if="candidateResults.length"
@@ -249,7 +241,7 @@ onMounted(() => {});
       >
         <li
           v-for="(result, index) in candidateResults"
-          :key="result.id"
+          :key="result._id"
           class="my-2 text-secondary row col-lg-4 align-items-center"
         >
           <div class="col-7 col-md-5 col-lg-7 mb-2">
@@ -264,7 +256,7 @@ onMounted(() => {});
               data-bs-toggle="tooltip"
               data-bs-placement="left"
               title="Go to full result"
-              @click="pushRoute(result.parent.id, result.id)"
+              @click="pushRoute(result._id)"
             />
             <font-awesome-icon
               role="button"
@@ -273,7 +265,7 @@ onMounted(() => {});
               data-bs-toggle="tooltip"
               data-bs-placement="left"
               title="Delete quiz result"
-              @click="deleteQuizResult(result.parent.id, result.id)"
+              @click="deleteQuizResult(result._id)"
             />
           </div>
         </li>
@@ -283,7 +275,7 @@ onMounted(() => {});
           All results will be displayed here after passing quiz by candidate
         </p>
       </div>
-    </div> -->
+    </div>
   </div>
   <EasyModal
     :title="'Edit candidate'"

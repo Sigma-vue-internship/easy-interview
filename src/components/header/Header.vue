@@ -2,24 +2,24 @@
 import { useAuth0 } from "@auth0/auth0-vue";
 import BurgerMenu from "./BurgerMenu.vue";
 import SearchComponent from "./SearchComponent.vue";
-const auth0 = useAuth0();
+// const auth0 = useAuth0();
 
-const isUserAuthenticated = auth0.isAuthenticated;
+// const isUserAuthenticated = auth0.isAuthenticated;
 
-function login() {
-  auth0.loginWithRedirect();
-}
+// function login() {
+//   auth0.loginWithRedirect();
+// }
 
 // function logoutUser() {
 //   auth0.logout({ returnTo: window.location.origin });
 // }
 // TODO: after deploy, switch urls
-function logoutUser() {
-  auth0.logout({
-    returnTo: "https://easy-interview.netlify.app/",
-    client_id: import.meta.env.VITE_AUTH_CLIENT_ID,
-  });
-}
+// function logoutUser() {
+//   auth0.logout({
+//     returnTo: "https://easy-interview.netlify.app/",
+//     client_id: import.meta.env.VITE_AUTH_CLIENT_ID,
+//   });
+// }
 </script>
 <template>
   <header>

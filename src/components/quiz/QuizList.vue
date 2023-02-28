@@ -204,7 +204,7 @@ const incorrectCount = computed(() => {
                 class="btn btn-outline-danger border-0 me-md-2"
                 style="height: 50px"
                 icon="fa-regular fa-square-minus"
-                @click="deleteQuestion(oneQuestion.id, oneQuestion)"
+                @click="deleteQuestion(oneQuestion._id, oneQuestion)"
               />
             </div>
             <!-- Loop for radios starts -->
@@ -219,12 +219,12 @@ const incorrectCount = computed(() => {
                 class="form-check form-check-inline me-0 ms-3"
               >
                 <input
-                  :id="oneQuestion.id"
+                  :id="oneQuestion._id"
                   class="form-check-input"
                   type="radio"
                   :value="idNumber"
-                  :name="'radio' + oneQuestion.id"
-                  @click="addPoint(idNumber, oneQuestion.id)"
+                  :name="'radio' + oneQuestion._id"
+                  @click="addPoint(idNumber, oneQuestion._id)"
                 />
                 <label
                   class="form-check-label"
@@ -241,7 +241,7 @@ const incorrectCount = computed(() => {
             >
               <h5 class="mb-3 text-primary">Correct/Incorrect</h5>
               <EasySwitch
-                :id="oneQuestion.id"
+                :id="oneQuestion._id"
                 @set-checked="addPoint"
               />
             </div>

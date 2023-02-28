@@ -14,33 +14,32 @@ import { getBarColor, defaultBarColor } from "../utils/useChangeColor";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { getRouterParam } from "../service/routerParam";
 
-const result = ref<Result>({
-  questionAnswer: [],
+const result = ref({
+  answerArray: [],
   startedAt: 0,
   endedAt: 0,
-  id: "",
+  _id: "",
   title: "",
-  parent: {
+  createdAt: "",
+  updatedAt: "",
+  candidateId: {
     position: "",
     username: "",
     linkedinUrl: "",
     feedback: "",
     avatarUrl: "",
-    id: "",
+    _id: "",
   },
 });
 
 const route = useRoute();
-const { getOneResultForCandidate } = useResultsStore();
+const { getOneResult } = useResultsStore();
 const isLoaderVisible = ref(true);
 
-async function getOneResultForCandidateData() {
+async function getOneResultData() {
   try {
     isLoaderVisible.value = true;
-    result.value = await getOneResultForCandidate(
-      getRouterParam(route.params.candidateId),
-      getRouterParam(route.params.resultId),
-    );
+    result.value = await getOneResult(getRouterParam(route.params.resultId));
     isLoaderVisible.value = false;
   } catch (e) {
     isLoaderVisible.value = false;
@@ -50,26 +49,26 @@ async function getOneResultForCandidateData() {
   }
 }
 
-getOneResultForCandidateData();
+getOneResultData();
 
 const resultPercentage = computed(() =>
   (
-    result.value.questionAnswer.reduce(
+    result.value.answerArray.reduce(
       (summ, item) => summ + item.answerPoints,
       0,
-    ) / result.value.questionAnswer.reduce((summ, item) => summ + item.point, 0)
+    ) / result.value.answerArray.reduce((summ, item) => summ + item.point, 0)
   ).toLocaleString("en-GB", { style: "percent" }),
 );
 
 const categories = computed(() =>
-  _uniq(result.value.questionAnswer.map(obj => obj.category)),
+  _uniq(result.value.answerArray.map(obj => obj.category)),
 );
 
 const categoriesWithPoints = computed(() =>
   Object.fromEntries(
     categories.value.map(category => [
       category,
-      result.value.questionAnswer
+      result.value.answerArray
         .filter(answer => answer.category === category)
         .reduce((summ, item) => summ + item.point, 0),
     ]),
@@ -80,7 +79,7 @@ const categoriesWithAnswerPoints = computed(() =>
   Object.fromEntries(
     categories.value.map(category => [
       category,
-      result.value.questionAnswer
+      result.value.answerArray
         .filter(answer => answer.category === category)
         .reduce((summ, item) => summ + item.answerPoints, 0),
     ]),
@@ -108,13 +107,13 @@ function printPage() {
     <div
       class="col-md-4 col-lg-3 col-xxl-2 text-center text-md-start pt-4 avatar d-flex justify-content-center"
     >
-      <router-link :to="'/candidates/' + result.parent.id">
+      <router-link :to="'/candidates/' + result.candidateId._id">
         <img
-          v-if="result.parent.avatarUrl"
+          v-if="result.candidateId.avatarUrl"
           class="rounded-circle img-fluid p-2 border-primary border border-3 fit"
-          :src="result.parent.avatarUrl"
+          :src="result.candidateId.avatarUrl"
           onerror="this.onerror=null; 
-            this.src='../../../assets/not-found-img.3ed597be.svg'
+            this.src='../../../assets/not-found-img.svg'
           "
           data-bs-toggle="tooltip"
           data-bs-placement="left"
@@ -134,14 +133,14 @@ function printPage() {
     </div>
     <div class="col-md-8 col-lg-4 mt-3 mt-lg-2">
       <h2 class="text-primary text-center text-md-start">
-        {{ result.parent.username }}
+        {{ result.candidateId.username }}
       </h2>
       <div class="text-center text-md-start fs-4">
         <font-awesome-icon
           icon="fa-solid fa-user"
           class="text-primary"
         />
-        {{ result.parent.position }}
+        {{ result.candidateId.position }}
       </div>
       <div class="text-center text-md-start fs-4">
         <font-awesome-icon
@@ -181,7 +180,7 @@ function printPage() {
     >
       <h4 class="fw-light">
         <span class="fw-bolder">Short summary:</span>
-        {{ result.parent.feedback }}
+        {{ result.candidateId.feedback }}
       </h4>
     </div>
     <h4 class="text-center text-md-start ps-md-1 mt-4">Skills</h4>
@@ -256,7 +255,7 @@ function printPage() {
             :key="category"
             :item-id="index"
             :category="category"
-            :questions-array="result.questionAnswer"
+            :questions-array="result.answerArray"
           />
         </div>
       </div>

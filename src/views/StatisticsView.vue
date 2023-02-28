@@ -28,7 +28,7 @@ interface chartData {
 }
 
 const { getAllQuestions } = useQuestionStore();
-const { getPercentageResults } = useResultsStore();
+const { getAllResults } = useResultsStore();
 
 const activeTab = ref("Results");
 const categories = ref<string[]>([]);
@@ -113,7 +113,7 @@ async function getQuestions() {
   doughnutColors.value = generateColors(categories.value.length);
   doughnutData.value.datasets[0].backgroundColor = [...doughnutColors.value];
 }
-async function getAllResults() {
+async function getAllResultsData() {
   const data = await getPercentageResults();
   const topCandidates = getTopCandidates(data);
   chartData.value.labels = [
@@ -158,7 +158,7 @@ const currentAlert = computed(() => {
   }
 });
 getQuestions();
-getAllResults();
+getAllResultsData();
 </script>
 <template>
   <div class="p-4 rounded">

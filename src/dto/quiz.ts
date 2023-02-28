@@ -4,14 +4,15 @@ export interface QuizQuestion {
   answerPoints?: number;
   answer: string;
   category: string;
-  id: string;
+  _id?: string;
 }
 
 export interface QuizResult {
-  questionAnswer: QuizQuestion[];
+  answerArray: QuizQuestion[];
   title: string;
   startedAt: number;
   endedAt: number;
+  resultsPoints: number;
 }
 
 export interface CategoryQuestions {

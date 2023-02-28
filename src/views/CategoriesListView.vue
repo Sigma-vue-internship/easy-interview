@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { useQuestionStore } from "../stores/questions";
 import { categories } from "../hooks/categories";
 import { onBeforeMount, ref } from "vue";
@@ -7,7 +7,6 @@ import { Question } from "../dto/questions";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 
 const questionStore = useQuestionStore();
-const route = useRoute();
 const questionsList = ref<Question[]>([]);
 
 onBeforeMount(() => getQuestionList());

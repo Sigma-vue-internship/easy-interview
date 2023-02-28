@@ -29,10 +29,11 @@ const currentCandidate = ref<CurrentCandidate>({
 });
 const startQuizDate = ref<number>(0);
 const result = ref<QuizResult>({
-  questionAnswer: [],
+  answerArray: [],
   title: "",
   startedAt: 0,
   endedAt: 0,
+  resultPoints: 0,
 });
 const isCandidateChoosed = ref<boolean>(false);
 const questionsByCategories = ref<Object>({});
@@ -68,7 +69,7 @@ async function getQuestionList() {
 function addQuestions(question: QuizQuestion) {
   questionList.value = [
     ...questionList.value.filter(
-      singleQuestion => singleQuestion.id !== question.id,
+      singleQuestion => singleQuestion._id !== question._id,
     ),
   ];
   if (!questionCategories.value.includes(question.category)) {
@@ -91,9 +92,9 @@ function removeQuestionsFromCategory() {
   ];
   const tempQuestion = {};
   collapsedQuestions.forEach(question => {
-    tempQuestion[question.id]
-      ? (tempQuestion[question.id] = null)
-      : (tempQuestion[question.id] = question);
+    tempQuestion[question._id]
+      ? (tempQuestion[question._id] = null)
+      : (tempQuestion[question._id] = question);
   });
   return tempQuestion;
 }
@@ -114,7 +115,7 @@ function addAllQuestions() {
 function answerPoints(point: number, id: string) {
   checkedAnswer.value = point;
   const filtredElement = quizList.value.find(
-    quizAnswer => quizAnswer.id === id,
+    quizAnswer => quizAnswer._id === id,
   );
   if (filtredElement) {
     filtredElement.answerPoints = checkedAnswer.value;
@@ -124,7 +125,7 @@ function answerPoints(point: number, id: string) {
 
 function deleteQuestion(questionId: string, item: QuizQuestion) {
   quizList.value = quizList.value.filter(
-    question => question.id !== questionId,
+    question => question._id !== questionId,
   );
   questionList.value.push(item);
   questionsByCategories.value = { ...spreadQuestionsByCategories() };
@@ -158,18 +159,18 @@ const setCandidateSelected = async () => {
   await getQuestionList();
 };
 // TODO: add test for post persentageResult
-async function postPercentageResult() {
-  try {
-    await resultsStore.postPercentageResult({
-      candidateUsername: currentCandidate.value.name,
-      resultPoints: resultPercents.value,
-      candidateId: currentCandidate.value.id,
-      id: "",
-    });
-  } catch (e) {
-    console.log(e);
-  }
-}
+// async function postPercentageResult() {
+//   try {
+//     await resultsStore.postPercentageResult({
+//       candidateUsername: currentCandidate.value.name,
+//       resultPoints: resultPercents.value,
+//       candidateId: currentCandidate.value.id,
+//       id: "",
+//     });
+//   } catch (e) {
+//     console.log(e);
+//   }
+// }
 
 const setModeQuiz = () => {
   quizMode.value = false;
@@ -203,22 +204,19 @@ async function postResult() {
     });
     return;
   }
-  result.value.questionAnswer = quizList.value;
+  result.value.answerArray = quizList.value;
   result.value.title = `${Math.round(resultPercents.value)}%`;
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
+  result.value.resultPoints = Math.round(resultPercents.value);
+  result.value.candidateId = currentCandidate.value.id;
   try {
-    const { candidateId, id } = await resultsStore.postResult(
-      result.value,
-      currentCandidate.value.id,
-    );
-    postPercentageResult();
+    const data = await resultsStore.postResult(result.value);
     quizList.value = [];
     router.push({
       name: "singleResult",
       params: {
-        candidateId,
-        resultId: id,
+        resultId: data.result._id,
       },
     });
   } catch (e) {
@@ -274,7 +272,7 @@ async function postResult() {
   >
     <li
       v-for="item in categoryQuestions"
-      :key="item.id"
+      :key="item._id"
       class="border border-light mt-4 py-4 px-2 rounded-3 mx-auto shadow text-start ps-sm-3"
     >
       <div
@@ -283,7 +281,7 @@ async function postResult() {
         <div class="col-md-9 col-9">
           <label
             class="w-100 form-check-label ps-2"
-            :for="item.id"
+            :for="item._id"
           >
             <p>
               <span class="text-primary fs-5"

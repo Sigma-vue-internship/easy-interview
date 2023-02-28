@@ -1,40 +1,31 @@
 import { defineStore } from "pinia";
-import { Result, PercentsResult } from "../dto/results";
+import { Result } from "../dto/results";
 import axios from "../service/axiosInstance";
 
 export const useResultsStore = defineStore("results", {
   actions: {
-    async postResult(result: Result, candidateId: string) {
-      const response = await axios.post<Result>(
-        `/candidates/${candidateId}/results`,
-        result,
-      );
-      return response.data;
-    },
-    async postPercentageResult(result: PercentsResult) {
-      await axios.post("/candidateResults", result);
-    },
-    async getPercentageResults() {
-      const response = await axios.get<PercentsResult[]>("/candidateResults");
+    async postResult(result: Result) {
+      const response = await axios.post("/results/create", result);
       return response.data;
     },
     async getResultsForCandidate(candidateId: string) {
-      const response = await axios.get<Result[]>(
-        `/candidates/${candidateId}/results`,
-      );
-      return response.data;
+      const response = await axios.get(`/results/filter/${candidateId}`);
+      return response.data.result;
     },
-    async getOneResultForCandidate(candidateId: string, resultId: string) {
-      const response = await axios.get<Result>(
-        `/candidates/${candidateId}/results/${resultId}`,
-      );
-      return response.data;
+    async getOneResult(resultId: string) {
+      const response = await axios.get(`/results/get/${resultId}`);
+      return response.data.result[0];
     },
-    async deleteResult(candidateId: string, resultId: string) {
-      await axios.delete(`/candidates/${candidateId}/results/${resultId}`);
+    async getLastResult() {
+      const response = await axios.get("/results/findlast");
+      return response.data.result;
     },
-    async deletePercentageResult(resultId: string) {
-      await axios.delete(`/candidateResults/${resultId}`);
+    async getAllResults() {
+      const response = await axios.get("/results/get");
+      return response.data.results;
+    },
+    async deleteResult(resultId: string) {
+      await axios.delete(`/results/delete/${resultId}`);
     },
   },
 });

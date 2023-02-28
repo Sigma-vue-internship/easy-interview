@@ -24,26 +24,26 @@ const router = createRouter({
       path: "/dashboard",
       name: "dashboard",
       component: DashboardView,
-      beforeEnter: authGuard,
+      // beforeEnter: authGuard,
     },
     {
       path: "/statistics",
       name: "statistics",
       component: StatisticsView,
-      beforeEnter: authGuard,
+      // beforeEnter: authGuard,
     },
 
     {
       path: "/candidates",
       name: "candidates",
       component: CandidatesListView,
-      beforeEnter: authGuard,
+      // beforeEnter: authGuard,
     },
     {
       path: "/candidates/:id",
       name: "candidate",
       component: CandidateView,
-      beforeEnter: authGuard,
+      // beforeEnter: authGuard,
       beforeRouteUpdate(to, from, next) {
         if (to.path !== from.path) {
           window.location = to.path;
@@ -54,7 +54,7 @@ const router = createRouter({
       path: "/questions",
       name: "categoriesList",
       component: CategoriesListView,
-      beforeEnter: authGuard,
+      // beforeEnter: authGuard,
       beforeRouteUpdate(to, from, next) {
         if (to.path !== from.path) {
           window.location = to.path;
@@ -65,25 +65,25 @@ const router = createRouter({
       path: "/questions/:title",
       name: "category",
       component: QuestionsListView,
-      beforeEnter: authGuard,
+      // beforeEnter: authGuard,
     },
     {
       path: "/results",
       name: "quizResults",
       component: QuizResultsView,
-      beforeEnter: authGuard,
+      // beforeEnter: authGuard,
     },
     {
-      path: "/candidates/:candidateId/results/:resultId",
+      path: "/results/:resultId",
       name: "singleResult",
       component: SingleResultView,
-      beforeEnter: authGuard,
+      // beforeEnter: authGuard,
     },
     {
       path: "/constructor",
       name: "quizConstructor",
       component: QuizConstructorView,
-      beforeEnter: authGuard,
+      // beforeEnter: authGuard,
     },
     {
       path: "/:pathMatch(.*)*",
@@ -94,7 +94,7 @@ const router = createRouter({
       path: "/lastresult",
       name: "lastResult",
       component: LastResultView,
-      beforeEnter: authGuard,
+      // beforeEnter: authGuard,
     },
   ],
 });

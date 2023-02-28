@@ -31,13 +31,13 @@ const choosedCandidates = ref<Candidate[]>([]);
 watch(selectCandidate, async newCandidate => {
   choosedCandidates.value = await getCandidatesByUsername(newCandidate);
 });
-function setCandidate(user: Candidate) {
+function setCandidate(user) {
   isCandidatesVisible.value = false;
-  emit("choosedCandidate", user.id, user.username);
+  emit("choosedCandidate", user._id, user.username);
 
   selectCandidate.value = user.username;
   choosedCandidateObj.value = choosedCandidates.value.find(
-    candidate => candidate.id === user.id,
+    candidate => candidate._id === user._id,
   );
 }
 const isCandidateEmpty = computed(() => _isEmpty(choosedCandidateObj.value));
@@ -48,7 +48,7 @@ const emitCandidateSelect = () => emit("setCandidateSelected");
 <template>
   <h2 class="text-primary text-center text-md-start">Choose Candidate</h2>
   <div
-    v-if="!choosedCandidateObj.id"
+    v-if="!choosedCandidateObj._id"
     class="alert alert-primary d-flex align-items-center text-start"
     role="alert"
   >

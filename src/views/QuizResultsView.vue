@@ -15,13 +15,24 @@ import EasyDropdown from "../components/common/EasyDropdown.vue";
 
 const router = useRouter();
 const { getCandidatesByUsername } = useCandidateStore();
-const { getResultsForCandidate } = useResultsStore();
+const { getResultsForCandidate, getAllResults } = useResultsStore();
 
 const selectedCandidate = ref("");
 const isCandidatesVisible = ref(false);
 const choosedCandidates = ref<Candidate[]>([]);
 const quizResults = ref<Result[]>([]);
 const isLoaderVisible = ref(true);
+
+async function getAllResultsData() {
+  try {
+    quizResults.value = await getAllResults();
+  } catch (e) {
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
+  }
+}
+getAllResultsData();
 
 async function getResultsForCandidateData(candidateId: string) {
   try {
@@ -43,14 +54,13 @@ function setCandidate(user: Candidate) {
   quizResults.value = [];
   isCandidatesVisible.value = false;
   selectedCandidate.value = user.username;
-  getResultsForCandidateData(user.id);
+  getResultsForCandidateData(user._id);
 }
 
-function pushRoute(candidateId: string, resultId: string) {
+function pushRoute(resultId: string) {
   router.push({
     name: "singleResult",
     params: {
-      candidateId,
       resultId,
     },
   });
@@ -67,8 +77,8 @@ function pushRoute(candidateId: string, resultId: string) {
       icon="fa-solid fa-circle-info"
       class="fs-6"
     />
-    Quiz results are grouped by Candidates. For displaying results, please,
-    choose candidate from list
+    By default are displayed all results. For displaying results by candidate,
+    please, choose candidate from list
   </div>
   <div class="col-12 w-100 position-relative">
     <h2 class="text-primary text-center text-md-start mt-2">
@@ -87,18 +97,18 @@ function pushRoute(candidateId: string, resultId: string) {
       <ul class="list-unstyled">
         <li
           v-for="oneResult in quizResults"
-          :key="oneResult.id"
+          :key="oneResult._id"
           class="border border-light mt-3 mb-4 p-2 rounded-3 text-secondary mx-auto shadow ps-4 pe-auto"
           role="button"
           data-bs-toggle="tooltip"
           data-bs-placement="left"
           title="Click for showing full report"
-          @click="pushRoute(oneResult.parent.id, oneResult.id)"
+          @click="pushRoute(oneResult._id)"
         >
           <div class="row">
             <div class="col-12 col-md-10 col-lg-11">
               <h5 class="text-primary text-center text-md-start mb-1">
-                Quiz Result {{ oneResult.id }}
+                Quiz Result for {{ oneResult.candidateId.username }}
               </h5>
               <span class="text-secondary text-center text-md-start d-block">
                 <font-awesome-icon
