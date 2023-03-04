@@ -158,19 +158,6 @@ const setCandidateSelected = async () => {
   isCandidateChoosed.value = true;
   await getQuestionList();
 };
-// TODO: add test for post persentageResult
-// async function postPercentageResult() {
-//   try {
-//     await resultsStore.postPercentageResult({
-//       candidateUsername: currentCandidate.value.name,
-//       resultPoints: resultPercents.value,
-//       candidateId: currentCandidate.value.id,
-//       id: "",
-//     });
-//   } catch (e) {
-//     console.log(e);
-//   }
-// }
 
 const setModeQuiz = () => {
   quizMode.value = false;

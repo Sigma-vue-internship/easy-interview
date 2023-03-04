@@ -1,5 +1,5 @@
 import axiosInst from "axios";
-
+import { authHeader } from "../hooks/authHeader";
 // const axiosConfig = {
 //   baseURL: `${import.meta.env.VITE_MOCK_API_URL}`,
 // };
@@ -10,6 +10,14 @@ import axiosInst from "axios";
 
 const axios = axiosInst.create({
   baseURL: `${(import.meta as any).env.VITE_BACK_API_URL}`,
+});
+
+axios.interceptors.request.use(config => {
+  const header = authHeader();
+  if (config.url === "/users/validate") {
+    config.headers.Authorization = header.Authorization;
+  }
+  return config;
 });
 
 export default axios;

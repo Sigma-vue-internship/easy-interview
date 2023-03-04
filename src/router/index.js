@@ -12,6 +12,12 @@ import SingleResultView from "../views/SingleResultView.vue";
 import MissingView from "../views/MissingView.vue";
 import LastResultView from "../views/LastResultView.vue";
 import HeroView from "../views/HeroView.vue";
+import SingInView from "../views/SingInView.vue";
+import LoginView from "../views/LoginView.vue";
+import { useUsersStore } from "../stores/users";
+
+const notSecuredRoutes = ["singIn", "login", "hero", "dashboard"];
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -24,26 +30,21 @@ const router = createRouter({
       path: "/dashboard",
       name: "dashboard",
       component: DashboardView,
-      // beforeEnter: authGuard,
     },
     {
       path: "/statistics",
       name: "statistics",
       component: StatisticsView,
-      // beforeEnter: authGuard,
     },
-
     {
       path: "/candidates",
       name: "candidates",
       component: CandidatesListView,
-      // beforeEnter: authGuard,
     },
     {
       path: "/candidates/:id",
       name: "candidate",
       component: CandidateView,
-      // beforeEnter: authGuard,
       beforeRouteUpdate(to, from, next) {
         if (to.path !== from.path) {
           window.location = to.path;
@@ -54,7 +55,6 @@ const router = createRouter({
       path: "/questions",
       name: "categoriesList",
       component: CategoriesListView,
-      // beforeEnter: authGuard,
       beforeRouteUpdate(to, from, next) {
         if (to.path !== from.path) {
           window.location = to.path;
@@ -65,25 +65,21 @@ const router = createRouter({
       path: "/questions/:title",
       name: "category",
       component: QuestionsListView,
-      // beforeEnter: authGuard,
     },
     {
       path: "/results",
       name: "quizResults",
       component: QuizResultsView,
-      // beforeEnter: authGuard,
     },
     {
       path: "/results/:resultId",
       name: "singleResult",
       component: SingleResultView,
-      // beforeEnter: authGuard,
     },
     {
       path: "/constructor",
       name: "quizConstructor",
       component: QuizConstructorView,
-      // beforeEnter: authGuard,
     },
     {
       path: "/:pathMatch(.*)*",
@@ -94,9 +90,38 @@ const router = createRouter({
       path: "/lastresult",
       name: "lastResult",
       component: LastResultView,
-      // beforeEnter: authGuard,
+    },
+    {
+      path: "/registration",
+      name: "singIn",
+      component: SingInView,
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: LoginView,
     },
   ],
+});
+
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUsersStore();
+  try {
+    if (!notSecuredRoutes.includes(to.name)) {
+      await userStore.validationUser();
+      userStore.isAuthenticated = true;
+    }
+    if (!notSecuredRoutes.includes(to.name) && !userStore.isAuthenticated) {
+      Notify.failure("Please, login first");
+      next({ name: "login" });
+    } else {
+      next();
+    }
+  } catch (e) {
+    userStore.isAuthenticated = false;
+    next({ name: "login" });
+    useError(e);
+  }
 });
 
 export default router;

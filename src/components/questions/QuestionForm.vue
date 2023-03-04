@@ -4,6 +4,7 @@ import { Question } from "../../dto/questions";
 import { ref, watch } from "vue";
 import { useFormValidator } from "../../hooks/useFormValidator";
 import { categories } from "../../hooks/categories";
+import { Notify } from "notiflix";
 const questionInit = {
   text: "",
   point: 0,
@@ -63,7 +64,7 @@ async function sendData() {
     emitUpdateQuestions();
   } catch (e) {
     resetForm();
-    console.log(e);
+    Notify.failure("Something went wrong. Please, try again.");
   }
 }
 function emitUpdateQuestions() {
