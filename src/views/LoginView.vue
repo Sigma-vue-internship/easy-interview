@@ -27,7 +27,7 @@ async function logging() {
       name: "dashboard",
     });
   } catch (e) {
-    Notify.failure("Something went wrong. Please, try again.");
+    Notify.failure("Login or password is invalid");
   }
 }
 
