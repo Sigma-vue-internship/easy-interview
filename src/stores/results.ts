@@ -19,9 +19,7 @@ export const useResultsStore = defineStore("results", {
       return response.data;
     },
     async getResultsForCandidate(candidateId: string) {
-      const response = await axios.get<Result[]>(
-        `/candidates/${candidateId}/results`,
-      );
+      const response = await axios.get<Result[]>(`/results/all/${candidateId}`);
       return response.data;
     },
     async getOneResultForCandidate(candidateId: string, resultId: string) {

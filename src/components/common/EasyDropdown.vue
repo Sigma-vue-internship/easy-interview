@@ -7,6 +7,7 @@ export default {
 import { ref, reactive, watch } from "vue";
 import debounce from "lodash/debounce";
 import { Candidate } from "../../dto/candidates";
+import { ICategory } from "../../dto/ICategory";
 
 interface Emit {
   (e: "update:dropdownInput", targetValue: string): void;
@@ -21,7 +22,7 @@ const props = defineProps({
     },
   },
   dropdownData: {
-    type: Array<string | Candidate>,
+    type: Array<ICategory | Candidate>,
     required: false,
     default() {
       return [];
@@ -102,8 +103,8 @@ watch(
           @click="emitSetDropdownObj(dropdownObj)"
         >
           <img
-            v-if="dropdownObj.avatarUrl"
-            :src="dropdownObj.avatarUrl"
+            v-if="dropdownObj.avatar_url"
+            :src="dropdownObj.avatar_url"
             class="rounded-circle candidate__img"
             alt="avatar"
             onerror="this.onerror=null; 
@@ -124,7 +125,9 @@ watch(
           </div>
           <div class="flex-column text-start">
             <p class="py-2 m-0">
-              {{ dropdownObj.username ? dropdownObj.username : dropdownObj }}
+              {{
+                dropdownObj.username ? dropdownObj.username : dropdownObj.title
+              }}
             </p>
             <p
               v-if="dropdownObj.position"

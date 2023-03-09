@@ -1,7 +1,10 @@
 export interface Question {
-  text: string;
-  point: number;
-  category: string;
+  id: number;
+  question: string;
+  max_point: number;
+  question_categories_id: number;
   answer: string;
-  id?: string;
+  updatedAt: string;
+  createdAt: string;
+  users_id: number;
 }

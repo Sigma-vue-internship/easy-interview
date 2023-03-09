@@ -18,9 +18,9 @@ describe("CandidateInfo.vue", () => {
     wrapper.vm.choosedCandidateObj = {
       position: "123",
       username: "123",
-      linkedinUrl: "123",
+      linkedin_url: "123",
       feedback: "123",
-      avatarUrl: "123",
+      avatar_url: "123",
       id: 4,
     };
     await flushPromises();

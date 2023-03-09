@@ -1,10 +1,13 @@
 export interface Candidate {
-  position: string;
-  username: string;
-  linkedinUrl: string;
+  avatar_url: string;
+  createdAt: string;
   feedback: string;
-  avatarUrl: string;
-  id: string;
+  id: number;
+  linkedin_url: string;
+  position: string;
+  updatedAt: string;
+  username: string;
+  users_id: number;
 }
 
 export interface CandidatesResponse {

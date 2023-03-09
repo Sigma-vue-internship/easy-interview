@@ -41,9 +41,9 @@ const plugins = [
             {
               position: "Mihael Shumaher",
               username: "shoom911",
-              linkedinUrl: "",
+              linkedin_url: "",
               feedback: "Lol racer",
-              avatarUrl: "123",
+              avatar_url: "123",
               id: "1",
             },
           ]),

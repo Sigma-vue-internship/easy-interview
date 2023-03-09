@@ -72,8 +72,8 @@ const emitCandidateSelect = () => emit("setCandidateSelected");
         class="col-md-2 d-flex align-items-center justify-content-center justify-content-md-start ms-md-3 mb-3 mb-md-0"
       >
         <img
-          v-if="choosedCandidateObj.avatarUrl"
-          :src="choosedCandidateObj.avatarUrl"
+          v-if="choosedCandidateObj.avatar_url"
+          :src="choosedCandidateObj.avatar_url"
           onerror="this.onerror=null; 
             this.src='../../assets/not-found-img.3ed597be.svg'
           "
@@ -97,7 +97,7 @@ const emitCandidateSelect = () => emit("setCandidateSelected");
           </p>
           <p>
             <small class="text-muted">{{
-              choosedCandidateObj.linkedinUrl
+              choosedCandidateObj.linkedin_url
             }}</small>
           </p>
         </div>

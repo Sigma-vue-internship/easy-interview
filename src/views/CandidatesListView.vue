@@ -15,10 +15,13 @@ const router = useRouter();
 const candidateInit = {
   position: "",
   username: "",
-  linkedinUrl: "",
+  linkedin_url: "",
   feedback: "",
-  avatarUrl: "",
-  id: "0",
+  avatar_url: "",
+  id: 0,
+  createdAt: "",
+  updatedAt: "",
+  users_id: 0,
 };
 const currentCandidate = ref({ ...candidateInit });
 const formType = ref("post");
@@ -28,7 +31,6 @@ async function getCandidates(page: number = 1) {
     isLoaderVisible.value = true;
     router.push({ name: "candidates", query: { page } });
     const { candidates, count } = await getCandidatesByPage(page);
-
     candidatePagesNum.value = Math.ceil(count / 8);
 
     candidatesList.value = candidates;
@@ -110,9 +112,9 @@ getCandidates();
         :to="'/candidates/' + candidate.id"
       >
         <img
-          v-if="candidate.avatarUrl"
+          v-if="candidate.avatar_url"
           class="rounded-circle p-2 border-primary border border-3 candidate__img"
-          :src="candidate.avatarUrl"
+          :src="candidate.avatar_url"
           alt="candidateAvatar"
           onerror="this.onerror=null;  
             this.src='../../assets/not-found-img.3ed597be.svg' 

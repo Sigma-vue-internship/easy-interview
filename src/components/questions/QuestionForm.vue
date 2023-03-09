@@ -1,19 +1,37 @@
 <script setup lang="ts">
 import { useQuestionStore } from "../../stores/questions";
 import { Question } from "../../dto/questions";
-import { ref, watch } from "vue";
+import { onBeforeMount, ref, watch } from "vue";
 import { useFormValidator } from "../../hooks/useFormValidator";
-import { categories } from "../../hooks/categories";
+import { ICategory } from "../../dto/ICategory";
+import { Notify } from "notiflix";
 const questionInit = {
-  text: "",
-  point: 0,
-  category: "HTML",
+  id: 0,
+  question: "",
+  max_point: 0,
+  question_categories_id: 0,
   answer: "",
+  updatedAt: "",
+  createdAt: "",
+  users_id: 0,
 };
 interface Emit {
   (e: "updateQuestionsList"): void;
 }
-const question = ref({ ...questionInit });
+const categories = ref<ICategory[]>([]);
+const question = ref<Question>({ ...questionInit });
+
+onBeforeMount(() => getQuestionCategories());
+
+async function getQuestionCategories() {
+  try {
+    categories.value = await questionStore.getAllQuestionCategories();
+  } catch (e) {
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
+  }
+}
 
 const props = defineProps({
   singleQuestion: {
@@ -21,10 +39,14 @@ const props = defineProps({
     required: false,
     default() {
       return {
-        text: "",
-        point: 0,
-        category: "HTML",
+        id: 0,
+        question: "",
+        max_point: 0,
+        question_categories_id: 0,
         answer: "",
+        updatedAt: "",
+        createdAt: "",
+        users_id: 0,
       };
     },
   },
@@ -81,7 +103,7 @@ function emitUpdateQuestions() {
     >
     <textarea
       id="text"
-      v-model="question.text"
+      v-model="question.question"
       name="text"
       placeholder="How to centre div ?"
       class="form-control text-secondary"
@@ -90,7 +112,9 @@ function emitUpdateQuestions() {
       style="height: 25px"
       class="pt-1 ps-1 text-danger mb-2"
     >
-      <span v-if="v$.text.$error">{{ v$.text.$errors[0].$message }}</span>
+      <span v-if="v$.question.$error">{{
+        v$.question.$errors[0].$message
+      }}</span>
     </p>
     <label
       for="point"
@@ -99,7 +123,7 @@ function emitUpdateQuestions() {
     >
     <input
       id="point"
-      v-model="question.point"
+      v-model="question.max_point"
       name="point"
       type="number"
       placeholder="1"
@@ -109,7 +133,9 @@ function emitUpdateQuestions() {
       style="height: 25px"
       class="pt-1 ps-1 text-danger mb-2"
     >
-      <span v-if="v$.point.$error">{{ v$.point.$errors[0].$message }}</span>
+      <span v-if="v$.max_point.$error">{{
+        v$.max_point.$errors[0].$message
+      }}</span>
     </p>
     <label
       for="category"
@@ -119,25 +145,25 @@ function emitUpdateQuestions() {
 
     <select
       id="category"
-      v-model="question.category"
+      v-model="question.question_categories_id"
       name="category"
       class="form-select text-secondary"
     >
       <option
         v-for="category in categories"
-        :key="category"
+        :key="category.id"
         class="category__option"
-        :value="category"
+        :value="category.id"
       >
-        {{ category }}
+        {{ category.title }}
       </option>
     </select>
     <p
       style="height: 25px"
       class="pt-1 ps-1 text-danger mb-2"
     >
-      <span v-if="v$.category.$error">{{
-        v$.category.$errors[0].$message
+      <span v-if="v$.question_categories_id.$error">{{
+        v$.question_categories_id.$errors[0].$message
       }}</span>
     </p>
     <div class="form-floating my-4">

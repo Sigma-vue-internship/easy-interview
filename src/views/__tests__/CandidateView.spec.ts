@@ -31,9 +31,9 @@ const getWrapper = () =>
                   data: {
                     position: "position",
                     username: "username",
-                    linkedinUrl: "linkedin",
+                    linkedin_url: "linkedin",
                     feedback: "feedback",
-                    avatarUrl: "avatar",
+                    avatar_url: "avatar",
                     id: "1",
                   },
                 }),

@@ -23,9 +23,9 @@ const result = ref<Result>({
   parent: {
     position: "",
     username: "",
-    linkedinUrl: "",
+    linkedin_url: "",
     feedback: "",
-    avatarUrl: "",
+    avatar_url: "",
     id: "",
   },
 });
@@ -110,9 +110,9 @@ function printPage() {
     >
       <router-link :to="'/candidates/' + result.parent.id">
         <img
-          v-if="result.parent.avatarUrl"
+          v-if="result.parent.avatar_url"
           class="rounded-circle img-fluid p-2 border-primary border border-3 fit"
-          :src="result.parent.avatarUrl"
+          :src="result.parent.avatar_url"
           onerror="this.onerror=null; 
             this.src='../../../assets/not-found-img.3ed597be.svg'
           "

@@ -9,9 +9,9 @@ export interface QuestionAnswer {
 export interface ResultParent {
   position: string;
   username: string;
-  linkedinUrl: string;
+  linkedin_url: string;
   feedback: string;
-  avatarUrl: string;
+  avatar_url: string;
   id: string;
 }
 

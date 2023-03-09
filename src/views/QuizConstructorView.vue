@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import _uniq from "lodash/uniq";
-import { computed, onMounted, ref } from "vue";
+import { computed, onBeforeMount, ref } from "vue";
 import { QuizQuestion, QuizResult } from "../dto/quiz";
 import { Question } from "../dto/questions";
 import QuizList from "../components/quiz/QuizList.vue";
@@ -9,6 +9,7 @@ import { useResultsStore } from "../stores/results";
 import { useQuestionStore } from "../stores/questions";
 import { useRouter } from "vue-router";
 import { Notify } from "notiflix";
+import { ICategory } from "../dto/ICategory";
 
 interface CurrentCandidate {
   name: string;
@@ -17,7 +18,7 @@ interface CurrentCandidate {
 
 const router = useRouter();
 const resultsStore = useResultsStore();
-const { getAllQuestions } = useQuestionStore();
+const { getAllQuestions, getAllQuestionCategories } = useQuestionStore();
 
 const selectedCategory = ref<string>("");
 const quizMode = ref<boolean>(true);
@@ -36,11 +37,16 @@ const result = ref<QuizResult>({
 });
 const isCandidateChoosed = ref<boolean>(false);
 const questionsByCategories = ref<Object>({});
-const questionCategories = ref<Array<String>>([]);
-
-onMounted(() => {
+const questionCategories = ref<Array<string>>([]);
+const initialCategories = ref<Array<ICategory>>([]);
+onBeforeMount(() => {
+  setInitialCategories();
   selectedCategory.value = "Select category for displaying questions";
 });
+
+async function setInitialCategories() {
+  initialCategories.value = await getAllQuestionCategories();
+}
 
 const categories = computed(() => {
   return _uniq(questionList.value.map(item => item.category));
@@ -260,12 +266,12 @@ async function postResult() {
   >
     <option selected>Select category for displaying questions</option>
     <option
-      v-for="category in categories"
+      v-for="category in initialCategories"
       id="categoryOption"
-      :key="category"
-      :value="category"
+      :key="category.id"
+      :value="category.title"
     >
-      {{ category }}
+      {{ category.title }}
     </option>
   </select>
   <ul

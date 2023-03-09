@@ -24,10 +24,10 @@ describe("Candidate.vue", () => {
     wrapper.find("#feedback").setValue("feedback");
 
     expect(wrapper.vm.candidate).toMatchObject({
-      avatarUrl: "avatar",
+      avatar_url: "avatar",
       feedback: "feedback",
       id: 0,
-      linkedinUrl: "linkedin",
+      linkedin_url: "linkedin",
       position: "position",
       username: "username",
     });
@@ -47,9 +47,9 @@ describe("Candidate.vue", () => {
     const singleCandidate = {
       position: "position 3",
       username: "username 3",
-      linkedinUrl: "linkedinUrl 3",
+      linkedin_url: "linkedinUrl 3",
       feedback: "feedback 3",
-      avatarUrl:
+      avatar_url:
         "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/541.jpg",
       id: "3",
     };
@@ -76,9 +76,9 @@ describe("Candidate.vue", () => {
     const postCandidate = {
       position: "position 3",
       username: "username 3",
-      linkedinUrl: "linkedinUrl 3",
+      linkedin_url: "linkedinUrl 3",
       feedback: "feedback 3",
-      avatarUrl:
+      avatar_url:
         "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/541.jpg",
       id: 0,
     };

@@ -1,12 +1,13 @@
 import axiosInst from "axios";
 import { getAuthHeader } from "../hooks/getAuthHeader";
-// const axiosConfig = {
-//   baseURL: `${import.meta.env.VITE_MOCK_API_URL}`,
-// };
-// export default (function createAxiosInstance() {
-//   const axiosInstance = axios.create(axiosConfig);
-//   return axiosInstance;
-// })();
+
+const guardedRoutes: Array<string> = [
+  "/questions",
+  "/users/auth",
+  "/categories",
+  "/candidates",
+  "/results",
+];
 
 const axios = axiosInst.create({
   baseURL: `${(import.meta as any).env.VITE_DEV_API_URL}`,
@@ -14,11 +15,14 @@ const axios = axiosInst.create({
 axios.interceptors.request.use(
   config => {
     const authHeader = getAuthHeader();
-    console.log(config);
+    const isRouteGuarded = guardedRoutes.some(route =>
+      config.url?.startsWith(route),
+    );
 
-    if (config.url === "/users/auth") {
+    if (isRouteGuarded && config.headers) {
       config.headers.Authorization = authHeader.Authorization;
     }
+
     return config;
   },
   error => {

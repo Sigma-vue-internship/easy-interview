@@ -1,18 +1,34 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, onBeforeMount } from "vue";
 import { useCandidateStore } from "../../stores/candidates";
 import { Candidate } from "../../dto/candidates";
-import { categories } from "../../hooks/categories";
 import { useRouter } from "vue-router";
+import { ICategory } from "../../dto/ICategory";
+import { useQuestionStore } from "../../stores/questions";
 
 const searchInput = ref<string>("");
 const isCandidateMode = ref(false);
 const isCategoryMode = ref(false);
 const currentMode = ref("all");
 const candidateStore = useCandidateStore();
-const searchData = ref<Array<string | Candidate>>([]);
+const searchData = ref<Array<ICategory | Candidate>>([]);
 const inputValue = ref("");
 const router = useRouter();
+const questionCategories = ref<ICategory[]>([]);
+onBeforeMount(() => {
+  setCategories();
+});
+
+const questionStore = useQuestionStore();
+
+const categories = async (): Promise<ICategory[]> => {
+  return questionStore.getAllQuestionCategories();
+};
+
+async function setCategories() {
+  questionCategories.value = await categories();
+}
+
 watch([searchInput, currentMode], async ([newInput, newCurrentMode]) => {
   if (newInput.length === 0) {
     return;
@@ -24,8 +40,8 @@ watch([searchInput, currentMode], async ([newInput, newCurrentMode]) => {
 
     case "category":
       searchData.value = [
-        ...categories.filter(category =>
-          category.toLowerCase().includes(newInput.toLowerCase()),
+        ...questionCategories.value.filter(category =>
+          category.title.toLowerCase().includes(newInput.toLowerCase()),
         ),
       ];
       break;
@@ -33,18 +49,19 @@ watch([searchInput, currentMode], async ([newInput, newCurrentMode]) => {
       const resCandidate = await candidateStore.getCandidatesByUsername(
         newInput,
       );
-      const searchedCategories: Array<string> = categories.filter(category =>
-        category.toLowerCase().includes(newInput.toLowerCase()),
-      );
+      const searchedCategories: Array<ICategory> =
+        questionCategories.value.filter(category =>
+          category.title.toLowerCase().includes(newInput.toLowerCase()),
+        );
       searchData.value = [...spreadDynamicly(resCandidate, searchedCategories)];
       break;
   }
 });
 function spreadDynamicly(
   candidates: Array<Candidate>,
-  categories: Array<string>,
+  categories: Array<ICategory>,
 ) {
-  const dynamicArray: Array<string | Candidate> = [];
+  const dynamicArray: Array<ICategory | Candidate> = [];
   let maxLength = 0;
   if (candidates.length > categories.length) {
     maxLength = candidates.length;

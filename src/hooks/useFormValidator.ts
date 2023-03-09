@@ -20,17 +20,17 @@ export function useFormValidator(
   const showModal = ref<boolean>(false);
   let v$;
   const questionRules: object = {
-    point: {
+    max_point: {
       required,
       minValue: minValue(1),
       maxValue: maxValue(5),
     } as ValidationRuleCollection,
-    text: {
+    question: {
       required,
       minLength: minLength(5),
       maxLength: maxLength(50),
     } as ValidationRuleCollection,
-    category: { required } as ValidationRuleCollection,
+    question_categories_id: { required } as ValidationRuleCollection,
     answer: {
       required,
       minLength: minLength(5),

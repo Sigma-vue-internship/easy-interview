@@ -28,14 +28,19 @@ const candidateResults = ref<Result[]>([]);
 const currentCandidate = ref<Candidate>({
   position: "",
   username: "",
-  linkedinUrl: "",
+  linkedin_url: "",
   feedback: "",
-  avatarUrl: "",
-  id: "",
+  avatar_url: "",
+  id: 0,
+  createdAt: "",
+  updatedAt: "",
+  users_id: 0,
 });
 
 async function getCandidateData(): Promise<void> {
-  currentCandidate.value = await getCandidateById(getRouterParam(params.id));
+  currentCandidate.value = await getCandidateById(
+    Number(getRouterParam(params.id)),
+  );
   candidateInit = { ...currentCandidate.value };
 }
 
@@ -48,10 +53,13 @@ async function getResultsForCandidateData(): Promise<void> {
 let candidateInit = {
   position: "",
   username: "",
-  linkedinUrl: "",
+  linkedin_url: "",
   feedback: "",
-  avatarUrl: "",
-  id: "",
+  avatar_url: "",
+  id: 0,
+  createdAt: "",
+  updatedAt: "",
+  users_id: 0,
 };
 
 async function editSingleCandidate() {
@@ -173,9 +181,9 @@ onMounted(() => {});
         class="col-12 col-lg-4 col-xxl-3 mb-3 mb-lg-0 d-flex justify-content-center justify-content-lg-start"
       >
         <img
-          v-if="currentCandidate.avatarUrl"
-          id="avatarUrl"
-          :src="currentCandidate.avatarUrl"
+          v-if="currentCandidate.avatar_url"
+          id="avatar_url"
+          :src="currentCandidate.avatar_url"
           alt="singleCandidate image"
           class="candidate__img rounded-4 border bg-light p-1"
           onerror="this.onerror=null; 
@@ -222,15 +230,15 @@ onMounted(() => {});
           class="text-secondary my-4 d-flex align-items-center justify-content-center justify-content-lg-start"
         >
           <font-awesome-icon
-            v-if="currentCandidate.linkedinUrl"
+            v-if="currentCandidate.linkedin_url"
             icon="fa-brands fa-linkedin"
             class="text-primary me-2 fs-3"
           />
           <a
-            :href="currentCandidate.linkedinUrl"
+            :href="currentCandidate.linkedin_url"
             target="blank"
             class="candidate-link text-start text-truncate"
-            >{{ currentCandidate.linkedinUrl }}</a
+            >{{ currentCandidate.linkedin_url }}</a
           >
         </div>
         <p

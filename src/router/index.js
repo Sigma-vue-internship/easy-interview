@@ -73,7 +73,7 @@ const router = createRouter({
       },
     },
     {
-      path: "/questions/:title",
+      path: "/questions/:question_categories_id",
       name: "category",
       component: QuestionsListView,
     },
