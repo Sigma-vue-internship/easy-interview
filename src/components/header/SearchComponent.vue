@@ -79,12 +79,12 @@ function spreadDynamicly(
   return dynamicArray;
 }
 function redirectTo(dropdownObj) {
-  if (dropdownObj.id) {
+  if (dropdownObj.position) {
     inputValue.value = dropdownObj.username;
     router.push({ path: `/candidates/${dropdownObj.id}`, replace: true });
   } else {
-    inputValue.value = dropdownObj;
-    router.push({ path: `/questions/${dropdownObj}`, replace: true });
+    inputValue.value = dropdownObj.title;
+    router.push({ path: `/questions/${dropdownObj.id}`, replace: true });
   }
 }
 

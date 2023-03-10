@@ -4,7 +4,7 @@ import { ref, computed, onMounted } from "vue";
 import { useCandidateStore } from "../stores/candidates";
 import { useResultsStore } from "../stores/results";
 import CandidateForm from "../components/candidates/CandidateForm.vue";
-import { Candidate } from "../dto/candidates";
+import { ICandidate } from "../dto/candidates";
 import { Result } from "../dto/results";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { getRouterParam } from "../service/routerParam";
@@ -20,12 +20,11 @@ const {
   getResultsForCandidate,
   deleteResult,
   deletePercentageResult,
-  postPercentageResult,
   postResult,
 } = useResultsStore();
 const candidateResults = ref<Result[]>([]);
 
-const currentCandidate = ref<Candidate>({
+const currentCandidate = ref<ICandidate>({
   position: "",
   username: "",
   linkedin_url: "",
@@ -48,6 +47,7 @@ async function getResultsForCandidateData(): Promise<void> {
   candidateResults.value = await getResultsForCandidate(
     getRouterParam(params.id),
   );
+  debugger;
 }
 
 let candidateInit = {
@@ -110,12 +110,11 @@ async function deleteCandidate() {
   }
 }
 
-async function deleteQuizResult(candidateId: string, resultId: string) {
+async function deleteQuizResult(candidateId: number, resultId: number) {
   try {
     isLoaderVisible.value = true;
 
     await deleteResult(candidateId, resultId);
-    await deletePercentageResult(resultId);
     await getResultsForCandidateData();
     await checkCurrentResults();
     candidateResults.value = candidateResults.value.filter(
@@ -137,7 +136,7 @@ async function deleteQuizResult(candidateId: string, resultId: string) {
   }
 }
 
-function pushRoute(candidateId: string, resultId: string) {
+function pushRoute(candidateId: number, resultId: number) {
   router.push({
     name: "singleResult",
     params: {
@@ -263,7 +262,7 @@ onMounted(() => {});
         >
           <div class="col-7 col-md-5 col-lg-7 mb-2">
             #{{ index + 1 }}. {{ result.title }},
-            {{ formattingDate(result.endedAt) }}
+            {{ formattingDate(result.ended_at) }}
           </div>
           <div class="col-4">
             <font-awesome-icon
@@ -273,7 +272,7 @@ onMounted(() => {});
               data-bs-toggle="tooltip"
               data-bs-placement="left"
               title="Go to full result"
-              @click="pushRoute(result.parent.id, result.id)"
+              @click="pushRoute(currentCandidate.id, result.id)"
             />
             <font-awesome-icon
               role="button"
@@ -282,7 +281,7 @@ onMounted(() => {});
               data-bs-toggle="tooltip"
               data-bs-placement="left"
               title="Delete quiz result"
-              @click="deleteQuizResult(result.parent.id, result.id)"
+              @click="deleteQuizResult(currentCandidate.id, result.id)"
             />
           </div>
         </li>

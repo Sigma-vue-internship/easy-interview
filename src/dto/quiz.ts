@@ -1,10 +1,10 @@
 export interface QuizQuestion {
-  text: string;
-  point: number;
-  answerPoints?: number;
-  answer: string;
-  category: string;
   id: string;
+  question: string;
+  answer: string;
+  max_point: number;
+  answerPoints?: number;
+  question_categories_id: number;
 }
 
 export interface QuizResult {

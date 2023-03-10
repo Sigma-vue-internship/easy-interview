@@ -9,7 +9,7 @@ import { useCandidateStore } from "../stores/candidates";
 import { useResultsStore } from "../stores/results";
 import { ref, watch } from "vue";
 import { Candidate } from "../dto/candidates";
-import { Result } from "../dto/results";
+import { ISingleCandidateResult } from "../dto/results";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import EasyDropdown from "../components/common/EasyDropdown.vue";
 
@@ -20,10 +20,10 @@ const { getResultsForCandidate } = useResultsStore();
 const selectedCandidate = ref("");
 const isCandidatesVisible = ref(false);
 const choosedCandidates = ref<Candidate[]>([]);
-const quizResults = ref<Result[]>([]);
+const quizResults = ref<ISingleCandidateResult[]>([]);
 const isLoaderVisible = ref(true);
 
-async function getResultsForCandidateData(candidateId: string) {
+async function getResultsForCandidateData(candidateId: number) {
   try {
     isLoaderVisible.value = true;
     quizResults.value = await getResultsForCandidate(candidateId);
@@ -46,7 +46,7 @@ function setCandidate(user: Candidate) {
   getResultsForCandidateData(user.id);
 }
 
-function pushRoute(candidateId: string, resultId: string) {
+function pushRoute(candidateId: number, resultId: number) {
   router.push({
     name: "singleResult",
     params: {
@@ -93,7 +93,7 @@ function pushRoute(candidateId: string, resultId: string) {
           data-bs-toggle="tooltip"
           data-bs-placement="left"
           title="Click for showing full report"
-          @click="pushRoute(oneResult.parent.id, oneResult.id)"
+          @click="pushRoute(oneResult.candidates_id, oneResult.id)"
         >
           <div class="row">
             <div class="col-12 col-md-10 col-lg-11">
@@ -105,7 +105,12 @@ function pushRoute(candidateId: string, resultId: string) {
                   icon="fa-regular fa-clock"
                   class="text-primary"
                 />
-                {{ calculateTime(oneResult.startedAt, oneResult.endedAt) }}
+                {{
+                  calculateTime(
+                    new Date(oneResult.started_at).getTime(),
+                    new Date(oneResult.ended_at).getTime(),
+                  )
+                }}
                 minutes
               </span>
               <span class="d-block text-secondary text-center text-md-start">
@@ -113,8 +118,9 @@ function pushRoute(candidateId: string, resultId: string) {
                   icon="fa-solid fa-calendar-days"
                   class="text-primary fs-6"
                 />
-                Ended at: {{ formattingDate(oneResult.endedAt) }},
-                {{ formattingHours(oneResult.endedAt) }}
+                Ended at:
+                {{ formattingDate(new Date(oneResult.ended_at).getTime()) }},
+                {{ formattingHours(new Date(oneResult.ended_at).getTime()) }}
               </span>
             </div>
             <div class="col-md-2 col-lg-1 text-center">

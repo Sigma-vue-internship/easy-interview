@@ -20,7 +20,7 @@ const router = useRouter();
 const resultsStore = useResultsStore();
 const { getAllQuestions, getAllQuestionCategories } = useQuestionStore();
 
-const selectedCategory = ref<string>("");
+const selectedCategory = ref<string | number>("");
 const quizMode = ref<boolean>(true);
 const questionList = ref<Array<QuizQuestion>>([]);
 const checkedAnswer = ref<number>(0);
@@ -37,32 +37,45 @@ const result = ref<QuizResult>({
 });
 const isCandidateChoosed = ref<boolean>(false);
 const questionsByCategories = ref<Object>({});
-const questionCategories = ref<Array<string>>([]);
+const questionCategoriesIds = ref<Array<number>>([]);
 const initialCategories = ref<Array<ICategory>>([]);
+const selectedCategoryInitial = "Select category for displaying questions";
+
 onBeforeMount(() => {
   setInitialCategories();
-  selectedCategory.value = "Select category for displaying questions";
+  selectedCategory.value = selectedCategoryInitial;
 });
 
 async function setInitialCategories() {
   initialCategories.value = await getAllQuestionCategories();
 }
 
-const categories = computed(() => {
-  return _uniq(questionList.value.map(item => item.category));
+const questionCategoriesTitles = computed<string[]>(() => {
+  return initialCategories.value
+    .filter(category => questionCategoriesIds.value.includes(category.id))
+    .map(category => category.title);
 });
-const categoryQuestions = computed(() =>
-  questionList.value.filter(
-    question => question.category === selectedCategory.value,
-  ),
-);
+// const categories = computed(() => {
+//   return _uniq(questionList.value.map(item => item.category));
+// });
+
+const categoryQuestions = computed(() => {
+  if (selectedCategory.value !== selectedCategoryInitial) {
+    return questionList.value.filter(question => {
+      return question.question_categories_id === selectedCategory.value;
+    });
+  }
+  return [];
+});
+
 const quizList = ref<QuizQuestion[]>([]);
-const resultPercents = computed(
-  () =>
-    (quizList.value.reduce((summ, answer) => summ + answer?.answerPoints, 0) *
+const resultPercents = computed(() => {
+  return (
+    (quizList.value.reduce((summ, answer) => summ + answer.answerPoints, 0) *
       100) /
-    quizList.value.reduce((summ, answer) => summ + answer.point, 0),
-);
+    quizList.value.reduce((summ, answer) => summ + answer.max_point, 0)
+  );
+});
 async function getQuestionList() {
   try {
     questionList.value = await getAllQuestions();
@@ -77,19 +90,21 @@ function addQuestions(question: QuizQuestion) {
       singleQuestion => singleQuestion.id !== question.id,
     ),
   ];
-  if (!questionCategories.value.includes(question.category)) {
-    questionCategories.value.push(question.category);
+  if (!questionCategoriesIds.value.includes(question.question_categories_id)) {
+    questionCategoriesIds.value.push(question.question_categories_id);
   }
   if (
     !questionList.value.find(
-      questionItem => questionItem.category === question.category,
+      questionItem =>
+        questionItem.question_categories_id === question.question_categories_id,
     )
   ) {
-    selectedCategory.value = "Select category for displaying questions";
+    selectedCategory.value = selectedCategoryInitial;
   }
   quizList.value.push(question);
   questionsByCategories.value = { ...spreadQuestionsByCategories() };
 }
+
 function removeQuestionsFromCategory() {
   const collapsedQuestions = [
     ...questionList.value,
@@ -111,11 +126,13 @@ function addAllQuestions() {
 
   questionsByCategories.value = { ...spreadQuestionsByCategories() };
 
-  if (!questionCategories.value.includes(selectedCategory.value)) {
-    questionCategories.value.push(selectedCategory.value);
+  if (selectedCategory.value !== selectedCategoryInitial) {
+    if (!questionCategoriesIds.value.includes(selectedCategory.value)) {
+      questionCategoriesIds.value.push(selectedCategory.value);
+    }
   }
 
-  selectedCategory.value = "Select category for displaying questions";
+  selectedCategory.value = selectedCategoryInitial;
 }
 function answerPoints(point: number, id: string) {
   checkedAnswer.value = point;
@@ -134,9 +151,9 @@ function deleteQuestion(questionId: string, item: QuizQuestion) {
   );
   questionList.value.push(item);
   questionsByCategories.value = { ...spreadQuestionsByCategories() };
-  if (!questionsByCategories.value[item.category]) {
-    questionCategories.value = questionCategories.value.filter(
-      questionCategory => questionCategory !== item.category,
+  if (!questionsByCategories.value[item.question_categories_id]) {
+    questionCategoriesIds.value = questionCategoriesIds.value.filter(
+      categoryId => categoryId !== item.question_categories_id,
     );
   }
 }
@@ -164,22 +181,12 @@ const setCandidateSelected = async () => {
   await getQuestionList();
 };
 // TODO: add test for post persentageResult
-async function postPercentageResult() {
-  try {
-    await resultsStore.postPercentageResult({
-      candidateUsername: currentCandidate.value.name,
-      resultPoints: resultPercents.value,
-      candidateId: currentCandidate.value.id,
-      id: "",
-    });
-  } catch (e) {
-    console.log(e);
-  }
-}
 
 const setModeQuiz = () => {
   quizMode.value = false;
-  questionCategories.value = _uniq(quizList.value.map(obj => obj.category));
+  questionCategoriesIds.value = _uniq(
+    quizList.value.map(question => question.question_categories_id),
+  );
   startQuizDate.value = Date.now();
   // questionsByCategories.value = { ...spreadQuestionsByCategories() };
   // here ok
@@ -188,13 +195,13 @@ function spreadQuestionsByCategories() {
   const tempCategoryQuestions = {};
 
   quizList.value.forEach(q => {
-    if (tempCategoryQuestions[q.category]) {
-      tempCategoryQuestions[q.category].push(q);
+    if (tempCategoryQuestions[q.question_categories_id]) {
+      tempCategoryQuestions[q.question_categories_id].push(q);
       return;
     }
 
-    tempCategoryQuestions[q.category] = [];
-    tempCategoryQuestions[q.category].push(q);
+    tempCategoryQuestions[q.question_categories_id] = [];
+    tempCategoryQuestions[q.question_categories_id].push(q);
   });
   return tempCategoryQuestions;
 }
@@ -209,22 +216,24 @@ async function postResult() {
     });
     return;
   }
-  result.value.questionAnswer = quizList.value;
+  result.value.questionAnswer = quizList.value.map(question => ({
+    question_point: question.answerPoints,
+    questions_id: question.id,
+  }));
   result.value.title = `${Math.round(resultPercents.value)}%`;
   result.value.startedAt = startQuizDate.value;
   result.value.endedAt = Date.now();
   try {
-    const { candidateId, id } = await resultsStore.postResult(
+    const resultRes = await resultsStore.postResult(
       result.value,
       currentCandidate.value.id,
     );
-    postPercentageResult();
     quizList.value = [];
     router.push({
       name: "singleResult",
       params: {
-        candidateId,
-        resultId: id,
+        candidateId: resultRes[resultRes.length - 1].candidates_id,
+        resultId: resultRes[resultRes.length - 1].id,
       },
     });
   } catch (e) {
@@ -269,7 +278,7 @@ async function postResult() {
       v-for="category in initialCategories"
       id="categoryOption"
       :key="category.id"
-      :value="category.title"
+      :value="category.id"
     >
       {{ category.title }}
     </option>
@@ -298,7 +307,7 @@ async function postResult() {
                   icon="fa-circle-question"
                 />Question:</span
               >
-              {{ item.text }}
+              {{ item.question }}
             </p>
 
             <p class="text-secondary mb-1 text-md-start pb-2 pb-md-0">
@@ -309,7 +318,7 @@ async function postResult() {
                 />Answer: </span
               >{{ item.answer }}
             </p>
-            <p>Max points: {{ item.point }}</p>
+            <p>Max points: {{ item.max_point }}</p>
           </label>
         </div>
         <div class="col-md-2 col-3 text-end me-md-2">
@@ -346,7 +355,9 @@ async function postResult() {
     v-if="isCandidateChoosed"
     :question-arrays-by-category="questionsByCategories"
     :is-mode-review="quizMode"
-    :categories="questionCategories"
+    :categories="questionCategoriesTitles"
+    :categories-ids="questionCategoriesIds"
+    :initial-categories="initialCategories"
     :questions="quizList"
     @add-point="answerPoints"
     @delete-question="deleteQuestion"

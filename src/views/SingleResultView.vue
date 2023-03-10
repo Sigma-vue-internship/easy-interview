@@ -9,39 +9,60 @@ import _uniq from "lodash/uniq";
 import { useRoute } from "vue-router";
 import { computed, ref } from "vue";
 import { useResultsStore } from "../stores/results";
-import { Result } from "../dto/results";
+import { useCandidateStore } from "../stores/candidates";
+import { useQuestionStore } from "../stores/questions";
+import { IResultAnswer, IResultDescription } from "../dto/results";
 import { getBarColor, defaultBarColor } from "../utils/useChangeColor";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { getRouterParam } from "../service/routerParam";
+import { ICandidate } from "../dto/candidates";
+import { ICategory } from "../dto/ICategory";
 
-const result = ref<Result>({
-  questionAnswer: [],
-  startedAt: 0,
-  endedAt: 0,
-  id: "",
+const resultAnswers = ref<Array<IResultAnswer>>([]);
+const resultDescription = ref<IResultDescription>({
+  id: 0,
   title: "",
-  parent: {
-    position: "",
-    username: "",
-    linkedin_url: "",
-    feedback: "",
-    avatar_url: "",
-    id: "",
-  },
+  started_at: "",
+  ended_at: "",
+  candidates_id: 0,
+  createdAt: "",
+  updatedAt: "",
 });
 
 const route = useRoute();
-const { getOneResultForCandidate } = useResultsStore();
+const { getOneResultForCandidate, getResultAnswersByResultId } =
+  useResultsStore();
+const { getCandidateById } = useCandidateStore();
+const { getAllQuestionCategories } = useQuestionStore();
+const initialCategories = ref<Array<ICategory>>([]);
 const isLoaderVisible = ref(true);
+const candidateInfo = ref<ICandidate>({
+  id: 0,
+  position: "",
+  username: "",
+  linkedin_url: "",
+  feedback: "",
+  avatar_url: "",
+  users_id: 0,
+  createdAt: "",
+  updatedAt: "",
+});
 
 async function getOneResultForCandidateData() {
   try {
     isLoaderVisible.value = true;
-    result.value = await getOneResultForCandidate(
+    debugger;
+
+    resultDescription.value = await getOneResultForCandidate(
       getRouterParam(route.params.candidateId),
       getRouterParam(route.params.resultId),
     );
-    isLoaderVisible.value = false;
+
+    resultAnswers.value = await getResultAnswersByResultId(
+      resultDescription.value.id,
+    );
+    resultAnswers.value.pop();
+    console.log("RESULT VALUE: ", resultAnswers.value);
   } catch (e) {
     isLoaderVisible.value = false;
     Notify.failure("Something went wrong. Please, try again.", {
@@ -49,40 +70,103 @@ async function getOneResultForCandidateData() {
     });
   }
 }
+async function getCandidateInfo() {
+  try {
+    isLoaderVisible.value = true;
+
+    candidateInfo.value = await getCandidateById(
+      getRouterParam(route.params.candidateId),
+    );
+
+    isLoaderVisible.value = false;
+  } catch (e) {
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
+    isLoaderVisible.value = false;
+  }
+}
+async function getInitialCategories() {
+  try {
+    isLoaderVisible.value = true;
+
+    initialCategories.value = await getAllQuestionCategories();
+
+    isLoaderVisible.value = false;
+  } catch (e) {
+    isLoaderVisible.value = false;
+
+    Notify.failure("Something went wrong. Please, try again.", {
+      distance: "65px",
+    });
+  }
+}
 
 getOneResultForCandidateData();
+getCandidateInfo();
+getInitialCategories();
 
-const resultPercentage = computed(() =>
-  (
-    result.value.questionAnswer.reduce(
-      (summ, item) => summ + item.answerPoints,
-      0,
-    ) / result.value.questionAnswer.reduce((summ, item) => summ + item.point, 0)
-  ).toLocaleString("en-GB", { style: "percent" }),
+const resultPercentage = computed(() => {
+  debugger;
+  if (resultAnswers.value.length) {
+    const percent =
+      resultAnswers.value.reduce(
+        (summ, item) => summ + item.question_point,
+        0,
+      ) /
+      resultAnswers.value.reduce(
+        (summ, item) => summ + item.question.max_point,
+        0,
+      );
+    console.log(percent);
+    return percent.toLocaleString("en-GB", { style: "percent" });
+  }
+  return "0%";
+});
+
+// const categoriesUniqueIds = ref<Array<number>>([]);
+const categoriesUniqueIds = computed(() =>
+  _uniq(
+    resultAnswers.value.map(answer => answer.question.question_categories_id),
+  ),
 );
 
-const categories = computed(() =>
-  _uniq(result.value.questionAnswer.map(obj => obj.category)),
-);
+// TODO: rebuild for category id
+const categories = computed(() => {
+  return initialCategories.value
+    .filter(category => categoriesUniqueIds.value.includes(category.id))
+    .map(category => category.title);
+});
+// Rebuild not to ids, but just get categories, and filter them
 
 const categoriesWithPoints = computed(() =>
+  // TODO: rebuild for category id
   Object.fromEntries(
     categories.value.map(category => [
       category,
-      result.value.questionAnswer
-        .filter(answer => answer.category === category)
-        .reduce((summ, item) => summ + item.point, 0),
+      resultAnswers.value
+        .filter(answer =>
+          categoriesUniqueIds.value.includes(
+            answer.question.question_categories_id,
+          ),
+        )
+        .reduce((summ, item) => summ + item.question.max_point, 0),
     ]),
   ),
 );
 
+// TODO: rebuild for category id
 const categoriesWithAnswerPoints = computed(() =>
   Object.fromEntries(
     categories.value.map(category => [
       category,
-      result.value.questionAnswer
-        .filter(answer => answer.category === category)
-        .reduce((summ, item) => summ + item.answerPoints, 0),
+      resultAnswers.value
+        .filter(answer =>
+          categoriesUniqueIds.value.includes(
+            answer.question.question_categories_id,
+          ),
+        )
+        .reduce((summ, item) => summ + item.question_point, 0),
     ]),
   ),
 );
@@ -108,11 +192,11 @@ function printPage() {
     <div
       class="col-md-4 col-lg-3 col-xxl-2 text-center text-md-start pt-4 avatar d-flex justify-content-center"
     >
-      <router-link :to="'/candidates/' + result.parent.id">
+      <router-link :to="'/candidates/' + resultDescription.candidates_id">
         <img
-          v-if="result.parent.avatar_url"
+          v-if="candidateInfo?.avatar_url"
           class="rounded-circle img-fluid p-2 border-primary border border-3 fit"
-          :src="result.parent.avatar_url"
+          :src="candidateInfo.avatar_url"
           onerror="this.onerror=null; 
             this.src='../../../assets/not-found-img.3ed597be.svg'
           "
@@ -134,21 +218,26 @@ function printPage() {
     </div>
     <div class="col-md-8 col-lg-4 mt-3 mt-lg-2">
       <h2 class="text-primary text-center text-md-start">
-        {{ result.parent.username }}
+        {{ candidateInfo.username }}
       </h2>
       <div class="text-center text-md-start fs-4">
         <font-awesome-icon
           icon="fa-solid fa-user"
           class="text-primary"
         />
-        {{ result.parent.position }}
+        {{ candidateInfo.position }}
       </div>
       <div class="text-center text-md-start fs-4">
         <font-awesome-icon
           icon="fa-regular fa-clock"
           class="text-primary fs-4"
         />
-        {{ calculateTime(result.startedAt, result.endedAt) }}
+        {{
+          calculateTime(
+            new Date(resultDescription.started_at).getTime(),
+            new Date(resultDescription.ended_at).getTime(),
+          )
+        }}
         minutes
       </div>
       <div class="text-center text-md-start fs-4">
@@ -156,8 +245,7 @@ function printPage() {
           icon="fa-solid fa-calendar-days"
           class="text-primary fs-5"
         />
-        {{ formattingDate(result.endedAt) }},
-        {{ formattingHours(result.endedAt) }}
+        {{ new Date(resultDescription.ended_at).toLocaleString() }}
       </div>
       <div class="text-center text-md-start mb-3 fs-4">
         Result: {{ resultPercentage }}
@@ -181,7 +269,7 @@ function printPage() {
     >
       <h4 class="fw-light">
         <span class="fw-bolder">Short summary:</span>
-        {{ result.parent.feedback }}
+        {{ candidateInfo.feedback }}
       </h4>
     </div>
     <h4 class="text-center text-md-start ps-md-1 mt-4">Skills</h4>
@@ -252,11 +340,15 @@ function printPage() {
           data-bs-parent="#detailedByCategory"
         >
           <CategoryListItem
-            v-for="(category, index) in categories"
-            :key="category"
-            :item-id="index"
-            :category="category"
-            :questions-array="result.questionAnswer"
+            v-for="categoryId in categoriesUniqueIds"
+            :key="categoryId"
+            :item-id="categoryId"
+            :questions-array="resultAnswers"
+            :category-id="categoryId"
+            :category="
+              initialCategories.find(category => category.id === categoryId)
+                .title
+            "
           />
         </div>
       </div>

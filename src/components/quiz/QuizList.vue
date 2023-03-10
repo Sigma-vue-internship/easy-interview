@@ -3,7 +3,9 @@ import { QuizQuestion } from "../../dto/quiz";
 import _uniq from "lodash/uniq";
 import SubmitButton from "../common/SubmitButton.vue";
 import { Question } from "../../dto/questions";
-import { ref, computed } from "vue";
+import { ref, computed, onBeforeMount } from "vue";
+import { ICategory } from "../../dto/ICategory";
+import { useQuestionStore } from "../../stores/questions";
 
 interface Emit {
   (e: "addPoint", point: number, id: string): void;
@@ -25,8 +27,16 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  categoriesIds: {
+    type: Array<number>,
+    default: () => {},
+  },
   categories: {
     type: Array<string>,
+    default: () => [],
+  },
+  initialCategories: {
+    type: Array<ICategory>,
     default: () => [],
   },
   questions: {
@@ -35,6 +45,14 @@ const props = defineProps({
   },
 });
 const emit = defineEmits<Emit>();
+const questionStore = useQuestionStore();
+onBeforeMount(() => {});
+
+const choosedCategories = computed(() => {
+  return props.initialCategories.filter(category =>
+    props.categories.includes(category.title),
+  );
+});
 
 function startQuiz() {
   emit("setMode");
@@ -145,33 +163,33 @@ const incorrectCount = computed(() => {
     class="accordion accordion-flush mb-2"
   >
     <div
-      v-for="(category, categoryIndex) in categories"
-      :key="categoryIndex"
+      v-for="category in choosedCategories"
+      :key="category.id"
       class="accordion-category pb-2"
     >
       <button
         class="accordion-button collapsed text-primary shadow-lg border border-light rounded py-4 fs-5 text-md-start"
         type="button"
         data-bs-toggle="collapse"
-        :data-bs-target="'#flush-collapseOne' + categoryIndex"
+        :data-bs-target="'#flush-collapseOne' + category.id"
         aria-expanded="false"
-        :aria-controls="'flush-collapseOne' + categoryIndex"
+        :aria-controls="'flush-collapseOne' + category.id"
       >
         <FontAwesomeIcon
           class="pe-2"
           icon="fa-tags"
         />
-        <h5 class="p-0 m-0">{{ category }}</h5>
+        <h5 class="p-0 m-0">{{ category.title }}</h5>
       </button>
       <div
-        :id="'flush-collapseOne' + categoryIndex"
+        :id="'flush-collapseOne' + category.id"
         class="accordion-collapse collapse"
         aria-labelledby="flush-heading"
         data-bs-parent="#categoryAccordionFlush"
       >
         <ul class="list-unstyled">
           <li
-            v-for="oneQuestion in questionArraysByCategory[category]"
+            v-for="oneQuestion in questionArraysByCategory[category.id]"
             id="questionItem"
             :key="oneQuestion"
             class="row justify-content-center text-center text-md-start justify-content-md-between py-4 px-2 rounded-3 mx-auto ps-sm-3 border border-light my-3"
@@ -184,7 +202,7 @@ const incorrectCount = computed(() => {
                     icon="fa-circle-question"
                   />Question:</span
                 >
-                {{ oneQuestion.text }}
+                {{ oneQuestion.question }}
               </p>
               <p class="text-secondary mb-1 text-md-start pb-2 pb-md-0">
                 <span class="text-primary"
@@ -209,12 +227,12 @@ const incorrectCount = computed(() => {
             </div>
             <!-- Loop for radios starts -->
             <div
-              v-if="!isModeReview && oneQuestion.point > 1"
+              v-if="!isModeReview && oneQuestion.max_point > 1"
               class="col-12 col-md-6 col-xl-5 col-xxl-4 text-md-end"
             >
               <h5 class="text-primary">Answer</h5>
               <div
-                v-for="idNumber in pointsArray(oneQuestion.point)"
+                v-for="idNumber in pointsArray(oneQuestion.max_point)"
                 :key="idNumber"
                 class="form-check form-check-inline me-0 ms-3"
               >
@@ -236,7 +254,7 @@ const incorrectCount = computed(() => {
             </div>
             <!-- Loop for radios ends -->
             <div
-              v-if="!isModeReview && oneQuestion.point === 1"
+              v-if="!isModeReview && oneQuestion.max_point === 1"
               class="col-12 col-md-6 col-xl-5 col-xxl-4 text-md-end"
             >
               <h5 class="mb-3 text-primary">Correct/Incorrect</h5>

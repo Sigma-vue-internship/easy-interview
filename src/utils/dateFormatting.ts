@@ -14,6 +14,8 @@ export function formattingHours(pureDate: number) {
 }
 
 export function calculateTime(startDate: number, endDate: number) {
+  console.log(startDate);
+  console.log(endDate);
   return Math.floor((endDate - startDate) / 60000);
 }
 

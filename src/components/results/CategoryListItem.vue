@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import ListItem from "./ListItem.vue";
 import { computed } from "vue";
-import { QuestionAnswer } from "../../dto/results";
+import { IResultAnswer } from "../../dto/results";
 
 const props = defineProps({
   category: {
     type: String,
     required: true,
   },
+  categoryId: {
+    type: Number,
+    required: true,
+  },
   questionsArray: {
-    type: Array as () => QuestionAnswer[],
+    type: Array<IResultAnswer>,
     required: true,
   },
   itemId: {
@@ -19,7 +23,9 @@ const props = defineProps({
 });
 
 const questionsSegregation = computed(() =>
-  props.questionsArray.filter(answer => answer.category === props.category),
+  props.questionsArray.filter(
+    answer => answer.question.question_categories_id === props.categoryId,
+  ),
 );
 </script>
 
@@ -54,7 +60,7 @@ const questionsSegregation = computed(() =>
           <ul class="list-unstyled">
             <ListItem
               v-for="question in questionsSegregation"
-              :key="question.text"
+              :key="question.question.id"
               :question="question"
             />
           </ul>

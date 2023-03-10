@@ -9,7 +9,6 @@ export const useCandidateStore = defineStore("candidates", {
   actions: {
     async getCandidateById(id: number) {
       const response = await axios.get<Candidate>(`/candidates/get/${id}`);
-      debugger;
 
       return response.data;
     },
