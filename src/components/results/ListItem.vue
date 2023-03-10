@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { QuestionAnswer } from "../../dto/results";
+import { IResultAnswer } from "../../dto/results";
 import { getBarColor, defaultBarColor } from "../../utils/useChangeColor";
 
 defineProps({
   question: {
-    type: Object as () => QuestionAnswer,
+    type: Object as () => IResultAnswer,
     required: true,
   },
 });
@@ -24,7 +24,7 @@ defineProps({
             />
             Question:
           </span>
-          {{ question.text }}
+          {{ question.question.question }}
         </p>
       </div>
       <div class="row fst-italic">
@@ -36,7 +36,7 @@ defineProps({
             />
             Answer:
           </span>
-          {{ question.answer }}
+          {{ question.question.answer }}
         </p>
       </div>
     </div>
@@ -48,16 +48,20 @@ defineProps({
         :inner-stroke-color="defaultBarColor"
         :stroke-width="7"
         :inner-stroke-width="5"
-        :start-color="getBarColor(question.answerPoints, question.point)"
-        :stop-color="getBarColor(question.answerPoints, question.point)"
-        :completed-steps="question.answerPoints"
-        :total-steps="question.point"
+        :start-color="
+          getBarColor(question.question_point, question.question.max_point)
+        "
+        :stop-color="
+          getBarColor(question.question_point, question.question.max_point)
+        "
+        :completed-steps="question.question_point"
+        :total-steps="question.question.max_point"
         data-bs-toggle="tooltip"
         data-bs-placement="left"
         title="Answer score"
       >
         <span class="text-info"
-          >{{ question.answerPoints }}/{{ question.point }}</span
+          >{{ question.question_point }}/{{ question.question.max_point }}</span
         >
       </radial-progress-bar>
     </div>

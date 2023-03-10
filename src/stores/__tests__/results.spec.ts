@@ -27,9 +27,9 @@ describe("Results Store", () => {
           parent: {
             position: "position",
             username: "username",
-            linkedinUrl: "url",
+            linkedin_url: "url",
             feedback: "feedback",
-            avatarUrl: "avatar",
+            avatar_url: "avatar",
             id: "1",
           },
         },
@@ -46,9 +46,9 @@ describe("Results Store", () => {
         parent: {
           position: "position",
           username: "username",
-          linkedinUrl: "url",
+          linkedin_url: "url",
           feedback: "feedback",
-          avatarUrl: "avatar",
+          avatar_url: "avatar",
           id: "1",
         },
       },
@@ -63,9 +63,9 @@ describe("Results Store", () => {
       parent: {
         position: "position",
         username: "username",
-        linkedinUrl: "url",
+        linkedin_url: "url",
         feedback: "feedback",
-        avatarUrl: "avatar",
+        avatar_url: "avatar",
         id: "1",
       },
     });
@@ -78,9 +78,9 @@ describe("Results Store", () => {
       parent: {
         position: "position",
         username: "username",
-        linkedinUrl: "url",
+        linkedin_url: "url",
         feedback: "feedback",
-        avatarUrl: "avatar",
+        avatar_url: "avatar",
         id: "1",
       },
     });

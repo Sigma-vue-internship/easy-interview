@@ -56,18 +56,18 @@ describe("CandidateList.vue", () => {
           {
             position: "position 1",
             username: "Misha Pronka",
-            linkedinUrl: "linkedinUrl 1",
+            linkedin_url: "linkedinUrl 1",
             feedback: "feedback 1",
-            avatarUrl:
+            avatar_url:
               "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/602.jpg",
             id: "1",
           },
           {
             position: "position 2",
             username: "username 2",
-            linkedinUrl: "linkedinUrl 2",
+            linkedin_url: "linkedinUrl 2",
             feedback: "feedback 2",
-            avatarUrl:
+            avatar_url:
               "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/976.jpg",
             id: "2",
           },

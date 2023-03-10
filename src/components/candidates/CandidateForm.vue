@@ -16,9 +16,9 @@ const props = defineProps({
       return {
         position: "",
         username: "",
-        linkedinUrl: "",
+        linkedin_url: "",
         feedback: "",
-        avatarUrl: "",
+        avatar_url: "",
         id: 0,
       };
     },
@@ -101,7 +101,7 @@ async function onSubmit() {
     >
     <input
       id="linkedin"
-      v-model="candidate.linkedinUrl"
+      v-model="candidate.linkedin_url"
       name="linkedin"
       type="linkedin"
       placeholder="https://www.linkedin.com/"
@@ -114,7 +114,7 @@ async function onSubmit() {
     >
     <input
       id="avatar"
-      v-model="candidate.avatarUrl"
+      v-model="candidate.avatar_url"
       name="avatar"
       type="avatar"
       placeholder="https://myavatar"

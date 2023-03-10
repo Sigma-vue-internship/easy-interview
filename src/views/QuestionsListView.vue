@@ -1,29 +1,40 @@
-<script setup>
+<script setup lang="ts">
 import QuestionForm from "../components/questions/QuestionForm.vue";
 import { useRoute } from "vue-router";
 import { useQuestionStore } from "../stores/questions";
 import { ref, computed } from "vue";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
-
+import { Question } from "../dto/questions";
+import { getRouterParam } from "../service/routerParam";
 const questionStore = useQuestionStore();
 const route = useRoute();
 
-const currentQuestion = ref({});
-const formType = ref("");
+const questionInitial = {
+  id: 0,
+  question: "",
+  max_point: 0,
+  question_categories_id: 0,
+  answer: "",
+  updatedAt: "",
+  createdAt: "",
+  users_id: 0,
+};
+
+const currentQuestion = ref<Question>(questionInitial);
+const formType = ref<string>("");
+const questionsList = ref<Array<Question>>([]);
 const formTitle = computed(() =>
   formType.value === "put" ? "Edit question" : "Add new question",
 );
 
-const questionsList = ref([]);
-
-const isLoaderVisible = ref(true);
-const deleteQuestionId = ref("");
+const isLoaderVisible = ref<boolean>(true);
+const deleteQuestionId = ref<number>(0);
 
 async function getQuestionList() {
   try {
     isLoaderVisible.value = true;
     questionsList.value = await questionStore.getAllQuestions(
-      route.params.title,
+      getRouterParam(route.params.question_categories_id),
     );
     clearForm();
     isLoaderVisible.value = false;
@@ -38,7 +49,7 @@ async function deleteQuestion() {
   try {
     await questionStore.deleteQuestion(deleteQuestionId.value);
     questionsList.value = questionsList.value.filter(
-      question => question.id !== deleteQuestionId.value,
+      (question: Question) => question.id !== deleteQuestionId.value,
     );
     Notify.success("Question successfully deleted", {
       distance: "65px",
@@ -52,15 +63,14 @@ async function deleteQuestion() {
     });
   }
 }
-function setModalItem(item, action) {
+function setModalItem(item: Question, action: string) {
   formType.value = action;
-
   currentQuestion.value = { ...item };
 }
 function clearForm() {
-  currentQuestion.value = {};
+  currentQuestion.value = { ...questionInitial };
 }
-function setDeleteQuestion(id) {
+function setDeleteQuestion(id: number) {
   deleteQuestionId.value = id;
 }
 
@@ -99,13 +109,13 @@ getQuestionList();
       :key="item.id"
       class="border border-light mt-4 p-2 rounded-3 mx-auto shadow text-sm-start ps-sm-3"
     >
-      <h4 class="text-secondary mt-2">{{ item.text }}</h4>
+      <h4 class="text-secondary mt-2">{{ item.question }}</h4>
       <p class="text-secondary">{{ item.answer }}</p>
       <div
         class="row text-primary text-md-end align-items-center d-flex justify-content-end"
       >
         <div class="col-6 col-sm-3 col-lg-9 pt-2">
-          <h4>Score: {{ item.point }}</h4>
+          <h4>Score: {{ item.max_point }}</h4>
         </div>
         <div
           class="col-6 col-md-2 me-xl-2 d-flex align-items-center justify-content-md-end ps-5 ps-md-0 pe-4 pe-md-0"

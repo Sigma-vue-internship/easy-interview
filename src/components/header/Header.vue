@@ -1,24 +1,14 @@
 <script setup>
-import { useAuth0 } from "@auth0/auth0-vue";
 import BurgerMenu from "./BurgerMenu.vue";
 import SearchComponent from "./SearchComponent.vue";
-const auth0 = useAuth0();
-
-const isUserAuthenticated = auth0.isAuthenticated;
-
-function login() {
-  auth0.loginWithRedirect();
-}
-
-// function logoutUser() {
-//   auth0.logout({ returnTo: window.location.origin });
-// }
-// TODO: after deploy, switch urls
+import { useUserStore } from "../../stores/users";
+import { useRouter } from "vue-router";
+const userStore = useUserStore();
+const router = useRouter();
 function logoutUser() {
-  auth0.logout({
-    returnTo: "https://easy-interview.netlify.app/",
-    client_id: import.meta.env.VITE_AUTH_CLIENT_ID,
-  });
+  localStorage.removeItem("auth_token");
+  router.push({ name: "hero" });
+  userStore.isAuthenticated = false;
 }
 </script>
 <template>
@@ -41,13 +31,13 @@ function logoutUser() {
             class="d-none d-md-flex col-md-8 row gx-5 gx-lg-0 justify-content-end align-items-center justify-content-md-around"
           >
             <SearchComponent class="d-none d-md-block col-12 col-md-9" />
-            <button
-              v-if="!isUserAuthenticated"
+            <router-link
+              v-if="!userStore.isAuthenticated"
               class="btn btn-outline-primary rounded-3 log-in col-md-2 d-none d-md-block"
-              @click="login"
+              to="/login"
             >
               Log in
-            </button>
+            </router-link>
             <button
               v-else
               class="btn btn-outline-primary rounded-3 log-out col-md-3 col-lg-2 d-none d-md-block"

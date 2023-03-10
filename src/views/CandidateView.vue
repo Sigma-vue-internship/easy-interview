@@ -4,7 +4,7 @@ import { ref, computed, onMounted } from "vue";
 import { useCandidateStore } from "../stores/candidates";
 import { useResultsStore } from "../stores/results";
 import CandidateForm from "../components/candidates/CandidateForm.vue";
-import { Candidate } from "../dto/candidates";
+import { ICandidate } from "../dto/candidates";
 import { Result } from "../dto/results";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { getRouterParam } from "../service/routerParam";
@@ -20,22 +20,26 @@ const {
   getResultsForCandidate,
   deleteResult,
   deletePercentageResult,
-  postPercentageResult,
   postResult,
 } = useResultsStore();
 const candidateResults = ref<Result[]>([]);
 
-const currentCandidate = ref<Candidate>({
+const currentCandidate = ref<ICandidate>({
   position: "",
   username: "",
-  linkedinUrl: "",
+  linkedin_url: "",
   feedback: "",
-  avatarUrl: "",
-  id: "",
+  avatar_url: "",
+  id: 0,
+  createdAt: "",
+  updatedAt: "",
+  users_id: 0,
 });
 
 async function getCandidateData(): Promise<void> {
-  currentCandidate.value = await getCandidateById(getRouterParam(params.id));
+  currentCandidate.value = await getCandidateById(
+    Number(getRouterParam(params.id)),
+  );
   candidateInit = { ...currentCandidate.value };
 }
 
@@ -43,15 +47,19 @@ async function getResultsForCandidateData(): Promise<void> {
   candidateResults.value = await getResultsForCandidate(
     getRouterParam(params.id),
   );
+  debugger;
 }
 
 let candidateInit = {
   position: "",
   username: "",
-  linkedinUrl: "",
+  linkedin_url: "",
   feedback: "",
-  avatarUrl: "",
-  id: "",
+  avatar_url: "",
+  id: 0,
+  createdAt: "",
+  updatedAt: "",
+  users_id: 0,
 };
 
 async function editSingleCandidate() {
@@ -102,12 +110,11 @@ async function deleteCandidate() {
   }
 }
 
-async function deleteQuizResult(candidateId: string, resultId: string) {
+async function deleteQuizResult(candidateId: number, resultId: number) {
   try {
     isLoaderVisible.value = true;
 
     await deleteResult(candidateId, resultId);
-    await deletePercentageResult(resultId);
     await getResultsForCandidateData();
     await checkCurrentResults();
     candidateResults.value = candidateResults.value.filter(
@@ -129,7 +136,7 @@ async function deleteQuizResult(candidateId: string, resultId: string) {
   }
 }
 
-function pushRoute(candidateId: string, resultId: string) {
+function pushRoute(candidateId: number, resultId: number) {
   router.push({
     name: "singleResult",
     params: {
@@ -173,9 +180,9 @@ onMounted(() => {});
         class="col-12 col-lg-4 col-xxl-3 mb-3 mb-lg-0 d-flex justify-content-center justify-content-lg-start"
       >
         <img
-          v-if="currentCandidate.avatarUrl"
-          id="avatarUrl"
-          :src="currentCandidate.avatarUrl"
+          v-if="currentCandidate.avatar_url"
+          id="avatar_url"
+          :src="currentCandidate.avatar_url"
           alt="singleCandidate image"
           class="candidate__img rounded-4 border bg-light p-1"
           onerror="this.onerror=null; 
@@ -222,15 +229,15 @@ onMounted(() => {});
           class="text-secondary my-4 d-flex align-items-center justify-content-center justify-content-lg-start"
         >
           <font-awesome-icon
-            v-if="currentCandidate.linkedinUrl"
+            v-if="currentCandidate.linkedin_url"
             icon="fa-brands fa-linkedin"
             class="text-primary me-2 fs-3"
           />
           <a
-            :href="currentCandidate.linkedinUrl"
+            :href="currentCandidate.linkedin_url"
             target="blank"
             class="candidate-link text-start text-truncate"
-            >{{ currentCandidate.linkedinUrl }}</a
+            >{{ currentCandidate.linkedin_url }}</a
           >
         </div>
         <p
@@ -255,7 +262,7 @@ onMounted(() => {});
         >
           <div class="col-7 col-md-5 col-lg-7 mb-2">
             #{{ index + 1 }}. {{ result.title }},
-            {{ formattingDate(result.endedAt) }}
+            {{ formattingDate(result.ended_at) }}
           </div>
           <div class="col-4">
             <font-awesome-icon
@@ -265,7 +272,7 @@ onMounted(() => {});
               data-bs-toggle="tooltip"
               data-bs-placement="left"
               title="Go to full result"
-              @click="pushRoute(result.parent.id, result.id)"
+              @click="pushRoute(currentCandidate.id, result.id)"
             />
             <font-awesome-icon
               role="button"
@@ -274,7 +281,7 @@ onMounted(() => {});
               data-bs-toggle="tooltip"
               data-bs-placement="left"
               title="Delete quiz result"
-              @click="deleteQuizResult(result.parent.id, result.id)"
+              @click="deleteQuizResult(currentCandidate.id, result.id)"
             />
           </div>
         </li>

@@ -43,17 +43,17 @@ describe("Candidate Store", () => {
     await addCandidate({
       position: "position",
       username: "username",
-      linkedinUrl: "url",
+      linkedin_url: "url",
       feedback: "feedback",
-      avatarUrl: "avatar",
+      avatar_url: "avatar",
       id: "1",
     });
     expect(axios.post).toBeCalledWith("/candidates", {
       position: "position",
       username: "username",
-      linkedinUrl: "url",
+      linkedin_url: "url",
       feedback: "feedback",
-      avatarUrl: "avatar",
+      avatar_url: "avatar",
       id: "1",
     });
   });
@@ -67,17 +67,17 @@ describe("Candidate Store", () => {
     const data = await editCandidate({
       position: "position",
       username: "username",
-      linkedinUrl: "url",
+      linkedin_url: "url",
       feedback: "feedback",
-      avatarUrl: "avatar",
+      avatar_url: "avatar",
       id: "1",
     });
     expect(axios.put).toBeCalledWith("/candidates/1", {
       position: "position",
       username: "username",
-      linkedinUrl: "url",
+      linkedin_url: "url",
       feedback: "feedback",
-      avatarUrl: "avatar",
+      avatar_url: "avatar",
       id: "1",
     });
     expect(data).toEqual("123");
@@ -96,9 +96,9 @@ describe("Candidate Store", () => {
             {
               position: "string",
               username: "string",
-              linkedinUrl: "string",
+              linkedin_url: "string",
               feedback: "string",
-              avatarUrl: "string",
+              avatar_url: "string",
               id: "123",
             },
           ],
@@ -112,9 +112,9 @@ describe("Candidate Store", () => {
       {
         position: "string",
         username: "string",
-        linkedinUrl: "string",
+        linkedin_url: "string",
         feedback: "string",
-        avatarUrl: "string",
+        avatar_url: "string",
         id: "123",
       },
     ]);
@@ -127,9 +127,9 @@ describe("Candidate Store", () => {
             {
               position: "string",
               username: "string",
-              linkedinUrl: "string",
+              linkedin_url: "string",
               feedback: "string",
-              avatarUrl: "string",
+              avatar_url: "string",
               id: "123",
             },
           ],
@@ -143,9 +143,9 @@ describe("Candidate Store", () => {
       {
         position: "string",
         username: "string",
-        linkedinUrl: "string",
+        linkedin_url: "string",
         feedback: "string",
-        avatarUrl: "string",
+        avatar_url: "string",
         id: "123",
       },
     ]);
